@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.util.EnumSendableChooser;
 import frc.robot.RobotStatemachine.SuperstructureState;
 import frc.robot.statemachines.ClimberStatemachine;
-import frc.robot.statemachines.FlipperStatemachine;
+import frc.robot.statemachines.ThingStatemachine;
 import frc.robot.statemachines.FlywheelIntakeStatemachine;
 import frc.robot.statemachines.FlywheelIntakeStatemachine.FlywheelIntakeState;
 import frc.robot.statemachines.PivotStatemachine;
@@ -29,7 +29,7 @@ public class TestInputs {
     EnumSendableChooser<TriggerIntakeStatemachine.TriggerIntakeState> triggerIntakeStateChooser = new EnumSendableChooser<>(TriggerIntakeStatemachine.TriggerIntakeState.values());
     EnumSendableChooser<PivotStatemachine.PivotState> pivotStateChooser = new EnumSendableChooser<>(PivotStatemachine.PivotState.values());
     EnumSendableChooser<ShooterStatemachine.ShooterState> shooterStateChooser = new EnumSendableChooser<>(ShooterStatemachine.ShooterState.values());
-    EnumSendableChooser<FlipperStatemachine.FlipperState> diverterStateChooser = new EnumSendableChooser<>(FlipperStatemachine.FlipperState.values());
+    EnumSendableChooser<ThingStatemachine.FlipperState> diverterStateChooser = new EnumSendableChooser<>(ThingStatemachine.FlipperState.values());
     EnumSendableChooser<ClimberStatemachine.ClimberState> climberStateChooser = new EnumSendableChooser<>(ClimberStatemachine.ClimberState.values());
     
     public void putChoosers() {
@@ -64,7 +64,7 @@ public class TestInputs {
                         TriggerIntakeStatemachine triggerIntakeStatemachine,
                         ShooterStatemachine shooterStatemachine, 
                         PivotStatemachine pivotStatemachine,
-                        FlipperStatemachine diverterStatemachine,
+                        ThingStatemachine diverterStatemachine,
                         ClimberStatemachine climberStatemachine) {
 
         if(SmartDashboard.getBoolean("Override Robot State", false)) {
