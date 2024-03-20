@@ -11,6 +11,8 @@ public class Motion {
      * take an initial state (velocity, position) and a final state (velocity, position),
      * and interpolate between them, accelerating at a constant rate
      * This interpolation includes position, velocity, and acceleration at each point in time.
+     * (Note: Another authentic 2023 season experience that I didn't bother to document)
+     * #authentic2023experience
      */
     private Motion(double deltaPosition, double initialVelocity, double finalVelocity, double acceleration, double time){
         this.deltaPosition = deltaPosition;

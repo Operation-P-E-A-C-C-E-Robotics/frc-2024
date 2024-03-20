@@ -3,12 +3,12 @@ package frc.lib.telemetry;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.networktables.DoubleArrayPublisher;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StructPublisher;
-import frc.lib.safety.Value;
-import frc.lib.sensors.LimelightHelper;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.StructArrayLogEntry;
+import edu.wpi.first.util.datalog.StructLogEntry;
+import edu.wpi.first.wpilibj.DataLogManager;
+import frc.lib.vision.LimelightHelpers;
+import frc.robot.Robot;
 
 /**
  * Telemetry for a limelight camera, intended for use with apriltag tracking.
@@ -22,59 +22,37 @@ import frc.lib.sensors.LimelightHelper;
  * </ul>
  * 
  * A HOT MESS COURTESY OF PEACCY
+ * I LEGINTIMATELY HAVE NO IDEA WHAT I'M DOING
  */
 public class LimelightTelemetry {
-    private static final NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("Limelight");
-    private static final DoubleArrayPublisher cornersXPublisher = limelightTable.getDoubleArrayTopic("Corners X").publish();
-    private static final DoubleArrayPublisher cornersYPublisher = limelightTable.getDoubleArrayTopic("Corners Y").publish();
-    private static final StructPublisher<Pose3d> primaryTagPosePublisher = limelightTable.getStructTopic("Primary Tag From Robot", Pose3d.struct).publish();
-    private static final StructPublisher<Pose3d> primaryTagPoseFromFieldPublisher = limelightTable.getStructTopic("Primary Tag From Field", Pose3d.struct).publish();
-    private static final StructPublisher<Pose3d> rawBotPosePublisher = limelightTable.getStructTopic("Raw BotPose", Pose3d.struct).publish();
+    private static final DataLog log = DataLogManager.getLog();
+    private static final StructArrayLogEntry<Pose3d> tagPosePublisher = StructArrayLogEntry.create(log, "Limelight/Tag Poses", Pose3d.struct);
+    private static final StructArrayLogEntry<Pose3d> tagPoseFromFieldPublisher = StructArrayLogEntry.create(log, "Limelight/Tag Poses From Field", Pose3d.struct);
+    private static final StructLogEntry<Pose3d> rawBotPosePublisher = StructLogEntry.create(log, "Limelight/Bot Pose", Pose3d.struct);
 
-    public static final void update(LimelightHelper limelight, Pose3d robotPose){
-        Value<double[]> tcornxy = limelight.getCorners();
-        if(tcornxy.isNormal()) {
-            double[] corners = tcornxy.get(new double[]{});
-            
-            //make sure length is even and nonzero:
-            if(corners.length % 2 == 0 && corners.length != 0) {
-                double[] cornersX = new double[corners.length / 2];
-                double[] cornersY = new double[corners.length / 2];
-                for (int i = 0; i < corners.length; i++) {
-                    if (i % 2 == 0) {
-                        cornersX[i / 2] = corners[i];
-                    } else {
-                        cornersY[i / 2] = corners[i];
-                    }
-                }
-                cornersXPublisher.accept(cornersX);
-                cornersYPublisher.accept(cornersY);
-            }
+    public static void update (String llName, Pose3d robotPose){
+        var results = LimelightHelpers.getLatestResults(llName).targetingResults;
+        Pose3d[] tagPosesFromField = new Pose3d[results.targets_Fiducials.length];
+        Pose3d[] tagPosesFromRobot = new Pose3d[results.targets_Fiducials.length];
+        for(int i = 0; i < results.targets_Fiducials.length; i++){
+            tagPosesFromField[i] = results.targets_Fiducials[i].getTargetPose_RobotSpace();
+            tagPosesFromRobot[i] = robotPose.plus(new Transform3d(tagPosesFromField[i].getTranslation(), tagPosesFromField[i].getRotation()));
+        }
+        
+        tagPosePublisher.append(tagPosesFromRobot);
+        tagPoseFromFieldPublisher.append(tagPosesFromField);
+        if(results.botpose.length == 6){
+            rawBotPosePublisher.append(robotPose);
+        }
 
-            Value<double[]> primaryTagPoseRobot = limelight.getTagFromRobot();
-            if (primaryTagPoseRobot.isNormal()){
-                double[] primaryTagPoseRobotArray = primaryTagPoseRobot.get(new double[]{});
-                Pose3d primaryTagPoseFromRobot = new Pose3d(
-                    primaryTagPoseRobotArray[0], 
-                    primaryTagPoseRobotArray[1], 
-                    primaryTagPoseRobotArray[2], 
-                    new Rotation3d(
-                        primaryTagPoseRobotArray[3], 
-                        primaryTagPoseRobotArray[4], 
-                        primaryTagPoseRobotArray[5]
-                    )
-                );
+        if(Robot.isSimulation()){
+            tagPoseFromFieldPublisher.append(new Pose3d[] {
+                new Pose3d(0, 0, 1, new Rotation3d(0, 0, 0)),
+                new Pose3d(2, 2, 1, new Rotation3d(0, 0, 0)),
+                new Pose3d(2, 0, 0.4, new Rotation3d(1, 0, 0)),
+            });
 
-                primaryTagPosePublisher.accept(primaryTagPoseFromRobot);
-
-                Pose3d primaryTagPoseFromField = robotPose.plus(new Transform3d(new Pose3d(), primaryTagPoseFromRobot));
-                primaryTagPoseFromFieldPublisher.accept(primaryTagPoseFromField);
-            }
-
-            Value<Pose3d> rawBotPose = limelight.getBotpose();
-            if (rawBotPose.isNormal()){
-                rawBotPosePublisher.accept(rawBotPose.get(new Pose3d()));
-            }
+            rawBotPosePublisher.append(new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0)));
         }
     }
 }

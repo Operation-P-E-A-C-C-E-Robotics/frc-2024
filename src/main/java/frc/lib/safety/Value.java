@@ -7,6 +7,20 @@ public class Value <T> {
     /**
      * Hold a safe value that has a value and a state,
      * and can only be read with a default value.
+     * Note from the future: This was a really stupid idea.
+     * Here is a fun poem about stupid ideas:
+     * Stupid ideas are stupid,
+     * Stupid ideas are dumb,
+     * Stupid ideas are stupid,
+     * And so are you <3
+     * - Peaccy, (almost) 2024
+     * 
+     * Here is a fun poem about writing mildly offensive poems but not actually wanting them to be offensive:
+     * I'm sorry if I called you stupid,
+     * I'm sorry if I called you dumb,
+     * You probably are, but I'm sorry,
+     * I like you, you're my chum.
+     * -Peaccy
      * @param value the value
      */
     public Value(T value){

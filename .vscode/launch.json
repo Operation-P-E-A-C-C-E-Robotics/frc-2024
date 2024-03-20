@@ -6,10 +6,24 @@
   "configurations": [
     {
       "type": "java",
-      "name": "PeaccyRequest",
+      "name": "Util",
       "request": "launch",
-      "mainClass": "frc.lib.swerve.PeaccyRequest",
-      "projectName": "base-swerve-2024"
+      "mainClass": "frc.lib.util.Util",
+      "projectName": "frc-2024"
+    },
+    {
+      "type": "java",
+      "name": "LinearInterpolate",
+      "request": "launch",
+      "mainClass": "frc.lib.util.LinearInterpolate",
+      "projectName": "frc-2024"
+    },
+    {
+      "type": "java",
+      "name": "AimPlanner",
+      "request": "launch",
+      "mainClass": "frc.robot.planners.AimPlanner",
+      "projectName": "frc-2024"
     },
     {
       "type": "wpilib",

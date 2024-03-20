@@ -11,6 +11,7 @@ public class LinearAcceleration {
      * <br/> - one leg represents time
      * <br/> - the other leg represents initial velocity (for deceleration) or final velocity (for acceleration)
      * <br/> - the slope of the hypotenuse (velocity/time) represents acceleration
+     * #authentic2023experience
      */
     private LinearAcceleration(double position, double velocity, double acceleration, double time){
         this.acceleration = acceleration;
@@ -51,6 +52,7 @@ public class LinearAcceleration {
         return fromVelocityAcceleration(Util.limit(velocity, maxVelocity), Util.limit(acceleration, maxAcceleration));
     }
 
+    //note from the future: don't worry about what these do, documentation is overrated.
     public LinearAcceleration limitAcceleration(double maxAcceleration){
         return fromAcceleration(Util.limit(acceleration, maxAcceleration), time);
     }

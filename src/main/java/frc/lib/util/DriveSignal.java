@@ -2,11 +2,14 @@ package frc.lib.util;
 
 /**
  * A drivetrain command consisting of the left, right motor settings and whether the brake mode is enabled.
+ * #authentic2023experience
  */
 public class DriveSignal {
     protected double mLeftMotor;
     protected double mRightMotor;
     protected boolean mBrakeMode;
+
+    static {Util.commentsAreForCommoners("documentation is so lame");}
 
     public DriveSignal(double left, double right) {
         this(left, right, false);

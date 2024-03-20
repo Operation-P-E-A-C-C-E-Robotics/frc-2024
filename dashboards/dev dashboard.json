@@ -1,0 +1,805 @@
+{
+  "tabPane": [
+    {
+      "title": "SmartDashboard",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "SmartDashboard/",
+      "widgetPane": {
+        "gridSize": 90.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "7,2": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/trigger switch",
+              "_title": "/SmartDashboard/trigger switch",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "7,0": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/flywheel switch",
+              "_title": "/SmartDashboard/flywheel switch",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "LiveWindow",
+      "autoPopulate": true,
+      "autoPopulatePrefix": "LiveWindow/",
+      "widgetPane": {
+        "gridSize": 90.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {}
+      }
+    },
+    {
+      "title": "Setup",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 60.0,
+        "showGrid": false,
+        "hgap": 3.0,
+        "vgap": 3.0,
+        "titleType": 0,
+        "tiles": {
+          "0,0": {
+            "size": [
+              14,
+              8
+            ],
+            "content": {
+              "_type": "Field",
+              "_source0": "network_table:///SmartDashboard/Field",
+              "_title": "SmartDashboard/Field",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Game/Game": "k2024Crescendo",
+              "Visuals/Robot Icon Size": 50.0,
+              "Visuals/Show Outside Circles": false
+            }
+          },
+          "0,8": {
+            "size": [
+              12,
+              2
+            ],
+            "content": {
+              "_type": "Voltage View",
+              "_source0": "network_table:///SmartDashboard/PDP/Voltage",
+              "_title": "SmartDashboard/PDP/Voltage",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Range/Min": 0.0,
+              "Range/Max": 14.0,
+              "Range/Center": 0.0,
+              "Visuals/Orientation": "HORIZONTAL",
+              "Visuals/Number of tick marks": 5
+            }
+          },
+          "12,8": {
+            "size": [
+              12,
+              2
+            ],
+            "content": {
+              "_type": "Voltage View",
+              "_source0": "network_table:///SmartDashboard/PDP/TotalCurrent",
+              "_title": "SmartDashboard/PDP/TotalCurrent",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Range/Min": 0.0,
+              "Range/Max": 120.0,
+              "Range/Center": 0.0,
+              "Visuals/Orientation": "HORIZONTAL",
+              "Visuals/Number of tick marks": 5
+            }
+          },
+          "19,0": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "Number Bar",
+              "_source0": "network_table:///Control System/CAN/Bus Utilization",
+              "_title": "Control System/CAN/Bus Utilization",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Range/Min": 0.0,
+              "Range/Max": 1.0,
+              "Range/Center": 0.0,
+              "Visuals/Num tick marks": 5,
+              "Visuals/Show text": true,
+              "Visuals/Orientation": "HORIZONTAL"
+            }
+          },
+          "21,2": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Control System/CAN/Rx Error Count",
+              "_title": "Control System/CAN/Rx Error Count",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "21,5": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Control System/CAN/Tx Error Count",
+              "_title": "Control System/CAN/Tx Error Count",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "14,2": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/POSE SEED",
+              "_title": "SmartDashboard/POSE SEED",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "18,2": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Toggle Button",
+              "_source0": "network_table:///SmartDashboard/seed pose",
+              "_title": "SmartDashboard/seed pose",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "14,0": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/Auto Chooser",
+              "_title": "SmartDashboard/Auto Chooser",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Match",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 60.0,
+        "showGrid": false,
+        "hgap": 3.0,
+        "vgap": 3.0,
+        "titleType": 0,
+        "tiles": {
+          "5,0": {
+            "size": [
+              19,
+              9
+            ],
+            "content": {
+              "_type": "Field",
+              "_source0": "network_table:///SmartDashboard/Field",
+              "_title": "/SmartDashboard/Field",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Game/Game": "k2024Crescendo",
+              "Visuals/Robot Icon Size": 50.0,
+              "Visuals/Show Outside Circles": false
+            }
+          },
+          "0,0": {
+            "size": [
+              5,
+              3
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///Control System/RoboRIO/Brownout",
+              "_title": "Control System/RoboRIO/Brownout",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#993300FF",
+              "Colors/Color when false": "#008000FF"
+            }
+          },
+          "0,3": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Robot State",
+              "_title": "SmartDashboard/Robot State",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "0,5": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Teleop Mode",
+              "_title": "SmartDashboard/Teleop Mode",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "0,7": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Note Location",
+              "_title": "SmartDashboard/Note Location",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Debug",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 60.0,
+        "showGrid": false,
+        "hgap": 3.0,
+        "vgap": 3.0,
+        "titleType": 0,
+        "tiles": {
+          "12,0": {
+            "size": [
+              5,
+              4
+            ],
+            "content": {
+              "_type": "Network Table Tree",
+              "_source0": "network_table:///Control System/CAN",
+              "_title": "Control System/CAN",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "12,4": {
+            "size": [
+              5,
+              4
+            ],
+            "content": {
+              "_type": "Network Table Tree",
+              "_source0": "network_table:///Control System/Pneumatics",
+              "_title": "Control System/Pneumatics",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "0,0": {
+            "size": [
+              6,
+              8
+            ],
+            "content": {
+              "_type": "Network Table Tree",
+              "_source0": "network_table:///Control System/RoboRIO",
+              "_title": "Control System/RoboRIO",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "6,0": {
+            "size": [
+              6,
+              8
+            ],
+            "content": {
+              "_type": "PDP",
+              "_source0": "network_table:///SmartDashboard/PDP",
+              "_title": "SmartDashboard/PDP",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Visuals/Show voltage and current values": true
+            }
+          },
+          "17,6": {
+            "size": [
+              6,
+              4
+            ],
+            "content": {
+              "_type": "Network Table Tree",
+              "_source0": "network_table:///Swerve/Auto Heading",
+              "_title": "Swerve/Auto Heading",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "17,0": {
+            "size": [
+              6,
+              6
+            ],
+            "content": {
+              "_type": "Network Table Tree",
+              "_source0": "network_table:///Swerve/Command",
+              "_title": "Swerve/Command",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "14,8": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Swerve/Odometry Period",
+              "_title": "Swerve/Odometry Period",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Test",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 90.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "0,4": {
+            "size": [
+              3,
+              1
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/Climber State Chooser",
+              "_title": "/SmartDashboard/Climber State Chooser",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "0,5": {
+            "size": [
+              3,
+              1
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/Diverter State Chooser",
+              "_title": "/SmartDashboard/Diverter State Chooser",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "0,0": {
+            "size": [
+              3,
+              1
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/Flywheel Intake State Chooser",
+              "_title": "SmartDashboard/Flywheel Intake State Chooser",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "0,3": {
+            "size": [
+              3,
+              1
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/Pivot State Chooser",
+              "_title": "/SmartDashboard/Pivot State Chooser",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "11,0": {
+            "size": [
+              3,
+              1
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/Robot State Chooser",
+              "_title": "SmartDashboard/Robot State Chooser",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "0,2": {
+            "size": [
+              3,
+              1
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/Shooter State Chooser",
+              "_title": "/SmartDashboard/Shooter State Chooser",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "11,1": {
+            "size": [
+              3,
+              1
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/Swerve State Chooser",
+              "_title": "/SmartDashboard/Swerve State Chooser",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "0,1": {
+            "size": [
+              3,
+              1
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/Trigger Intake State Chooser",
+              "_title": "SmartDashboard/Trigger Intake State Chooser",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "3,4": {
+            "size": [
+              3,
+              1
+            ],
+            "content": {
+              "_type": "Toggle Button",
+              "_source0": "network_table:///SmartDashboard/Override Climber State",
+              "_title": "SmartDashboard/Override Climber State",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "3,5": {
+            "size": [
+              3,
+              1
+            ],
+            "content": {
+              "_type": "Toggle Button",
+              "_source0": "network_table:///SmartDashboard/Override Diverter State",
+              "_title": "SmartDashboard/Override Diverter State",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "3,0": {
+            "size": [
+              3,
+              1
+            ],
+            "content": {
+              "_type": "Toggle Button",
+              "_source0": "network_table:///SmartDashboard/Override Flywheel Intake State",
+              "_title": "SmartDashboard/Override Flywheel Intake State",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "3,3": {
+            "size": [
+              3,
+              1
+            ],
+            "content": {
+              "_type": "Toggle Button",
+              "_source0": "network_table:///SmartDashboard/Override Pivot State",
+              "_title": "SmartDashboard/Override Pivot State",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "9,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Toggle Button",
+              "_source0": "network_table:///SmartDashboard/Override Robot State",
+              "_title": "SmartDashboard/Override Robot State",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "3,2": {
+            "size": [
+              3,
+              1
+            ],
+            "content": {
+              "_type": "Toggle Button",
+              "_source0": "network_table:///SmartDashboard/Override Shooter State",
+              "_title": "SmartDashboard/Override Shooter State",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "9,1": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Toggle Button",
+              "_source0": "network_table:///SmartDashboard/Override Swerve State",
+              "_title": "SmartDashboard/Override Swerve State",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "3,1": {
+            "size": [
+              3,
+              1
+            ],
+            "content": {
+              "_type": "Toggle Button",
+              "_source0": "network_table:///SmartDashboard/Override Trigger Intake State",
+              "_title": "SmartDashboard/Override Trigger Intake State",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "6,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Flywheel Intake State",
+              "_title": "SmartDashboard/Flywheel Intake State",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "9,2": {
+            "size": [
+              3,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Robot State",
+              "_title": "SmartDashboard/Robot State",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "12,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Swerve State",
+              "_title": "SmartDashboard/Swerve State",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "6,1": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Trigger Intake State",
+              "_title": "SmartDashboard/Trigger Intake State",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "6,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Shooter State",
+              "_title": "SmartDashboard/Shooter State",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "6,3": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Pivot State",
+              "_title": "SmartDashboard/Pivot State",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "9,3": {
+            "size": [
+              5,
+              3
+            ],
+            "content": {
+              "_type": "Field",
+              "_source0": "network_table:///SmartDashboard/Field",
+              "_title": "SmartDashboard/Field",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Game/Game": "k2024Crescendo",
+              "Visuals/Robot Icon Size": 50.0,
+              "Visuals/Show Outside Circles": false
+            }
+          },
+          "6,4": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Climber State",
+              "_title": "SmartDashboard/Climber State",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Tab 7",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 64.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "8,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/num tags",
+              "_title": "/SmartDashboard/num tags",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "9,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/stdev",
+              "_title": "SmartDashboard/stdev",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "8,3": {
+            "size": [
+              3,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Odometry Error",
+              "_title": "/SmartDashboard/Odometry Error",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "11,1": {
+            "size": [
+              6,
+              4
+            ],
+            "content": {
+              "_type": "Field",
+              "_source0": "network_table:///SmartDashboard/Field",
+              "_title": "/SmartDashboard/Field",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Game/Game": "k2024Crescendo",
+              "Visuals/Robot Icon Size": 50.0,
+              "Visuals/Show Outside Circles": false
+            }
+          }
+        }
+      }
+    }
+  ],
+  "windowGeometry": {
+    "x": -7.199999809265137,
+    "y": -7.199999809265137,
+    "width": 1550.4000244140625,
+    "height": 830.4000244140625
+  }
+}

@@ -2,6 +2,7 @@ package frc.lib.swerve;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
@@ -24,6 +25,15 @@ import edu.wpi.first.wpilibj.Timer;
  * ADD ONE FUNCTION SO I CAN GET THE GODDAMN KNEMATICS DONT MAKE THEM """"PROTECTED"""" SO I HAVE TO DO ALL THIS NONSENSE JUST TO GET THE
  * CHASSIS SPEEDS. 
  * Okay maybe I wanted to do a couple other things too...
+ * 
+ * Heres a terrible poem about having to re-write other ppls code because they didn't include the function you wanted,
+ * and that kind of irritated you, and so you made the stupid class and then ended up adding a bunch of other crap too,
+ * so it was probably for the better in the first place, and so it is what it is:
+ * I litterally don't know what i'm doing with my life,
+ * writing poems about my superficial strife,
+ * stupiditiy creating stupidity,
+ * like a stupid casarole or whatever.
+ * -Peaccy
  */
 public class PeaccefulSwerve extends SwerveDrivetrain {
     private Rotation3d pigeonOdometryOffset = new Rotation3d();
@@ -45,12 +55,21 @@ public class PeaccefulSwerve extends SwerveDrivetrain {
         super(swerveConstants, frontLeft, frontRight, rearLeft, rearRight);
     }
 
+    public void optimizeBusUtilization() {
+        for(SwerveModule i : Modules) {
+            ParentDevice.optimizeBusUtilizationForAll(i.getCANcoder(), i.getDriveMotor(), i.getSteerMotor());
+        }
+    }
+
+
     /**
      * get the """PROWTECTED""" chassis speeds
      * @return the chassis speeds
      */
     public ChassisSpeeds getChassisSpeeds() {
-        return m_kinematics.toChassisSpeeds(getState().ModuleStates);
+        var moduleStates = getState().ModuleStates;
+        if (moduleStates == null) return new ChassisSpeeds();
+        return m_kinematics.toChassisSpeeds(moduleStates);
     }
 
     /**
@@ -119,7 +138,7 @@ public class PeaccefulSwerve extends SwerveDrivetrain {
             m_pigeon2.getQuatX().getValueAsDouble(),
             m_pigeon2.getQuatY().getValueAsDouble(),
             m_pigeon2.getQuatZ().getValueAsDouble()
-        )).minus(pigeonOdometryOffset);
+        ));//.minus(pigeonOdometryOffset);
         return new Pose3d(new Translation3d(odometry.getX(), odometry.getY(), visionZ), imu);
     }
 

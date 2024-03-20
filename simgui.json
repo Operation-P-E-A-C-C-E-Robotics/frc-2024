@@ -2,28 +2,55 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
-      "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
-      "/LiveWindow/Ungrouped/Pigeon 2 (Pro) [14]": "Gyro",
-      "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
-      "/LiveWindow/Ungrouped/Talon FX (Pro) [10]": "Motor Controller",
-      "/LiveWindow/Ungrouped/Talon FX (Pro) [11]": "Motor Controller",
-      "/LiveWindow/Ungrouped/Talon FX (Pro) [13]": "Motor Controller",
-      "/LiveWindow/Ungrouped/Talon FX (Pro) [2]": "Motor Controller",
-      "/LiveWindow/Ungrouped/Talon FX (Pro) [4]": "Motor Controller",
-      "/LiveWindow/Ungrouped/Talon FX (Pro) [5]": "Motor Controller",
-      "/LiveWindow/Ungrouped/Talon FX (Pro) [7]": "Motor Controller",
-      "/LiveWindow/Ungrouped/Talon FX (Pro) [8]": "Motor Controller",
-      "/SmartDashboard/AUTO MODE": "String Chooser",
-      "/SmartDashboard/DriveTrain": "Subsystem",
+      "/SmartDashboard/Climber State Chooser": "String Chooser",
+      "/SmartDashboard/Diverter State Chooser": "String Chooser",
       "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/Flywheel Intake State Chooser": "String Chooser",
+      "/SmartDashboard/POSE SEED": "String Chooser",
+      "/SmartDashboard/Pivot State Chooser": "String Chooser",
+      "/SmartDashboard/Robot State (chooser test)": "String Chooser",
+      "/SmartDashboard/Robot State Chooser": "String Chooser",
+      "/SmartDashboard/Shooter State Chooser": "String Chooser",
+      "/SmartDashboard/Supersystem State": "String Chooser",
       "/SmartDashboard/Swerve Mech": "Mechanism2d",
-      "/SmartDashboard/angular curve chooser": "String Chooser",
-      "/SmartDashboard/field": "Field2d",
-      "/SmartDashboard/linear curve chooser": "String Chooser",
-      "/SmartDashboard/swerve mech": "Mechanism2d"
+      "/SmartDashboard/Swerve State": "String Chooser",
+      "/SmartDashboard/Swerve State Chooser": "String Chooser",
+      "/SmartDashboard/Trigger Intake State Chooser": "String Chooser",
+      "/SmartDashboard/pivot mech": "Mechanism2d"
     },
     "windows": {
+      "/SmartDashboard/Climber State Chooser": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Diverter State Chooser": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/Field": {
+        "bottom": 1476,
+        "height": 8.210550308227539,
+        "left": 150,
+        "right": 2961,
+        "top": 79,
+        "width": 16.541748046875,
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Pivot State Chooser": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Robot State Chooser": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Shooter State Chooser": {
         "window": {
           "visible": true
         }
@@ -32,41 +59,49 @@
         "window": {
           "visible": true
         }
+      },
+      "/SmartDashboard/Swerve State Chooser": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/pivot mech": {
+        "window": {
+          "visible": true
+        }
       }
     }
   },
   "NetworkTables": {
+    "retained": {
+      "SmartDashboard": {
+        "open": true
+      }
+    },
     "transitory": {
       "SmartDashboard": {
-        "DriveTrain": {
-          "open": true
-        },
-        "double[]##v_/SmartDashboard/angle motor errors": {
-          "open": true
-        },
-        "double[]##v_/SmartDashboard/drive motor errors": {
-          "open": true
-        },
-        "double[]##v_/SmartDashboard/swerve requested velocity": {
-          "open": true
-        },
         "open": true,
-        "swerve mech": {
-          "open": true
+        "pivot mech": {
+          "open": true,
+          "pivot": {
+            "open": true,
+            "pivot": {
+              "open": true
+            }
+          }
         }
       },
       "Swerve": {
+        "Auto Heading": {
+          "open": true
+        },
         "Command": {
           "open": true
-        },
-        "Pose3d##v_/Swerve/Robot Pose": {
-          "Translation3d##v_translation": {
-            "open": true
-          },
-          "open": true
-        },
-        "open": true
+        }
       }
     }
+  },
+  "NetworkTables Info": {
+    "visible": true
   }
 }

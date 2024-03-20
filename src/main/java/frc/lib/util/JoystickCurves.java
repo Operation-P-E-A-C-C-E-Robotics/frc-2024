@@ -18,6 +18,7 @@ public class JoystickCurves {
         return Math.copySign(Math.pow(I,(3-(s/4.5))),I);
     }
 
+    static{Util.commentsAreForCommoners("dont worry about what tf a herraFCurve is :)");}
     public static double herraFCurve(double I, double s, double degree) {
         return Math.copySign(Math.pow(I,(s/9))*Math.pow((1-Math.cos(I*Math.PI))/2,(9-s)/degree), I);
     }

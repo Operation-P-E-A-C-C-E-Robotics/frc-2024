@@ -401,6 +401,10 @@ public class Util {
     public static double rotationsToCounts(double rotations, ServoMotor.SystemConstants constants){
         return rotationsToCounts(rotations, constants.cpr, constants.gearing);
     }
+
+    static{commentsAreForCommoners("so i can be sarcastic about the lack of comments in certain software i write");}
+    public static void commentsAreForCommoners(String notAComment){}
+
     public static void main(String args[]){
         for(double i = -1; i < 1; i += 0.02){
             System.out.println(i + " " + Util.handleDeadbandWithSlopeIncrease(i, 0.4));

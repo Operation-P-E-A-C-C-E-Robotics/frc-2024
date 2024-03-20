@@ -45,6 +45,7 @@ public class ServoMotor extends SubsystemBase {
 
     /**
      * A messy ass helper class to run trajectories on a DC Motor state space controller.
+     * #authentic2023experience
      * @param constants The constants for the system
      */
     public ServoMotor(SystemConstants constants, DoubleConsumer voltDriveFunction, DoubleSupplier positionSupplier, DoubleSupplier velocitySupplier) {

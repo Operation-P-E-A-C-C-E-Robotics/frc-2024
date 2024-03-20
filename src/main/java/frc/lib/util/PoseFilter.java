@@ -4,6 +4,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 
+//#authentic2023experience
 public class PoseFilter {
     public static final double TRANSLATION_RATE_LIMIT = 0.001;
     public static final double ROTATION_RATE_LIMIT = 0.1;

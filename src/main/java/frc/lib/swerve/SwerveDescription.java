@@ -4,12 +4,22 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SwerveModuleSteerFeedbackType;
-
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SteerFeedbackType;
 import edu.wpi.first.math.geometry.Translation2d;
 
 /**
  * CTRE's way of writing out swerve constants is messy, hard to read, and documented like a wet fart, so I made this.
+ * 
+ * Here's a fun poem about improving other people's trash code:
+ * It is indeed quite a feat,
+ * writing code so impossibly neat,
+ * that's why you didn't do it, bro,
+ * so now you have to read my code,
+ * and wish you had written it so.
+ * Seriously, why couldn't you have written it so?
+ * Then I could have slept or fished or whatever, but no.
+ * -Peaccy
  */
 public class SwerveDescription {
 
@@ -46,11 +56,12 @@ public class SwerveDescription {
                                 boolean invertSteerMotors){
         SwerveDrivetrainConstants swerveConstants = new SwerveDrivetrainConstants()
                                                     .withPigeon2Id(pigeonCANId)
-                                                    .withSupportsPro(false)
                                                     .withCANbusName("rio");
         SwerveModuleConstantsFactory globalModuleConstants = new SwerveModuleConstantsFactory()
                                     .withDriveMotorGearRatio(gearing.driveRatio)
+                                    .withDriveMotorClosedLoopOutput(ClosedLoopOutputType.TorqueCurrentFOC)
                                     .withSteerMotorGearRatio(gearing.steerRatio)
+                                    .withSteerMotorClosedLoopOutput(ClosedLoopOutputType.Voltage)
                                     .withWheelRadius(gearing.wheelRadius)
                                     .withSlipCurrent(physics.wheelSlipCurrent)
                                     .withSteerMotorGains(angleGains)
@@ -58,7 +69,7 @@ public class SwerveDescription {
                                     .withSpeedAt12VoltsMps(physics.freeSpeed)
                                     .withSteerInertia(physics.angularInertia)
                                     .withDriveInertia(physics.linearInertia)
-                                    .withFeedbackSource(SwerveModuleSteerFeedbackType.FusedCANcoder)
+                                    .withFeedbackSource(SteerFeedbackType.FusedCANcoder)
                                     .withCouplingGearRatio(gearing.steerCouplingRatio)
                                     .withSteerMotorInverted(invertSteerMotors);
 

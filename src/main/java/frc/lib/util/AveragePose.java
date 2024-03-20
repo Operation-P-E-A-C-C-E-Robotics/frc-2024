@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 
 /**
  * A class from our 2023 codebase to filter the pose of a fixed point on the field, used for aggressively smoothing gamepiece poses
+ * #authentic2023experience
  */
 public class AveragePose {
     public static final double TRANSLATION_RATE_LIMIT = 0.001;

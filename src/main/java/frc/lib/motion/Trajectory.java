@@ -9,6 +9,15 @@ public class Trajectory {
     private final State initialState;
     private State finalState;
 
+    /**
+     * You can tell how panicked I was when I wrote this because I didn't even bother to document it.
+     * Late-2023 season shenanigans. I will not be held responsible for any damage caused by this code.
+     * And I am not going to document it, so you can get the authentic experience of 2023 season.
+     * Also so that the next programmer won't be able to reuse all my stuff and pretend they are the programming god I am.
+     * (I'm just kidding bro, message me on slack if you need help with anything, or cheifdelphi @Phlogiston)
+     * #authentic2023experience
+     * @param waypoints the waypoints to follow
+     */
     public Trajectory(State... waypoints){
         this.initialState = waypoints[0];
         this.waypoints = new Motion[waypoints.length - 1];

@@ -12,7 +12,6 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.motion.Trajectory;
 import frc.lib.util.ServoMotor.SystemConstants;
@@ -36,6 +35,7 @@ public class ServoArm extends SubsystemBase {
     private Runnable superPeriodic;
     /**
      * A messy ass helper class to run trajectories on an arm
+     * #authentic2023experience
      * @param constants The constants for the system
      * @param armLength The length of the arm (m)
      * @param armMass The mass of the arm (kg)
@@ -214,8 +214,6 @@ public class ServoArm extends SubsystemBase {
          } else {
             feedforward = calculateGravityFeedforward(loop.getXHat(0), loop.getXHat(1));
          }
-
-         SmartDashboard.putNumber("Feedforward", feedforward);
 
          // run the feedback
          loop.correct(VecBuilder.fill(position));
