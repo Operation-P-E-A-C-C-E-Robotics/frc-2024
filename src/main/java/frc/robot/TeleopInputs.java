@@ -202,6 +202,11 @@ public class TeleopInputs {
             jogTriggerMode = false;
         }
 
+        if(mode != TeleopMode.CLIMB) {
+            jogClimberMode = false;
+            jogFlipperMode = false;
+        }
+
         if(jogPivotMode || Math.abs(manualPivot) > 0.2 && mode != TeleopMode.CLIMB) {
             jogPivotMode = true;
             Pivot.getInstance().setPivotPercent(manualPivot);
@@ -209,6 +214,7 @@ public class TeleopInputs {
 
         if(jogClimberMode || Math.abs(manualClimber) > 0.2 && mode == TeleopMode.CLIMB) {
             jogClimberMode = true;
+            Pivot.getInstance().climbMode();
             Climber.getInstance().setClimberPercent(manualClimber);
         }
 

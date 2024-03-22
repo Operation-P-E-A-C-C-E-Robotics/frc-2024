@@ -5,6 +5,7 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.ctre.phoenix6.controls.StrictFollower;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -30,6 +31,7 @@ public class Pivot {
 
     /* CONTROLLERS / CONTROL REQUESTS */
     private final MotionMagicExpoVoltage pivotControl = new MotionMagicExpoVoltage(restingAngle).withEnableFOC(true);
+    private final DutyCycleOut pivotSpringy = new DutyCycleOut(0.001);
     private final ArmFeedforward gravityFeedforward = new ArmFeedforward(0, gravityFeedforwardkG, 0);
 
     /* TELEMETRY */
@@ -110,6 +112,9 @@ public class Pivot {
         pivotMaster.setControl(new DutyCycleOut(percent));
     }
 
+    public void climbMode(){
+        pivotMaster.setControl(pivotSpringy);
+    }
     /**
      * Get the latency-compensated pivot position
      * @return the pivot position with 0 being fully horizontal
