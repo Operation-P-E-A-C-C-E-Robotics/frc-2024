@@ -55,7 +55,6 @@ public class OI {
         //climber states. these are all mutually exclusive, and will override each other if multiple are true.
         //they are also sticky, so the climber will stay in the state until another state is requested.
         public static final BooleanSupplier wantsAlign = () -> false; //aligns the robot to drive under the chain
-        public static final BooleanSupplier wantsBalance = () -> false; //retracts the sides and adjusts them individually to balance the robot
         public static final BooleanSupplier wantsClimbExtend = () -> false; //extends the climber
         public static final BooleanSupplier wantsClimbRetract = () -> false; //retracts the climber fully to climb
 
@@ -91,9 +90,9 @@ public class OI {
         //(well the trigger might but the pivot and climber won't)
         public static final DoubleSupplier jogTrigger = () -> -operatorJoystick.getRawAxis(1);
         public static final DoubleSupplier jogPivot = () -> -operatorJoystick.getRawAxis(3);
-        public static final DoubleSupplier jogClimberLeft = () -> -operatorJoystick.getRawAxis(3);
-        public static final DoubleSupplier jogClimberRight = () -> -operatorJoystick.getRawAxis(1);
-        public static final DoubleSupplier jogFlipper = () -> 0.0;
+        public static final DoubleSupplier jogClimber = () -> -operatorJoystick.getRawAxis(3);
+        public static final DoubleSupplier jogThing = () -> -operatorJoystick.getRawAxis(1);
+  
 
         public static final BooleanSupplier resetManualInputs = () -> operatorJoystick.getRawButton(7);
     }

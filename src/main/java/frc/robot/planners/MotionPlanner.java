@@ -15,7 +15,7 @@ public class MotionPlanner {
     //TODO
     //Angles in rotations
     public static final Rotation2d interferenceLowerPivotAngle = Rotation2d.fromDegrees(30); //threshold for the flywheel intake to avoid the pivot
-    public static final Rotation2d interferenceUpperPivotAngle = Rotation2d.fromDegrees(80); //threshold for the trigger intake to avoid the pivot
+    public static final Rotation2d interferenceUpperPivotAngle = Rotation2d.fromDegrees(60); //threshold for the trigger intake to avoid the pivot
     public static final Rotation2d flywheelIntakeMinExtensionToFlatten = Rotation2d.fromDegrees(0); //threshold for the pivot to be allowed to flatten
     public static final Rotation2d triggerIntakeMaxExtensionToFlatten = Rotation2d.fromDegrees(0); //threshold for the pivot to be allowed to flatten
     public static final Rotation2d allowIntakeLowerPivotAngle = Rotation2d.fromDegrees(0); //threshold for the flywheel intake to be allowed to intake

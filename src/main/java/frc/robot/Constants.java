@@ -200,19 +200,19 @@ public final class Constants {
     }
   }
 
-  public static final class Diverter {
-    public static final int diverterRollerMotorId = 50;
-    public static final int diverterDeployMotorId = 26;
-// 
+  public static final class Thing {
+    // public static final int thingRollerMotorId = 50;
+    public static final int thingDeployMotorId = 26;
+
     public static final double diverterDeployGearRatio = 1;
-    public static final double diverterDeployTolerance = 0; //how close to the target position the deployer needs to be to be considered "deployed"
+    public static final double diverterDeployTolerance = 0.1; //how close to the target position the deployer needs to be to be considered "deployed"
 
     public static final double maxDiverterExtension = 0; //in meters
 
     public static final TalonFXConfiguration diverterDeployConfigs = new TalonFXConfiguration();
     static {
-      diverterDeployConfigs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-      diverterDeployConfigs.CurrentLimits.StatorCurrentLimit = 20;
+      diverterDeployConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+      diverterDeployConfigs.CurrentLimits.StatorCurrentLimit = 40;
       diverterDeployConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
       diverterDeployConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
       
@@ -249,7 +249,7 @@ public final class Constants {
 
     public static final TalonFXConfiguration climberConfigs = new TalonFXConfiguration();
     static {
-      climberConfigs.CurrentLimits.StatorCurrentLimit = 80;
+      climberConfigs.CurrentLimits.StatorCurrentLimit = 10;
       climberConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
 
       climberConfigs.Slot0.kP = 0;
@@ -263,13 +263,15 @@ public final class Constants {
       climberConfigs.MotionMagic.MotionMagicExpo_kV = 0;
       climberConfigs.MotionMagic.MotionMagicCruiseVelocity = 0;
 
-      climberConfigs.HardwareLimitSwitch.ReverseLimitEnable = true;
-      climberConfigs.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = true;
-      climberConfigs.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = 0;
+      climberConfigs.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+      climberConfigs.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0;
+
+      climberConfigs.SoftwareLimitSwitch.ForwardSoftLimitEnable = false; //TODO
+      climberConfigs.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 10;
     }
 
-    public static final InvertedValue climberLeftMotorIsInverted = InvertedValue.Clockwise_Positive;
-    public static final InvertedValue climberRightMotorIsInverted = InvertedValue.CounterClockwise_Positive;
+    public static final InvertedValue climberLeftMotorIsInverted = InvertedValue.CounterClockwise_Positive;
+    public static final InvertedValue climberRightMotorIsInverted = InvertedValue.Clockwise_Positive;
     // todo delete this comment when sure the booleans are what we want
   }
   public static final class Swerve {
