@@ -22,7 +22,6 @@ import frc.lib.vision.ApriltagCamera.*;
  */
 public class PeaccyVision {
     private static final double INITIALIZE_ERROR = 20;
-    private static final double DISTANCE_DRIVEN_ERROR_WEIGHT = 1;
     private static final double TAG_ERROR_REDUCTION = 0.8;
     private static final double ACCELERATION_PENALTY = 5;
     private static final double ACCELERATION_PENALTY_THRESHOLD = 3;
@@ -40,10 +39,9 @@ public class PeaccyVision {
     private double odometryError = INITIALIZE_ERROR;
 
     private Pose2d visionPose = new Pose2d();
-    private Pose2d prevOdometryPose = new Pose2d();
+    // private Pose2d prevOdometryPose = new Pose2d();
     private double stDev = MAX_STDEV;
     private double timestamp = Timer.getFPGATimestamp();
-    private double velocity = 0.0;
 
     private boolean hasUpdated = false;
 
@@ -59,8 +57,8 @@ public class PeaccyVision {
 
     public void update(Pose2d odometryPose, double acceleration, double swerveVelocity) {
         var visionResult = getMeasurement(odometryPose);
-        var deltaDistance = odometryPose.getTranslation().getDistance(prevOdometryPose.getTranslation());
-        prevOdometryPose = odometryPose;
+        // var deltaDistance = odometryPose.getTranslation().getDistance(prevOdometryPose.getTranslation());
+        // prevOdometryPose = odometryPose;
         var accelerationPenalty = acceleration > ACCELERATION_PENALTY_THRESHOLD ? ACCELERATION_PENALTY : 0;
 
         odometryError += swerveVelocity;//deltaDistance * DISTANCE_DRIVEN_ERROR_WEIGHT;

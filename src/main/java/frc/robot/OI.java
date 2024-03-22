@@ -98,7 +98,7 @@ public class OI {
     }
 
     private static final double swerveCurrentRumbleThreshold = 60*4; //Amps
-    private static final double swerveCurrentRumbleScalar = 80*4; //Amps, how much current gives 100% rumble (0.5 on each side)
+    // private static final double swerveCurrentRumbleScalar = 80*4; //Amps, how much current gives 100% rumble (0.5 on each side)
 
     public static void updateRumble () {
         var driveCurrent = frc.robot.subsystems.Swerve.getInstance().getTotalDriveCurrent();

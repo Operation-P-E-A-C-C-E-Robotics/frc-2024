@@ -1,6 +1,5 @@
 package frc.robot.auto;
 
-import frc.robot.RobotContainer;
 import frc.robot.RobotStatemachine;
 import frc.robot.RobotStatemachine.SuperstructureState;
 import frc.robot.statemachines.SwerveStatemachine.SwerveState;
@@ -135,12 +134,12 @@ public class AutoTakeTwo {
         };
     }
 
-    private static Action[] followPathAndShoot(Path path) {
-        return new Action[] {
-            new Action(SuperstructureState.AUTO_AIM, path.command, path.duration + 1, () -> Shooter.getInstance().flywheelSwitchTripped()),
-            new Action(SuperstructureState.SHOOT, 0.25)
-        };
-    }
+    // private static Action[] followPathAndShoot(Path path) {
+    //     return new Action[] {
+    //         new Action(SuperstructureState.AUTO_AIM, path.command, path.duration + 1, () -> Shooter.getInstance().flywheelSwitchTripped()),
+    //         new Action(SuperstructureState.SHOOT, 0.25)
+    //     };
+    // }
 
     private static Action[] followPath(Path path) {
         return new Action[] {
@@ -148,14 +147,14 @@ public class AutoTakeTwo {
         };
     }
 
-    private static Action[] intakeNShoot(Path path) {
-        return new Action[] {
-            new Action(SuperstructureState.INTAKE_N_AIM, path.command, path.duration),
-            new Action(SuperstructureState.INTAKE_N_AIM, 1),
-            new Action(SuperstructureState.INTAKE_N_PIVOT_AIM, 1),
-            new Action(SuperstructureState.INTAKE_N_SHOOT, 0.15)
-        };
-    }
+    // private static Action[] intakeNShoot(Path path) {
+    //     return new Action[] {
+    //         new Action(SuperstructureState.INTAKE_N_AIM, path.command, path.duration),
+    //         new Action(SuperstructureState.INTAKE_N_AIM, 1),
+    //         new Action(SuperstructureState.INTAKE_N_PIVOT_AIM, 1),
+    //         new Action(SuperstructureState.INTAKE_N_SHOOT, 0.15)
+    //     };
+    // }
 
     private static Action[] shoot() {
         return new Action[]{
