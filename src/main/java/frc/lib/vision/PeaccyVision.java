@@ -32,7 +32,7 @@ public class PeaccyVision {
     private static final double MAX_STDEV = 5.0;
     private static final double STDEV_ERROR_WEIGHT = 3;
     
-    private static final double STDEV_YAW_MULTIPLIER = 30;
+    private static final double STDEV_YAW_MULTIPLIER = 5.61345989;
 
 
     private ApriltagCamera[] cameras;

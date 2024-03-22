@@ -37,6 +37,7 @@ public class TeleopInputs {
     private boolean jogPivotMode = false;
     private boolean jogClimberMode = false;
     private boolean jogFlipperMode = false;
+    private boolean jogTriggerMode = false;
 
     private Timer ampResetTimer = new Timer();
 
@@ -198,6 +199,7 @@ public class TeleopInputs {
             jogPivotMode = false;
             jogClimberMode = false;
             jogFlipperMode = false;
+            jogTriggerMode = false;
         }
 
         if(jogPivotMode || Math.abs(manualPivot) > 0.2 && mode != TeleopMode.CLIMB) {
@@ -215,8 +217,8 @@ public class TeleopInputs {
             Thing.getInstance().setThingExtensionPercent(manualThing);
         }
 
-        if(Math.abs(manualTrigger) > 0.1 && mode != TeleopMode.CLIMB) {
-            // jogTriggerMode = true;
+        if(jogTriggerMode || Math.abs(manualTrigger) > 0.1 && mode != TeleopMode.CLIMB) {
+            jogTriggerMode = true;
             Shooter.getInstance().setTrigerPercent(manualTrigger/2);
             if(manualTrigger < 0) {
                 //don't let notes stay stuck in the flywheel.
