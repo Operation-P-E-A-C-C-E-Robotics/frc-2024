@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.telemetry.MultiTracers;
 import frc.lib.telemetry.StrategyTelemetry;
+import frc.lib.vision.ApriltagCamera;
+import frc.lib.vision.PeaccyVision;
 import frc.robot.auto.AutoTakeTwo;
 import frc.robot.auto.Autonomous;
 import frc.robot.auto.AutoTakeTwo.TimedAuto;
@@ -108,19 +110,20 @@ public class RobotContainer {
         if(!swerveStatemachine.transitioning()) return false;
         if((swerve.getChassisSpeeds().vxMetersPerSecond > 0.001 && swerve.getChassisSpeeds().vyMetersPerSecond > 0.001) && !OI.Inputs.enableShootWhileMoving.getAsBoolean()) return false;
         if(OI.Inputs.wantsPlace.getAsBoolean()) return false;
+        if(swerve.getEyes().getOdometryError() > 0.75) return false;
         return true;
         // return OI.Inputs.wantsPlace.getAsBoolean();
     }
 
     public boolean readyToShoot(){
         if(OI.Inputs.wantsPlace.getAsBoolean()) {
-            readyTimer.reset();
-            readyTimer.stop();
+            if(OI.Inputs.enableShootWhileMoving.getAsBoolean()) return true;
+            else return false;
         }
         if(kindaReadyToShoot()) {
             readyTimer.start();
         }
-        if(readyTimer.get() > aimPlanner.getDistanceToTarget()/3){
+        if(readyTimer.get() > aimPlanner.getDistanceToTarget()/6){
             readyTimer.stop();
             readyTimer.reset();
             return true;

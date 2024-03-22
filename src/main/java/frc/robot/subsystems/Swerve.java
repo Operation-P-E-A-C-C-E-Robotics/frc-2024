@@ -1,19 +1,18 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.RobotCentric;
 import com.pathplanner.lib.auto.AutoBuilder;
 
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -24,18 +23,16 @@ import frc.lib.swerve.SwerveDescription;
 import frc.lib.swerve.SwerveDescription.PidGains;
 import frc.lib.telemetry.SwerveTelemetry;
 import frc.lib.util.AllianceFlipUtil;
-import frc.lib.vision.LimelightHelpers;
+import frc.lib.vision.ApriltagCamera;
+import frc.lib.vision.PeaccyVision;
 import frc.robot.Constants;
 import frc.robot.FieldConstants;
+import frc.robot.RobotContainer;
 import frc.robot.OI;
 import frc.robot.RobotContainer;
 import frc.robot.planners.AimPlanner;
 
 import static frc.robot.Constants.Swerve.*;
-
-import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonPoseEstimator;
-import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 public class Swerve extends SubsystemBase {
     protected final PeaccefulSwerve swerve;
@@ -43,32 +40,6 @@ public class Swerve extends SubsystemBase {
     private final SwerveRequest.ApplyChassisSpeeds autonomousRequest = new SwerveRequest.ApplyChassisSpeeds()
                                                                                         .withDriveRequestType(DriveRequestType.Velocity);
     private final SendableChooser<Pose2d> poseSeedChooser = new SendableChooser<>();
-
-    private static final double xyStDevCoeff = 5;
-    private static final double thetaStDevCoeff = 30;
-
-    private final PhotonCamera leftPhoton = new PhotonCamera("rightcamera");
-    private final PhotonCamera rightPhoton = new PhotonCamera("leftcamera");
-
-    private final Transform3d robotToLeftCamera = new Transform3d(
-        Units.inchesToMeters(10.5), 
-        Units.inchesToMeters(-6),
-        Units.inchesToMeters(8.5), 
-        new Rotation3d(0,Units.degreesToRadians(15),0)
-    );
-    private final Transform3d robotToRightCamera = new Transform3d(
-        Units.inchesToMeters(12-2.25),
-        Units.inchesToMeters(6.5),
-        Units.inchesToMeters(8.5),
-        new Rotation3d(
-            0, 
-            Units.degreesToRadians(15), 
-            Units.degreesToRadians(45)
-        )
-    );
-
-    private final PhotonPoseEstimator leftPoseEstimator = new PhotonPoseEstimator(FieldConstants.aprilTags, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, leftPhoton, robotToLeftCamera);
-    private final PhotonPoseEstimator rightPoseEstimator = new PhotonPoseEstimator(FieldConstants.aprilTags, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, rightPhoton, robotToRightCamera);
 
     private Transform2d visionDiscrepancy = new Transform2d();
     // private LimelightHelper limelight;
@@ -104,9 +75,6 @@ public class Swerve extends SubsystemBase {
         poseSeedChooser.addOption("test", new Pose2d(1, 1, new Rotation2d()));
         SmartDashboard.putData("POSE SEED", poseSeedChooser);
         SmartDashboard.putBoolean("seed pose", false);
-
-        leftPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_REFERENCE_POSE);
-        rightPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_REFERENCE_POSE);
 
         System.out.println("DriveTrain Initialized");
     }
@@ -171,6 +139,10 @@ public class Swerve extends SubsystemBase {
         swerve.seedFieldRelative();
     }
 
+    public PeaccyVision getEyes(){
+        return eyes;
+    }
+
     /**
      * Hopefully a potential workaround for CTRE's moronic zeroing behavior.
      */
@@ -207,7 +179,11 @@ public class Swerve extends SubsystemBase {
         swerve.applySteerConfigs(gains);
     }
 
-    
+    private static PeaccyVision eyes = new PeaccyVision(
+        new ApriltagCamera.ApriltagPhotonvision(Constants.Cameras.primaryPhotonvision, Constants.Cameras.robotToPrimaryPhotonvision, FieldConstants.aprilTags, 1),
+        new ApriltagCamera.ApriltagPhotonvision(Constants.Cameras.secondaryPhotonvision, Constants.Cameras.robotToSecondaryPhotonvision, FieldConstants.aprilTags, 0.5),
+        new ApriltagCamera.ApriltagLimelight(Constants.Cameras.frontLimelight, 0.1)
+    );
 
     @Override
     public void periodic() {
@@ -215,58 +191,16 @@ public class Swerve extends SubsystemBase {
             resetOdometry(poseSeedChooser.getSelected());
             SmartDashboard.putBoolean("seed pose", false);
         }
-        var currentPose = getPose();
-        leftPoseEstimator.setReferencePose(currentPose);
-        rightPoseEstimator.setReferencePose(currentPose);
 
-        var frontLLPose = LimelightHelpers.getBotPoseEstimate_wpiBlue(Constants.Cameras.frontLimelight);
+        BaseStatusSignal.refreshAll(swerve.getPigeon2().getAccelerationX(), swerve.getPigeon2().getAccelerationY(), swerve.getPigeon2().getAccelerationZ());
+        var acceleration = swerve.getPigeon2().getAccelerationX().getValue() + swerve.getPigeon2().getAccelerationY().getValue() + swerve.getPigeon2().getAccelerationZ().getValue();
+        eyes.update(getPose(), acceleration, new Translation2d(getChassisSpeeds().vxMetersPerSecond, getChassisSpeeds().vyMetersPerSecond).getNorm());
 
-        var trustCoefficient = Math.pow(frontLLPose.avgTagDist, 3) / frontLLPose.tagCount; //6.458 242
-
-        if(OI.Swerve.isFastVisionReset.getAsBoolean()) trustCoefficient /= 50;
-
-        // if(frontLLPose.tagCount > 0) {
-        //     visionDiscrepancy = getPose().minus(frontLLPose.pose);
-        //     swerve.addVisionMeasurement(
-        //         frontLLPose.pose, 
-        //         frontLLPose.timestampSeconds,
-        //         VecBuilder.fill(
-        //             trustCoefficient*xyStDevCoeff,
-        //             trustCoefficient*xyStDevCoeff,
-        //             trustCoefficient*thetaStDevCoeff
-        //         )
-        //     ); //todo right timestamp?
-        // }
-
-        var leftPose = leftPoseEstimator.update();
-        var rightPose = rightPoseEstimator.update();
-        var llPose = frontLLPose.pose;
-
-        if(leftPose.isPresent()) {
-            var pose = leftPose.get().estimatedPose;
-            var pose2d = new Pose2d(pose.getX(), pose.getY(), new Rotation2d(pose.getRotation().getZ()));
-            swerve.addVisionMeasurement(
-                pose2d, 
-                leftPose.get().timestampSeconds,
-                VecBuilder.fill(
-                    (RobotContainer.getInstance().getDistanceToTarget() * 0.05)/leftPose.get().targetsUsed.size(),
-                    (RobotContainer.getInstance().getDistanceToTarget() * 0.05)/leftPose.get().targetsUsed.size(),
-                    (RobotContainer.getInstance().getDistanceToTarget() * 5.0)/leftPose.get().targetsUsed.size()
-                ));
-        }
-
-        // if(rightPose.isPresent()) {
-        //     var pose = rightPose.get().estimatedPose;
-        //     var pose2d = new Pose2d(pose.getX(), pose.getY(), new Rotation2d(pose.getRotation().getZ()));
-        //     swerve.addVisionMeasurement(
-        //         pose2d, 
-        //         rightPose.get().timestampSeconds,
-        //         VecBuilder.fill(
-        //             0.1/rightPose.get().targetsUsed.size(),
-        //             0.1/rightPose.get().targetsUsed.size(),
-        //             5.0/rightPose.get().targetsUsed.size()
-        //         ));
-        // }
+        swerve.addVisionMeasurement(
+            eyes.getPose(),
+            eyes.getTimestamp(),
+            eyes.getStDev()
+        );
 
         //TODO: update limelight telemetry
         // LimelightTelemetry.update(Constants.Cameras.frontLimelight, swerve.getPose3d());
