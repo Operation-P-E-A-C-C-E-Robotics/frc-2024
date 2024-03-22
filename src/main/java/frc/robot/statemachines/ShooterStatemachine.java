@@ -39,7 +39,7 @@ public class ShooterStatemachine extends StateMachine<ShooterStatemachine.Shoote
         SmartDashboard.putBoolean("trigger switch", shooter.triggerSwitchTripped());
         if(state == ShooterState.RAMP_DOWN) if(shooter.flywheelSwitchTripped() || shooter.triggerSwitchTripped()) state = ShooterState.INDEX;
         else if(state == ShooterState.INTAKE) if(shooter.flywheelSwitchTripped()) state = ShooterState.INDEX;
-        else if(state == ShooterState.AUTO_AIM) if(shooter.flywheelSwitchTripped() || shooter.triggerSwitchTripped()) state = ShooterState.INDEX;
+        // else if(state == ShooterState.AUTO_AIM) if(shooter.flywheelSwitchTripped() || shooter.triggerSwitchTripped()) state = ShooterState.INDEX;
         else if(state == ShooterState.INDEX) if(!(shooter.triggerSwitchTripped() || shooter.flywheelSwitchTripped())) state = ShooterState.RAMP_DOWN;
         if (
               (state == ShooterState.AUTO_AIM
@@ -62,6 +62,11 @@ public class ShooterStatemachine extends StateMachine<ShooterStatemachine.Shoote
      */
     @Override
     public void requestState(ShooterState state){
+        if(state == ShooterState.AUTO_AIM && this.state == ShooterState.INDEX) return;
+        if(state == ShooterState.AUTO_AIM && this.state == ShooterState.INTAKE) {
+            this.state = ShooterState.INDEX;
+            return;
+        }
         if(state == ShooterState.AUTO_AIM && this.state == ShooterState.SHOOT) return;
         if(state == ShooterState.SHOOT && this.state != ShooterState.SHOOT) printShotData();
         if(state == ShooterState.INTAKE && this.state == ShooterState.INDEX) return;
@@ -106,8 +111,8 @@ public class ShooterStatemachine extends StateMachine<ShooterStatemachine.Shoote
         }
 
         if(state == ShooterState.INDEX){
-            if(shooter.flywheelSwitchTripped() && !shooter.triggerSwitchTripped()) shooter.setTrigerPercent(-state.getTriggerPercent());
-            else if (shooter.triggerSwitchTripped() && !shooter.flywheelSwitchTripped()) shooter.setTrigerPercent(state.getTriggerPercent());
+            if(shooter.flywheelSwitchTripped() && !shooter.triggerSwitchTripped()) shooter.setTrigerPercent(-0.3);//state.getTriggerPercent());
+            else if (shooter.triggerSwitchTripped() && !shooter.flywheelSwitchTripped()) shooter.setTrigerPercent(1);//state.getTriggerPercent());
             else shooter.setTrigerPercent(0.0);
 
             shooter.setFlywheelVelocity(state.flywheelVelocity);
