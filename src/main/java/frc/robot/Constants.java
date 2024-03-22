@@ -263,7 +263,7 @@ public final class Constants {
       climberConfigs.MotionMagic.MotionMagicExpo_kV = 0;
       climberConfigs.MotionMagic.MotionMagicCruiseVelocity = 0;
 
-      climberConfigs.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+      climberConfigs.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
       climberConfigs.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0;
 
       climberConfigs.SoftwareLimitSwitch.ForwardSoftLimitEnable = false; //TODO
