@@ -21,15 +21,15 @@ import frc.lib.vision.ApriltagCamera.*;
  * feeding the results to a pose estimator.
  */
 public class PeaccyVision {
-    private static final double INITIALIZE_ERROR = 3;
+    private static final double INITIALIZE_ERROR = 20;
     private static final double DISTANCE_DRIVEN_ERROR_WEIGHT = 1;
     private static final double TAG_ERROR_REDUCTION = 0.8;
     private static final double ACCELERATION_PENALTY = 5;
     private static final double ACCELERATION_PENALTY_THRESHOLD = 3;
     private static final double VISION_DISTANCE_FROM_CURRENT_ERROR_WEIGHT = 0.05;
 
-    private static final double MIN_STDEV = 0.05;
-    private static final double MAX_STDEV = 6.0;
+    private static final double MIN_STDEV = 0.02;
+    private static final double MAX_STDEV = 5.0;
     private static final double STDEV_ERROR_WEIGHT = 3;
     
     private static final double STDEV_YAW_MULTIPLIER = 30;
