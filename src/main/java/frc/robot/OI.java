@@ -71,7 +71,7 @@ public class OI {
     
     public static class Overrides {
         /* MODE OVERRIDES */ //overrides the state requested by the mode
-        public static final BooleanSupplier forceAim = () -> operatorJoystick.getRawButton(5);//force the robot into auto aim state
+        public static final BooleanSupplier forceAim = () -> operatorJoystick.getRawButton(6);//force the robot into auto aim state
         public static final BooleanSupplier forceIntakeFront = () -> false; //force the robot to intake from the front
         public static final BooleanSupplier forceIntakeBack = () -> driverJoystick.getRawAxis(2) > 0.2 || operatorJoystick.getRawButton(7);
         public static final BooleanSupplier forceHandoff = () -> false; //force the shooter to flipper handoff
@@ -81,7 +81,7 @@ public class OI {
         private static final boolean disableAutoHeadingToggle = false;
         public static final BooleanSupplier disableAutoHeading = () -> disableAutoHeadingToggle; //disables the auto heading of the swerve
         public static final BooleanSupplier forceTrigger = () -> false; //force the trigger to run
-        public static final BooleanSupplier eject = () -> operatorJoystick.getRawButton(6); //oopsie (very overridy) spins everything backwards
+        public static final BooleanSupplier eject = () -> operatorJoystick.getRawButton(5); //oopsie (very overridy) spins everything backwards
     }
 
     public static class ManualInputs {
@@ -94,7 +94,7 @@ public class OI {
         public static final DoubleSupplier jogThing = () -> -operatorJoystick.getRawAxis(1);
   
 
-        public static final BooleanSupplier resetManualInputs = () -> operatorJoystick.getRawButton(7);
+        public static final BooleanSupplier resetManualInputs = () -> operatorJoystick.getRawButton(8);
     }
 
     private static final double swerveCurrentRumbleThreshold = 60*4; //Amps
