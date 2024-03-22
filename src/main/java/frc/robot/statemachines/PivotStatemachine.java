@@ -71,7 +71,7 @@ public class PivotStatemachine extends StateMachine<PivotStatemachine.PivotState
         REST(Rotation2d.fromDegrees(33)),
         INTAKE(Rotation2d.fromDegrees(19)),
         STOW(Rotation2d.fromDegrees(20)),
-        AMP(Rotation2d.fromDegrees(75)),
+        AMP(Rotation2d.fromDegrees(69)),
         INTAKE_SOURCE(Rotation2d.fromDegrees(56)),
         PRE_CLIMB(Rotation2d.fromDegrees(110)),
         CLIMB(Rotation2d.fromDegrees(30)),

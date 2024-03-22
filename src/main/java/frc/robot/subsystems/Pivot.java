@@ -94,7 +94,7 @@ public class Pivot {
         // return;
         var gravity = gravityFeedforward.calculate(getPivotPosition().getRadians(), 0);
 
-        pivotControl.withFeedForward(gravity).withPosition(position.getRotations());
+        pivotControl.withFeedForward(gravity).withPosition(position.getRotations() + 0.005); //fudge factor because of goddamnclimber
 
         Reporter.log(pivotMaster.setControl(pivotControl), "couldn't set pivot position");
 

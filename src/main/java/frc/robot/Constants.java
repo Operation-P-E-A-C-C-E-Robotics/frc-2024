@@ -19,6 +19,8 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
@@ -37,8 +39,26 @@ public final class Constants {
   public static final class Cameras {
     public static final String frontLimelight = "limelight-front";
     public static final String rearLimelight = "limelight-rear";
-    public static final int apriltagPipeline = 0;
-    public static final int noteDectionPipeline = 0;
+
+    public static final String primaryPhotonvision = "leftcamera";
+    public static final String secondaryPhotonvision = "rightcamera";
+
+    public static final Transform3d robotToPrimaryPhotonvision = new Transform3d(
+        Units.inchesToMeters(10.5), 
+        Units.inchesToMeters(-6),
+        Units.inchesToMeters(8.5), 
+        new Rotation3d(0,Units.degreesToRadians(15),0)
+    );
+    public static final Transform3d robotToSecondaryPhotonvision = new Transform3d(
+        Units.inchesToMeters(12-2.25),
+        Units.inchesToMeters(6.5),
+        Units.inchesToMeters(8.5),
+        new Rotation3d(
+            0, 
+            Units.degreesToRadians(15), 
+            Units.degreesToRadians(45)
+        )
+    );
   }
 
   public static final class Shooter {
