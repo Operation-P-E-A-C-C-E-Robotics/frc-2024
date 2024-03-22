@@ -89,12 +89,14 @@ public class AllianceFlipUtil {
 
     private static boolean lastShouldFlip = false;
     private static Timer flipRecheckTimer = new Timer();
+    private static boolean hasRecievedGoodData = false;
 
     public static boolean shouldFlip() {
         flipRecheckTimer.start();
-        if (flipRecheckTimer.hasElapsed(10)) {
+        if (flipRecheckTimer.hasElapsed(10) || !hasRecievedGoodData) {
             var alliance = DriverStation.getAlliance();
             if(alliance.isEmpty()) return false;
+            hasRecievedGoodData = true;
             lastShouldFlip = alliance.get() == Alliance.Red;
             flipRecheckTimer.reset();
         }

@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.telemetry.MultiTracers;
 import frc.lib.telemetry.StrategyTelemetry;
+import frc.lib.vision.ApriltagCamera;
+import frc.lib.vision.PeaccyVision;
 import frc.robot.auto.AutoTakeTwo;
 import frc.robot.auto.Autonomous;
 import frc.robot.auto.AutoTakeTwo.TimedAuto;
@@ -15,14 +17,14 @@ import frc.robot.planners.AimPlanner;
 import frc.robot.planners.MotionPlanner;
 import frc.robot.planners.NoteTracker;
 import frc.robot.statemachines.ClimberStatemachine;
-import frc.robot.statemachines.FlipperStatemachine;
+import frc.robot.statemachines.ThingStatemachine;
 import frc.robot.statemachines.FlywheelIntakeStatemachine;
 import frc.robot.statemachines.PivotStatemachine;
 import frc.robot.statemachines.ShooterStatemachine;
 import frc.robot.statemachines.SwerveStatemachine;
 import frc.robot.statemachines.TriggerIntakeStatemachine;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Diverter;
+import frc.robot.subsystems.Thing;
 import frc.robot.subsystems.FlywheelIntake;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
@@ -41,7 +43,7 @@ public class RobotContainer {
     private final TriggerIntake triggerIntake = TriggerIntake.getInstance();
     private final Pivot pivot = Pivot.getInstance();
     private final Shooter shooter = Shooter.getInstance();
-    private final Diverter diverter = Diverter.getInstance();
+    private final Thing thing = Thing.getInstance();
     private final Climber climber = Climber.getInstance();
 
     /* PLANNERS */
@@ -59,7 +61,7 @@ public class RobotContainer {
     private final TriggerIntakeStatemachine triggerIntakeStatemachine = new TriggerIntakeStatemachine(triggerIntake, motionPlanner);
     private final PivotStatemachine pivotStatemachine = new PivotStatemachine(pivot, aimPlanner, motionPlanner);
     private final ShooterStatemachine shooterStatemachine = new ShooterStatemachine(shooter, aimPlanner, this::readyToShoot);
-    private final FlipperStatemachine diverterStatemachine = new FlipperStatemachine(diverter, motionPlanner);
+    private final ThingStatemachine thingStatemachine = new ThingStatemachine(thing, motionPlanner);
     private final ClimberStatemachine climberStatemachine = new ClimberStatemachine(climber, () -> swerve.getGyroAngle().getX());
 
     private final RobotStatemachine teleopStatemachine = new RobotStatemachine(
@@ -68,7 +70,7 @@ public class RobotContainer {
         triggerIntakeStatemachine,
         shooterStatemachine,
         pivotStatemachine,
-        diverterStatemachine,
+        thingStatemachine,
         climberStatemachine,
         motionPlanner,
         aimPlanner
@@ -107,20 +109,23 @@ public class RobotContainer {
         if(!pivot.atSetpoint()) return false;
         if(!swerveStatemachine.transitioning()) return false;
         if((swerve.getChassisSpeeds().vxMetersPerSecond > 0.001 && swerve.getChassisSpeeds().vyMetersPerSecond > 0.001) && !OI.Inputs.enableShootWhileMoving.getAsBoolean()) return false;
-        if(OI.Inputs.wantsPlace.getAsBoolean()) return false;
+        // if(OI.Inputs.wantsPlace.getAsBoolean()) return false;
+        if(swerve.getEyes().getOdometryError() > 1) return false;
         return true;
         // return OI.Inputs.wantsPlace.getAsBoolean();
     }
 
     public boolean readyToShoot(){
         if(OI.Inputs.wantsPlace.getAsBoolean()) {
-            readyTimer.reset();
-            readyTimer.stop();
+            // if(OI.Inputs.enableShootWhileMoving.getAsBoolean()) return true;
+            return false;
+        } else if (OI.Inputs.enableShootWhileMoving.getAsBoolean()) {
+            return true;
         }
         if(kindaReadyToShoot()) {
             readyTimer.start();
         }
-        if(readyTimer.get() > aimPlanner.getDistanceToTarget()/3){
+        if(readyTimer.get() > aimPlanner.getDistanceToTarget()/5){
             readyTimer.stop();
             readyTimer.reset();
             return true;
@@ -180,8 +185,8 @@ public class RobotContainer {
             MultiTracers.trace("RobotContainer::run", "pivotStatemachine.update");
             shooterStatemachine.update();
             MultiTracers.trace("RobotContainer::run", "shooterStatemachine.update");
-            // diverterStatemachine.update();
-            // MultiTracers.trace("RobotContainer::run", "diverterStatemachine.update");
+            thingStatemachine.update();
+            MultiTracers.trace("RobotContainer::run", "diverterStatemachine.update");
             climberStatemachine.update();
             MultiTracers.trace("RobotContainer::run", "climberStatemachine.update");
             

@@ -13,17 +13,10 @@ public class ClimberStatemachine extends StateMachine<ClimberStatemachine.Climbe
     private ClimberState state = ClimberState.RETRACT;
 
     private final Climber climber;
-
-    private double balanceOffset = 0.0;
-    private final double balanceOffsestGain = 0.0;
-    private DoubleSupplier robotRollSupplier;
-
-    private final double balanceTolerance = 0.0;
     private final double extensionTolerance = 0.0;
 
     public ClimberStatemachine(Climber climber, DoubleSupplier robotRollSupplier){
         this.climber = climber;
-        this.robotRollSupplier = robotRollSupplier;
     }
 
     @Override
@@ -34,15 +27,8 @@ public class ClimberStatemachine extends StateMachine<ClimberStatemachine.Climbe
     @Override
     public void update(){
         SmartDashboard.putString("Climber State", state.name());
-        if(!state.isBalance()){
-            climber.setClimberPosition(state.getPosition());
-            balanceOffset = 0.0;
-            return;
-        }
-        
-        balanceOffset += robotRollSupplier.getAsDouble() * balanceOffsestGain;
-        climber.setClimberPosition(state.getPosition() + balanceOffset, state.getPosition() - balanceOffset);
-
+        climber.setClimberPosition(state.getPosition());
+        return;
     }
 
     @Override
@@ -54,8 +40,7 @@ public class ClimberStatemachine extends StateMachine<ClimberStatemachine.Climbe
     public boolean transitioning(){
         //done when we are at the desired position and the robot is balanced or we are not balancing
         var atPosition = Math.abs(climber.getClimberPosition() - state.getPosition()) < extensionTolerance;
-        var balanced = Math.abs(robotRollSupplier.getAsDouble()) < balanceTolerance;
-        return !atPosition || !(balanced || !state.isBalance());
+        return !atPosition;
     }
 
     @Override
@@ -65,25 +50,17 @@ public class ClimberStatemachine extends StateMachine<ClimberStatemachine.Climbe
 
     public enum ClimberState{
         //todo
-        RETRACT(0.0, false),
-        EXTEND(0.0, false),
-        CENTER(0.0, false),
-        BALANCE(0.0, true);
+        RETRACT(0.0),
+        EXTEND(1.0);
 
         private Double position;
-        private Boolean balance;
 
         public Double getPosition(){
             return position;
         }
 
-        public Boolean isBalance(){
-            return balance;
-        }
-
-        private ClimberState(Double position, Boolean balance){
+        private ClimberState(Double position){
             this.position = position;
-            this.balance = balance;
         }
     }
 }

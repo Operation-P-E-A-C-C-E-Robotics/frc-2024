@@ -7,14 +7,14 @@ import frc.lib.telemetry.MultiTracers;
 import frc.robot.planners.AimPlanner;
 import frc.robot.planners.MotionPlanner;
 import frc.robot.statemachines.ClimberStatemachine;
-import frc.robot.statemachines.FlipperStatemachine;
+import frc.robot.statemachines.ThingStatemachine;
 import frc.robot.statemachines.FlywheelIntakeStatemachine;
 import frc.robot.statemachines.PivotStatemachine;
 import frc.robot.statemachines.ShooterStatemachine;
 import frc.robot.statemachines.SwerveStatemachine;
 import frc.robot.statemachines.TriggerIntakeStatemachine;
 import frc.robot.statemachines.ClimberStatemachine.ClimberState;
-import frc.robot.statemachines.FlipperStatemachine.FlipperState;
+import frc.robot.statemachines.ThingStatemachine.FlipperState;
 import frc.robot.statemachines.FlywheelIntakeStatemachine.FlywheelIntakeState;
 import frc.robot.statemachines.SwerveStatemachine.SwerveState;
 import frc.robot.statemachines.PivotStatemachine.PivotState;
@@ -34,7 +34,7 @@ public class RobotStatemachine extends StateMachine<RobotStatemachine.Superstruc
     private final TriggerIntakeStatemachine triggerIntakeStatemachine;
     private final ShooterStatemachine shooterStatemachine;
     private final PivotStatemachine pivotStatemachine;
-    private final FlipperStatemachine diverterStatemachine;
+    private final ThingStatemachine diverterStatemachine;
     private final ClimberStatemachine climberStatemachine;
 
     // private final MotionPlanner intakeMotionPlanner;
@@ -46,7 +46,7 @@ public class RobotStatemachine extends StateMachine<RobotStatemachine.Superstruc
                             TriggerIntakeStatemachine triggerIntakeStatemachine, 
                             ShooterStatemachine shooterStatemachine, 
                             PivotStatemachine pivotStatemachine, 
-                            FlipperStatemachine diverterStatemachine, 
+                            ThingStatemachine diverterStatemachine, 
                             ClimberStatemachine climberStatemachine,
                             MotionPlanner intakeMotionPlanner,
                             AimPlanner aimPlanner) {
@@ -180,8 +180,7 @@ public class RobotStatemachine extends StateMachine<RobotStatemachine.Superstruc
         ),
         PLACE_AMP(
             ShooterState.RAMP_DOWN,
-            PivotState.AMP,
-            FlipperState.PLACE_AMP
+            PivotState.AMP
         ),
         ALIGN_CLIMB(
             ShooterState.RAMP_DOWN,
@@ -190,39 +189,29 @@ public class RobotStatemachine extends StateMachine<RobotStatemachine.Superstruc
         CLIMB_EXTEND(
             TriggerIntakeState.AVOID,
             PivotState.CLIMB,
-            FlipperState.RETRACT, //TODO possible climb state
+            FlipperState.EXTEND,
             ClimberState.EXTEND
         ),
         CLIMB_RETRACT(
             TriggerIntakeState.AVOID,
             PivotState.CLIMB,
-            FlipperState.RETRACT,
+            FlipperState.EXTEND,
             ClimberState.RETRACT
-        ),
-        CLIMB_BALANCE(
-            TriggerIntakeState.AVOID,
-            PivotState.CLIMB,
-            FlipperState.RETRACT,
-            ClimberState.BALANCE
         ),
         ALIGN_AMP(
-            FlywheelIntakeState.RETRACT, 
-            TriggerIntakeState.AVOID, 
             ShooterState.AMP, 
-            PivotState.AMP, 
-            FlipperState.HANDOFF, 
-            ClimberState.RETRACT
+            PivotState.AMP
         ),
         ALIGN_TRAP(
             TriggerIntakeState.AVOID,
             PivotState.CLIMB,
-            FlipperState.ALIGN_TRAP,
+            FlipperState.EXTEND,
             ClimberState.RETRACT
         ),
         PLACE_TRAP(
             ShooterState.RAMP_DOWN,
             PivotState.CLIMB,
-            FlipperState.PLACE_TRAP
+            FlipperState.EXTEND
         ),
         INTAKE_SOURCE(
             ShooterState.INTAKE,

@@ -9,7 +9,7 @@ import frc.robot.planners.NoteTracker;
 import frc.robot.planners.NoteTracker.NoteLocation;
 import frc.robot.statemachines.SwerveStatemachine.SwerveState;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Diverter;
+import frc.robot.subsystems.Thing;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
@@ -37,6 +37,7 @@ public class TeleopInputs {
     private boolean jogPivotMode = false;
     private boolean jogClimberMode = false;
     private boolean jogFlipperMode = false;
+    private boolean jogTriggerMode = false;
 
     private Timer ampResetTimer = new Timer();
 
@@ -151,7 +152,6 @@ public class TeleopInputs {
                 if(climbMode == ClimbMode.ALIGN) return SuperstructureState.ALIGN_CLIMB;
                 if(climbMode == ClimbMode.EXTEND) return SuperstructureState.CLIMB_EXTEND;
                 if(climbMode == ClimbMode.RETRACT) return SuperstructureState.CLIMB_RETRACT;
-                if(climbMode == ClimbMode.BALANCE) return SuperstructureState.CLIMB_BALANCE;
                 return SuperstructureState.ALIGN_CLIMB;
             case SPEAKER:
                 aiming = wantsAim(blueAlliancePose); // stored for use in swerve state
@@ -183,24 +183,23 @@ public class TeleopInputs {
             TriggerIntake.getInstance().setRollerSpeed(-1);
             Shooter.getInstance().setTrigerPercent(-1);
             Shooter.getInstance().setFlywheelVelocity(10);
-            Diverter.getInstance().setDiverterRoller(1);
         }
 
         var manualPivot = OI.ManualInputs.jogPivot.getAsDouble() * 0.35;
         var manualTrigger = OI.ManualInputs.jogTrigger.getAsDouble();
-        var manualClimberLeft = OI.ManualInputs.jogClimberLeft.getAsDouble();
-        var manualClimberRight = OI.ManualInputs.jogClimberRight.getAsDouble();
-        var manualFlipper = OI.ManualInputs.jogFlipper.getAsDouble();
+        var manualClimber = OI.ManualInputs.jogClimber.getAsDouble();
+        var manualThing = OI.ManualInputs.jogThing.getAsDouble();
 
         if(mode != TeleopMode.CLIMB) {
-            manualClimberRight = 0;
-            manualClimberLeft = 0;
+            manualClimber = 0;
+            manualThing = 0;
         }
 
         if(OI.ManualInputs.resetManualInputs.getAsBoolean()) {
             jogPivotMode = false;
             jogClimberMode = false;
             jogFlipperMode = false;
+            jogTriggerMode = false;
         }
 
         if(jogPivotMode || Math.abs(manualPivot) > 0.2 && mode != TeleopMode.CLIMB) {
@@ -208,18 +207,18 @@ public class TeleopInputs {
             Pivot.getInstance().setPivotPercent(manualPivot);
         }
 
-        if(jogClimberMode || Math.abs(manualClimberLeft) > 0.2 || Math.abs(manualClimberRight) > 0.2 && mode == TeleopMode.CLIMB) {
+        if(jogClimberMode || Math.abs(manualClimber) > 0.2 && mode == TeleopMode.CLIMB) {
             jogClimberMode = true;
-            Climber.getInstance().setClimberPercent(manualClimberLeft, manualClimberRight);
+            Climber.getInstance().setClimberPercent(manualClimber);
         }
 
-        if(jogFlipperMode || Math.abs(manualFlipper) > 0.2 && mode != TeleopMode.CLIMB) {
+        if(jogFlipperMode || Math.abs(manualThing) > 0.2 && mode == TeleopMode.CLIMB) {
             jogFlipperMode = true;
-            Diverter.getInstance().setDiverterExtensionPercent(manualFlipper);
+            Thing.getInstance().setThingExtensionPercent(manualThing);
         }
 
-        if(Math.abs(manualTrigger) > 0.1 && mode != TeleopMode.CLIMB) {
-            // jogTriggerMode = true;
+        if(jogTriggerMode || Math.abs(manualTrigger) > 0.1 && mode != TeleopMode.CLIMB) {
+            jogTriggerMode = true;
             Shooter.getInstance().setTrigerPercent(manualTrigger/2);
             if(manualTrigger < 0) {
                 //don't let notes stay stuck in the flywheel.
@@ -267,7 +266,6 @@ public class TeleopInputs {
 
     private ClimbMode wantedClimbMode() {
         if(!OI.Inputs.wantsAlign.getAsBoolean()) return ClimbMode.ALIGN;
-        if(OI.Inputs.wantsBalance.getAsBoolean()) return ClimbMode.BALANCE;
         if(OI.Inputs.wantsClimbExtend.getAsBoolean()) return ClimbMode.EXTEND;
         if(OI.Inputs.wantsClimbRetract.getAsBoolean()) return ClimbMode.RETRACT;
         return climbMode;
@@ -282,7 +280,7 @@ public class TeleopInputs {
     }
 
     public enum ClimbMode {
-        EXTEND, RETRACT, BALANCE, ALIGN
+        EXTEND, RETRACT, ALIGN
     }
 
     private static TeleopInputs instance = new TeleopInputs();
