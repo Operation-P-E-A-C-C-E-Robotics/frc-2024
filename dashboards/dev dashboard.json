@@ -725,6 +725,75 @@
           }
         }
       }
+    },
+    {
+      "title": "Tab 7",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 64.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "8,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/num tags",
+              "_title": "/SmartDashboard/num tags",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "9,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/stdev",
+              "_title": "SmartDashboard/stdev",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "8,3": {
+            "size": [
+              3,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Odometry Error",
+              "_title": "/SmartDashboard/Odometry Error",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "11,1": {
+            "size": [
+              6,
+              4
+            ],
+            "content": {
+              "_type": "Field",
+              "_source0": "network_table:///SmartDashboard/Field",
+              "_title": "/SmartDashboard/Field",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Game/Game": "k2024Crescendo",
+              "Visuals/Robot Icon Size": 50.0,
+              "Visuals/Show Outside Circles": false
+            }
+          }
+        }
+      }
     }
   ],
   "windowGeometry": {
