@@ -37,7 +37,7 @@ public class ShooterStatemachine extends StateMachine<ShooterStatemachine.Shoote
         SmartDashboard.putBoolean("flywheel switch", shooter.flywheelSwitchTripped());
         SmartDashboard.putBoolean("trigger switch", shooter.triggerSwitchTripped());
         if(state == ShooterState.RAMP_DOWN) if(shooter.flywheelSwitchTripped()) state = ShooterState.INDEX;
-        else if(state == ShooterState.INTAKE) if(shooter.flywheelSwitchTripped()) state = ShooterState.INDEX;
+        // else if(state == ShooterState.INTAKE) if(shooter.flywheelSwitchTripped()) state = ShooterState.INDEX;
         // else if(state == ShooterState.AUTO_AIM) if(shooter.flywheelSwitchTripped() || shooter.triggerSwitchTripped()) state = ShooterState.INDEX;
         else if(state == ShooterState.INDEX) if(!(shooter.triggerSwitchTripped() || shooter.flywheelSwitchTripped())) state = ShooterState.RAMP_DOWN;
         if (
@@ -85,7 +85,7 @@ public class ShooterStatemachine extends StateMachine<ShooterStatemachine.Shoote
         if(shooter.triggerSwitchTripped() || shooter.flywheelSwitchTripped()) hasNote = true;
         if(shooter.shotDetected()) hasNote = false;
 
-        if(state == ShooterState.INTAKE && shooter.flywheelSwitchTripped() || shooter.triggerSwitchTripped()) {
+        if(state == ShooterState.INTAKE && shooter.flywheelSwitchTripped()) {
             state = ShooterState.INDEX;
         }
 
