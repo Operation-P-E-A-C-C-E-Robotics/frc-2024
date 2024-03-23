@@ -176,7 +176,7 @@ public class Swerve extends SubsystemBase {
 
     private static PeaccyVision eyes = new PeaccyVision(
         new ApriltagCamera.ApriltagPhotonvision(Constants.Cameras.primaryPhotonvision, Constants.Cameras.robotToPrimaryPhotonvision, FieldConstants.aprilTags, 1),
-        new ApriltagCamera.ApriltagPhotonvision(Constants.Cameras.secondaryPhotonvision, Constants.Cameras.robotToSecondaryPhotonvision, FieldConstants.aprilTags, 0.5),
+        // new ApriltagCamera.ApriltagPhotonvision(Constants.Cameras.secondaryPhotonvision, Constants.Cameras.robotToSecondaryPhotonvision, FieldConstants.aprilTags, 0.5),
         new ApriltagCamera.ApriltagLimelight(Constants.Cameras.frontLimelight, 0.1)
     );
 
