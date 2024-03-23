@@ -61,7 +61,9 @@ public class ShooterStatemachine extends StateMachine<ShooterStatemachine.Shoote
      */
     @Override
     public void requestState(ShooterState state){
-        if(state == ShooterState.AUTO_AIM && this.state == ShooterState.INDEX) return;
+        if(state == ShooterState.AUTO_AIM && (shooter.flywheelSwitchTripped() || shooter.triggerSwitchTripped())) {
+            this.state = ShooterState.INDEX;
+        }
         if(state == ShooterState.AUTO_AIM && this.state == ShooterState.INTAKE) {
             this.state = ShooterState.INDEX;
             return;
@@ -112,7 +114,7 @@ public class ShooterStatemachine extends StateMachine<ShooterStatemachine.Shoote
         if(state == ShooterState.INDEX){
             if(shooter.flywheelSwitchTripped()) shooter.setTrigerPercent(-state.getTriggerPercent());
             else if (shooter.triggerSwitchTripped() && !shooter.flywheelSwitchTripped()) shooter.setTrigerPercent(state.getTriggerPercent());
-            else shooter.setTrigerPercent(0.0);
+            else shooter.setTrigerPercent(0);
 
             shooter.setFlywheelVelocity(state.flywheelVelocity);
             return;
@@ -175,7 +177,7 @@ public class ShooterStatemachine extends StateMachine<ShooterStatemachine.Shoote
         RAMP_DOWN(0.0,0.0),
         COAST (0.0, 0.0),
         INTAKE(-10.0,1.0), //NOTE: this should fold flat if the flywheel-side intake is out
-        INDEX(-5.0,0.35),
+        INDEX(-5.0,0.15),
         AMP(10.0,1.0), //to diverter
         AIM_LAYUP(40.0,0.0),
         AIM_PROTECTED(80.0,0.0),
