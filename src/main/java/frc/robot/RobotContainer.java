@@ -106,7 +106,7 @@ public class RobotContainer {
         if(!swerveStatemachine.transitioning()) return false;
         if((swerve.getChassisSpeeds().vxMetersPerSecond > 0.005 && swerve.getChassisSpeeds().vyMetersPerSecond > 0.005) && !OI.Inputs.enableShootWhileMoving.getAsBoolean()) return false;
         // if(OI.Inputs.wantsPlace.getAsBoolean()) return false;
-        if(swerve.getEyes().getOdometryError() > 3) return false;
+        if(swerve.getEyes().getOdometryError() > 25) return false;
         return true;
         // return OI.Inputs.wantsPlace.getAsBoolean();
     }

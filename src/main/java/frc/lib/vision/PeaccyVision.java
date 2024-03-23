@@ -29,7 +29,7 @@ public class PeaccyVision {
 
     private static final double MIN_STDEV = 0.02;
     private static final double MAX_STDEV = 5.5;
-    private static final double STDEV_ERROR_WEIGHT = 5;
+    private static final double STDEV_ERROR_WEIGHT = 4;
     
     private static final double STDEV_YAW_MULTIPLIER = 4.61345989;
 
