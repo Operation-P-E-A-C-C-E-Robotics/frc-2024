@@ -94,7 +94,7 @@ public class OI {
         public static final DoubleSupplier jogThing = () -> -operatorJoystick.getRawAxis(1);
   
 
-        public static final BooleanSupplier resetManualInputs = () -> operatorJoystick.getRawButton(8);
+        public static final BooleanSupplier resetManualInputs = () -> !operatorJoystick.getRawButton(8);
     }
 
     private static final double swerveCurrentRumbleThreshold = 60*4; //Amps
