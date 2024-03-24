@@ -133,7 +133,7 @@ public class ShooterStatemachine extends StateMachine<ShooterStatemachine.Shoote
         }
 
         if(state == ShooterState.AMP) {
-            shooter.setFlywheelVelocity(18.5, 4.3);
+            shooter.setFlywheelVelocity(18.5, 5.3);
             if(OI.Inputs.wantsPlace.getAsBoolean()) shooter.setTrigerPercent(0.4);
             else shooter.setTrigerPercent(0);
             return;

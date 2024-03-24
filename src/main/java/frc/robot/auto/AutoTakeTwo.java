@@ -320,8 +320,8 @@ public class AutoTakeTwo {
     public static enum Path {
         TEST_PATH("test path", 3),
         START2_WING2("start 2 wing 2", 2.1),
-        START3_WING3("start 3 wing 3", 2.3),
-        START1_WING1("start 1 wing 1", 1.8),
+        START3_WING3("start 3 wing 3", 2.2),
+        START1_WING1("start 1 wing 1", 1.6),
         WING3_WING2("wing 3 wing 2", 2.3),
         WING2_WING1("wing 2 wing 1", 2.1),
         WING3_CENTER5("wing 3 center 5", 3.6),
