@@ -88,6 +88,7 @@ public class RobotContainer {
         autoChooser.addOption("(new) START 2 + WING 2 + CENTER 4", Autonomous.start2ThreeNoteCenter4);
         autoChooser.addOption("(new) START 2 + WING 2 + CENTER 4 + CENTER 3", Autonomous.start2FourNote);
         autoChooser.addOption("(new) START 3 + WING 3 + CENTER 4)", Autonomous.start3ThreeNoteCenter4);
+        autoChooser.addOption("NEW CENTER 3 + CENTER 4", Autonomous.newAutoThing);
         autoChooser.addOption("DEFENCE 1", Autonomous.defence1);
         autoChooser.addOption("DEFENCE 2", Autonomous.defence2);
         autoChooser.addOption("DEFENCE 3", Autonomous.defence3);

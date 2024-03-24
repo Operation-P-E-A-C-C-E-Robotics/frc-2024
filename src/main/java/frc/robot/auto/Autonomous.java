@@ -114,6 +114,17 @@ public class Autonomous {
         end()
     );
 
+    public static final TimedAuto newAutoThing = new TimedAuto(
+        shoot(),
+        intakeAndFollowPath(Path.NEW_INTAKE_1),
+        followPath(Path.NEW_SHOOT_1),
+        shoot(),
+        intakeAndFollowPath(Path.NEW_INTAKE_2),
+        followPath(Path.NEW_SHOOT_2),
+        shoot(),
+        end()
+    );
+
     public static final TimedAuto defence1 = new TimedAuto(
         shoot(),
         followPath(Path.DEFENCE_1),
@@ -169,7 +180,8 @@ public class Autonomous {
     private static Action[] intakeAndFollowPath(Path path){
         return new Action[]{
             // new Action(SuperstructureState.INTAKE_BACK, 0.5),
-            new Action(SuperstructureState.INTAKE_BACK, path.command, path.duration)
+            new Action(SuperstructureState.INTAKE_BACK, path.command, path.duration),
+            new Action(0.3)
         };
     }
 
@@ -379,7 +391,11 @@ public class Autonomous {
         DEFENCE_3("defence 3", 4.4),
         DEFENCE_4_R("defence 4 R", 4.4),
         DEFENCE_4_L("defence 4 L", 4.5),
-        DEFENCE_5_R("defence 5 R", 4.2);
+        DEFENCE_5_R("defence 5 R", 4.2),
+        NEW_INTAKE_1("sketch new auto pt1", 4.7),
+        NEW_SHOOT_1("sketch new auto pt2", 3.2),
+        NEW_INTAKE_2("sketch new auto pt3", 3.4),
+        NEW_SHOOT_2("sketch new auto pt4", 3.4);
     
         public final String pathName;
         public final Command command;
