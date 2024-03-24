@@ -7,8 +7,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.telemetry.MultiTracers;
 import frc.lib.telemetry.StrategyTelemetry;
-import frc.robot.auto.AutoTakeTwo;
-import frc.robot.auto.AutoTakeTwo.TimedAuto;
+import frc.robot.auto.Autonomous;
+import frc.robot.auto.Autonomous.TimedAuto;
 import frc.robot.planners.AimPlanner;
 import frc.robot.planners.MotionPlanner;
 import frc.robot.planners.NoteTracker;
@@ -75,22 +75,22 @@ public class RobotContainer {
     private SendableChooser<TimedAuto> autoChooser = new SendableChooser<>();
 
     private RobotContainer() {
-        autoChooser.setDefaultOption("do nothing", AutoTakeTwo.doNothing);
-        autoChooser.addOption("LAYUP", AutoTakeTwo.layupOnly);
-        autoChooser.addOption("SHOOT", AutoTakeTwo.shootOnly);
-        autoChooser.addOption("START 1 + WING 1", AutoTakeTwo.twoNoteStageSide);
-        autoChooser.addOption("START 2 + WING 2", AutoTakeTwo.twoNoteCenter);
-        autoChooser.addOption("START 3 + WING 3", AutoTakeTwo.twoNoteAmpSide);
-        autoChooser.addOption("START 3 + WING 3 + WING 2 + WING 1", AutoTakeTwo.fourNote);
-        autoChooser.addOption("START 3 + WING 3 + CENTER 5", AutoTakeTwo.start3ThreeNote);
-        autoChooser.addOption("START 1 + WING 1 + CENTER 2", AutoTakeTwo.start1ThreeNoteCenter2);
-        autoChooser.addOption("START 1 + WINT 1 + CENTER 3", AutoTakeTwo.start1ThreeNoteCenter3);
-        autoChooser.addOption("DEFENCE 1", AutoTakeTwo.defence1);
-        autoChooser.addOption("DEFENCE 2", AutoTakeTwo.defence2);
-        autoChooser.addOption("DEFENCE 3", AutoTakeTwo.defence3);
-        autoChooser.addOption("DEFENCE 4", AutoTakeTwo.defence4L);
-        autoChooser.addOption("DEFENCE 4 (start amp)", AutoTakeTwo.defence4R);
-        autoChooser.addOption("DEFENCE 5 (start amp)", AutoTakeTwo.defence5R);
+        autoChooser.setDefaultOption("do nothing", Autonomous.doNothing);
+        autoChooser.addOption("LAYUP", Autonomous.layupOnly);
+        autoChooser.addOption("SHOOT", Autonomous.shootOnly);
+        autoChooser.addOption("START 1 + WING 1", Autonomous.twoNoteStageSide);
+        autoChooser.addOption("START 2 + WING 2", Autonomous.twoNoteCenter);
+        autoChooser.addOption("START 3 + WING 3", Autonomous.twoNoteAmpSide);
+        autoChooser.addOption("START 3 + WING 3 + WING 2 + WING 1", Autonomous.fourNote);
+        autoChooser.addOption("START 3 + WING 3 + CENTER 5", Autonomous.start3ThreeNote);
+        autoChooser.addOption("START 1 + WING 1 + CENTER 2", Autonomous.start1ThreeNoteCenter2);
+        autoChooser.addOption("START 1 + WINT 1 + CENTER 3", Autonomous.start1ThreeNoteCenter3);
+        autoChooser.addOption("DEFENCE 1", Autonomous.defence1);
+        autoChooser.addOption("DEFENCE 2", Autonomous.defence2);
+        autoChooser.addOption("DEFENCE 3", Autonomous.defence3);
+        autoChooser.addOption("DEFENCE 4", Autonomous.defence4L);
+        autoChooser.addOption("DEFENCE 4 (start amp)", Autonomous.defence4R);
+        autoChooser.addOption("DEFENCE 5 (start amp)", Autonomous.defence5R);
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
