@@ -48,7 +48,7 @@ public class Autonomous {
         end()
     );
 
-    public static final TimedAuto start3ThreeNote = new TimedAuto(
+    public static final TimedAuto start3ThreeNoteCenter5 = new TimedAuto(
         shoot(),
         intakeAndFollowPath(Path.START3_WING3),
         shoot(),
@@ -76,6 +76,40 @@ public class Autonomous {
         intakeAndFollowPath(Path.WING1_CENTER3),
         wait(0.5),
         followPath(Path.CENTER3_SHOOT),
+        shoot(),
+        end()
+    );
+
+    public static final TimedAuto start2ThreeNoteCenter4 = new TimedAuto(
+        shoot(),
+        intakeAndFollowPath(Path.START2_WING2),
+        shoot(),
+        intakeAndFollowPath(Path.WING2_CENTER4),
+        followPath(Path.CENTER4_SHOOT_FROM_WING2),
+        shoot(),
+        end()
+    );
+
+    public static final TimedAuto start2FourNote = new TimedAuto(
+        shoot(),
+        intakeAndFollowPath(Path.START2_WING2),
+        shoot(),
+        intakeAndFollowPath(Path.WING2_CENTER4),
+        followPath(Path.CENTER4_SHOOT_FROM_WING2),
+        shoot(),
+        intakeAndFollowPath(Path.CENTER4_SHOOT_CENTER3),
+        followPath(Path.CENTER3_SHOOT),
+        shoot(),
+        end()
+    );
+
+    public static final TimedAuto start3ThreeNoteCenter4 = new TimedAuto(
+        shoot(),
+        intakeAndFollowPath(Path.START3_WING3),
+        shoot(),
+        intakeAndFollowPath(Path.WING3_CENTER4),
+        wait(0.5),
+        followPath(Path.CENTER4_SHOOT_FROM_WING3),
         shoot(),
         end()
     );
@@ -324,17 +358,22 @@ public class Autonomous {
 
     public static enum Path {
         TEST_PATH("test path", 3),
-        START2_WING2("start 2 wing 2", 2.1),
+        START2_WING2("start 2 wing 2", 1.9),
         START3_WING3("start 3 wing 3", 2.2),
-        START1_WING1("start 1 wing 1", 1.6),
-        WING3_WING2("wing 3 wing 2", 2.3),
+        START1_WING1("start 1 wing 1", 1.7),
+        WING3_WING2("wing 3 wing 2", 2.4),
         WING2_WING1("wing 2 wing 1", 2.1),
-        WING3_CENTER5("wing 3 center 5", 3.6),
+        WING3_CENTER5("wing 3 center 5", 3.5),
         CENTER5_SHOOT("center 5 shoot", 3.3),
-        WING1_CENTER2("wing 1 center 2", 4.4),
-        CENTER2_SHOOT("center 2 shoot", 3.6),
-        CENTER3_SHOOT("center 3 shoot", 3.4),
-        WING1_CENTER3("wing 1 center 3", 4.9),
+        WING3_CENTER4("wing 3 center 4", 3.5),
+        CENTER4_SHOOT_FROM_WING3("center 4 shoot from wing 3", 3.1),
+        WING1_CENTER2("wing 1 center 2", 4.5),
+        CENTER2_SHOOT("center 2 shoot", 3.7),
+        WING1_CENTER3("wing 1 center 3", 5.1),
+        CENTER3_SHOOT("center 3 shoot", 3.3),
+        WING2_CENTER4("wing 2 center 4", 4.2),
+        CENTER4_SHOOT_FROM_WING2("center 4 shoot from wing 2", 3.4),
+        CENTER4_SHOOT_CENTER3("center 4 shoot center 3", 3.3),
         DEFENCE_1("defence 1", 4.1),
         DEFENCE_2("defence 2", 4.3),
         DEFENCE_3("defence 3", 4.4),

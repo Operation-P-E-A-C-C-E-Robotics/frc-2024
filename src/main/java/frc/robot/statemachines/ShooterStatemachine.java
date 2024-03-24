@@ -88,6 +88,9 @@ public class ShooterStatemachine extends StateMachine<ShooterStatemachine.Shoote
         if(state == ShooterState.INTAKE && shooter.flywheelSwitchTripped()) {
             state = ShooterState.INDEX;
         }
+        if(state == ShooterState.INTAKE && DriverStation.isAutonomous() && shooter.triggerSwitchTripped()) {
+            state = ShooterState.INDEX;
+        }
 
         if(state == ShooterState.AUTO_AIM) {
             shooter.setFlywheelVelocity(aimPlanner.getTargetFlywheelVelocityRPS());
