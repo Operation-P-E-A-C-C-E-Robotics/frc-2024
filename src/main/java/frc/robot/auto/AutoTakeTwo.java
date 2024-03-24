@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 public class AutoTakeTwo {
 
     public static final TimedAuto twoNoteCenter = new TimedAuto(
-        layupShot(),
+        shoot(),
         intakeAndFollowPath(Path.START2_WING2),
         shoot(),
         end()
@@ -113,6 +113,11 @@ public class AutoTakeTwo {
 
     public static final TimedAuto layupOnly = new TimedAuto(
         layupShot(),
+        end()
+    );
+
+    public static final TimedAuto shootOnly = new TimedAuto(
+        shoot(),
         end()
     );
 

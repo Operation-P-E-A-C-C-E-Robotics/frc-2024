@@ -77,6 +77,7 @@ public class RobotContainer {
     private RobotContainer() {
         autoChooser.setDefaultOption("do nothing", AutoTakeTwo.doNothing);
         autoChooser.addOption("LAYUP", AutoTakeTwo.layupOnly);
+        autoChooser.addOption("SHOOT", AutoTakeTwo.shootOnly);
         autoChooser.addOption("START 1 + WING 1", AutoTakeTwo.twoNoteStageSide);
         autoChooser.addOption("START 2 + WING 2", AutoTakeTwo.twoNoteCenter);
         autoChooser.addOption("START 3 + WING 3", AutoTakeTwo.twoNoteAmpSide);
