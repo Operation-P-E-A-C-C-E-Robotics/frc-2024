@@ -170,6 +170,18 @@ public class RobotStatemachine extends StateMachine<RobotStatemachine.Superstruc
             ShooterState.AIM_PROTECTED,
             PivotState.AIM_PROTECTED
         ),
+        AIM_UNDER_STAGE (
+            ShooterState.AIM_UNDER_STAGE,
+            PivotState.AIM_UNDER_STAGE
+        ),
+        AIM_WINGLINE (
+            ShooterState.AIM_WINGLINE,
+            PivotState.AIM_WINGLINE
+        ),
+        AIM_CENTERLINE (
+            ShooterState.AIM_CENTERLINE,
+            PivotState.AIM_CENTERLINE
+        ),
         AUTO_AIM(
             ShooterState.AUTO_AIM,
             PivotState.AUTO_AIM

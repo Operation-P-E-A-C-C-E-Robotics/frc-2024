@@ -117,21 +117,26 @@ public class RobotContainer {
     }
 
     public boolean readyToShoot(){
-        if(OI.Inputs.wantsPlace.getAsBoolean()) {
-            // if(OI.Inputs.enableShootWhileMoving.getAsBoolean()) return true;
-            return false;
-        } else if (OI.Inputs.enableShootWhileMoving.getAsBoolean()) {
-            return true;
-        }
-        if(kindaReadyToShoot()) {
-            readyTimer.start();
-        }
-        if(readyTimer.get() > aimPlanner.getDistanceToTarget()/6){
-            readyTimer.stop();
-            readyTimer.reset();
-            return true;
-        }
-        return false;
+        // if(OI.Inputs.wantsPlace.getAsBoolean()) {
+        //     // if(OI.Inputs.enableShootWhileMoving.getAsBoolean()) return true;
+        //     return false;
+        // } else if (OI.Inputs.enableShootWhileMoving.getAsBoolean()) {
+        //     return true;
+        // }
+        // if(kindaReadyToShoot()) {
+        //     readyTimer.start();
+        // }
+        // if(readyTimer.get() > aimPlanner.getDistanceToTarget()/6){
+        //     readyTimer.stop();
+        //     readyTimer.reset();
+        //     return true;
+        // }
+        // return false;
+        return OI.Inputs.wantsPlace.getAsBoolean();
+    }
+
+    public double getOdometryError() {
+        return swerve.getEyes().getOdometryError();
     }
 
     public RobotStatemachine getTeleopStatemachine() {

@@ -26,9 +26,11 @@ public class TeleopInputs {
     private TeleopMode mode = TeleopMode.PANIC;
     private IntakingMode intakingMode = IntakingMode.NONE;
     private ClimbMode climbMode = ClimbMode.ALIGN;
+    private AimMode aimMode = AimMode.AUTO;
     private boolean aiming = false;
 
     private final double AUTO_AIM_X = 7; // distance from left wall to start aiming.
+    private final double LAYUP_X = 1.5; // distance from left wall to start aiming.
     // private final double AMP_HANDOFF_X = 5; // distance from left wall to start handoff.
     // private final double AMP_ALIGN_X = 3; // distance from left wall to start aligning.
     // private final double AMP_ALIGN_Y = 3; // distance from bottom wall to start aligning.
@@ -114,9 +116,12 @@ public class TeleopInputs {
             return intakingMode == IntakingMode.FRONT ? SuperstructureState.INTAKE_FRONT : SuperstructureState.INTAKE_BACK;
         }
 
-        if(OI.Inputs.wantsAimLayup.getAsBoolean()) return SuperstructureState.AIM_LAYUP;
-        if(OI.Inputs.wantsAimProtected.getAsBoolean()) return SuperstructureState.AIM_PROTECTED;
-        if(OI.Inputs.wantsIntakeSource.getAsBoolean()) return SuperstructureState.INTAKE_SOURCE;
+        if(OI.Inputs.wantsAimLayup.getAsBoolean()) aimMode = AimMode.LAYUP;
+        if(OI.Inputs.wantsAimProtected.getAsBoolean()) aimMode = AimMode.PROTECTED;
+        if(OI.Inputs.wantsAimUnderStage.getAsBoolean()) aimMode = AimMode.UNDER_STAGE;
+        if(OI.Inputs.wantsAimWingline.getAsBoolean()) aimMode = AimMode.WINGLINE;
+        if(OI.Inputs.wantsAimCenterline.getAsBoolean()) aimMode = AimMode.CENTERLINE;
+        if(OI.Inputs.wantsAutoAim.getAsBoolean()) aimMode = AimMode.AUTO;
 
         //handle the driver's request to "place" (a button that does different things based on the mode)
         if(OI.Inputs.wantsPlace.getAsBoolean()) {
@@ -139,9 +144,6 @@ public class TeleopInputs {
         switch (mode) {
             case AMP:
                 aiming = false;
-                // if(wantsHandoff(blueAlliancePose)) {
-                //     return SuperstructureState.HANDOFF;
-                // }
                 // if(wantsAlignAmp(blueAlliancePose)) {
                 //     return SuperstructureState.ALIGN_AMP;
                 // }
@@ -157,7 +159,7 @@ public class TeleopInputs {
                 aiming = wantsAim(blueAlliancePose); // stored for use in swerve state
                 // if(OI.Inputs.wantsShoot.getAsBoolean()) return TeleopState.SHOOT;
                 if(aiming) {
-                    return SuperstructureState.AUTO_AIM;
+                    return aimState();
                 }
                 return SuperstructureState.REST;
             default:
@@ -241,20 +243,30 @@ public class TeleopInputs {
         return mode;
     }
 
-    // private boolean wantsAlignAmp(Pose2d blueAlliancePose) {
-    //     if (blueAlliancePose.getX() < AMP_ALIGN_X && blueAlliancePose.getY() < AMP_ALIGN_Y) return true;
-    //     return false;
-    // }
-
-    // private boolean wantsHandoff(Pose2d blueAlliancePose) {
-    //     if (blueAlliancePose.getX() < AMP_HANDOFF_X) return true;
-    //     return false;
-    // }
-
     private boolean wantsAim(Pose2d blueAlliancePose) {
         if(NoteTracker.getLocation() != NoteLocation.SHOOTER) return false;
+        if (blueAlliancePose.getX() > LAYUP_X && aimMode == AimMode.LAYUP) return false;
         if (blueAlliancePose.getX() < AUTO_AIM_X) return true;
         return false;
+    }
+
+    private SuperstructureState aimState() {
+        switch (aimMode) {
+            case LAYUP:
+                return SuperstructureState.AIM_LAYUP;
+            case PROTECTED:
+                return SuperstructureState.AIM_PROTECTED;
+            case UNDER_STAGE:
+                return SuperstructureState.AIM_UNDER_STAGE;
+            case WINGLINE:
+                return SuperstructureState.AIM_WINGLINE;
+            case CENTERLINE:
+                return SuperstructureState.AIM_CENTERLINE;
+            case AUTO:
+                return SuperstructureState.AUTO_AIM;
+            default:
+                return SuperstructureState.REST;
+        }
     }
 
     private IntakingMode wantedIntakeMode() {
@@ -287,6 +299,10 @@ public class TeleopInputs {
 
     public enum ClimbMode {
         EXTEND, RETRACT, ALIGN
+    }
+
+    public enum AimMode {
+        LAYUP, PROTECTED, UNDER_STAGE, WINGLINE, CENTERLINE, AUTO
     }
 
     private static TeleopInputs instance = new TeleopInputs();
