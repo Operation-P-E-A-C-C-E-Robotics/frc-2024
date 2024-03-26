@@ -4,7 +4,6 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.RobotCentric;
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -27,10 +26,6 @@ import frc.lib.vision.ApriltagCamera;
 import frc.lib.vision.PeaccyVision;
 import frc.robot.Constants;
 import frc.robot.FieldConstants;
-import frc.robot.RobotContainer;
-import frc.robot.OI;
-import frc.robot.RobotContainer;
-import frc.robot.planners.AimPlanner;
 
 import static frc.robot.Constants.Swerve.*;
 
@@ -181,7 +176,7 @@ public class Swerve extends SubsystemBase {
 
     private static PeaccyVision eyes = new PeaccyVision(
         new ApriltagCamera.ApriltagPhotonvision(Constants.Cameras.primaryPhotonvision, Constants.Cameras.robotToPrimaryPhotonvision, FieldConstants.aprilTags, 1),
-        new ApriltagCamera.ApriltagPhotonvision(Constants.Cameras.secondaryPhotonvision, Constants.Cameras.robotToSecondaryPhotonvision, FieldConstants.aprilTags, 0.5),
+        // new ApriltagCamera.ApriltagPhotonvision(Constants.Cameras.secondaryPhotonvision, Constants.Cameras.robotToSecondaryPhotonvision, FieldConstants.aprilTags, 0.5),
         new ApriltagCamera.ApriltagLimelight(Constants.Cameras.frontLimelight, 0.1)
     );
 

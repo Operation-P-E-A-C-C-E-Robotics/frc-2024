@@ -10,38 +10,7 @@
         "hgap": 16.0,
         "vgap": 16.0,
         "titleType": 0,
-        "tiles": {
-          "7,2": {
-            "size": [
-              5,
-              2
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/trigger switch",
-              "_title": "/SmartDashboard/trigger switch",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "7,0": {
-            "size": [
-              5,
-              2
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/flywheel switch",
-              "_title": "/SmartDashboard/flywheel switch",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          }
-        }
+        "tiles": {}
       }
     },
     {
@@ -237,7 +206,7 @@
           "0,0": {
             "size": [
               5,
-              3
+              2
             ],
             "content": {
               "_type": "Boolean Box",
@@ -249,7 +218,7 @@
               "Colors/Color when false": "#008000FF"
             }
           },
-          "0,3": {
+          "0,2": {
             "size": [
               5,
               2
@@ -262,7 +231,7 @@
               "_showGlyph": false
             }
           },
-          "0,5": {
+          "0,4": {
             "size": [
               5,
               2
@@ -275,7 +244,7 @@
               "_showGlyph": false
             }
           },
-          "0,7": {
+          "0,6": {
             "size": [
               5,
               2
@@ -765,7 +734,7 @@
           },
           "8,3": {
             "size": [
-              3,
+              1,
               1
             ],
             "content": {

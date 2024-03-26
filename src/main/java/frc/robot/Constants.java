@@ -45,7 +45,7 @@ public final class Constants {
 
     public static final Transform3d robotToPrimaryPhotonvision = new Transform3d(
         Units.inchesToMeters(10.5), 
-        Units.inchesToMeters(-6),
+        Units.inchesToMeters(6),
         Units.inchesToMeters(8.5), 
         new Rotation3d(0,Units.degreesToRadians(15),0)
     );
@@ -329,7 +329,7 @@ public final class Constants {
     public static final Inversion inversion = new Inversion(false, true, false, true);
 
     //inertia only used for simulation
-    public static final Physics physics = new Physics(0.05,0.01, Robot.isReal() ? 70 : 800, 7);
+    public static final Physics physics = new Physics(0.05,0.01, Robot.isReal() ? 80 : 800, 7);
     public static final double steerMotorCurrentLimit = Robot.isReal() ? 40 : 120; //amps
     
     public static final PidGains driveGains = new PidGains(2, 0, 0, 0.2, 0.6); 

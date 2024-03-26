@@ -125,6 +125,8 @@ public class Shooter {
         topFlywheelAcceleration = topFlywheelMotor.getAcceleration();
         bottomFlywheelAcceleration = bottomFlywheelMotor.getAcceleration();
 
+        triggerMotor.setSmartCurrentLimit(20);
+
         BaseStatusSignal.setUpdateFrequencyForAll(100, 
             topFlywheelVelocity,
             bottomFlywheelVelocity,

@@ -7,7 +7,6 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
-import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StrictFollower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -18,9 +17,6 @@ public class Climber {
     private TalonFX leftMotor = new TalonFX(climberLeftMotorId);
     private TalonFX rightMotor = new TalonFX(climberRightMotorId);
     //declare two TalonFXs, one for the left climber, one for the right climber
-
-    private PositionVoltage leftControl = new PositionVoltage(0);
-    private PositionVoltage rightControl = new PositionVoltage(0);
 
     private StatusSignal <Double> leftPosition = leftMotor.getPosition(), 
                                     rightPosition = rightMotor.getPosition(),

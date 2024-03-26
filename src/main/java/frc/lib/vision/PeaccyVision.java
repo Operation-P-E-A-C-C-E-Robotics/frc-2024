@@ -22,17 +22,16 @@ import frc.lib.vision.ApriltagCamera.*;
  */
 public class PeaccyVision {
     private static final double INITIALIZE_ERROR = 20;
-    private static final double DISTANCE_DRIVEN_ERROR_WEIGHT = 1;
-    private static final double TAG_ERROR_REDUCTION = 0.8;
+    private static final double TAG_ERROR_REDUCTION = 0.87;
     private static final double ACCELERATION_PENALTY = 5;
     private static final double ACCELERATION_PENALTY_THRESHOLD = 3;
-    private static final double VISION_DISTANCE_FROM_CURRENT_ERROR_WEIGHT = 0.05;
+    private static final double VISION_DISTANCE_FROM_CURRENT_ERROR_WEIGHT = 0.01;
 
     private static final double MIN_STDEV = 0.02;
-    private static final double MAX_STDEV = 5.0;
-    private static final double STDEV_ERROR_WEIGHT = 3;
+    private static final double MAX_STDEV = 5.5;
+    private static final double STDEV_ERROR_WEIGHT = 4;
     
-    private static final double STDEV_YAW_MULTIPLIER = 5.61345989;
+    private static final double STDEV_YAW_MULTIPLIER = 4.61345989;
 
 
     private ApriltagCamera[] cameras;
@@ -40,10 +39,9 @@ public class PeaccyVision {
     private double odometryError = INITIALIZE_ERROR;
 
     private Pose2d visionPose = new Pose2d();
-    private Pose2d prevOdometryPose = new Pose2d();
+    // private Pose2d prevOdometryPose = new Pose2d();
     private double stDev = MAX_STDEV;
     private double timestamp = Timer.getFPGATimestamp();
-    private double velocity = 0.0;
 
     private boolean hasUpdated = false;
 
@@ -59,11 +57,11 @@ public class PeaccyVision {
 
     public void update(Pose2d odometryPose, double acceleration, double swerveVelocity) {
         var visionResult = getMeasurement(odometryPose);
-        var deltaDistance = odometryPose.getTranslation().getDistance(prevOdometryPose.getTranslation());
-        prevOdometryPose = odometryPose;
+        // var deltaDistance = odometryPose.getTranslation().getDistance(prevOdometryPose.getTranslation());
+        // prevOdometryPose = odometryPose;
         var accelerationPenalty = acceleration > ACCELERATION_PENALTY_THRESHOLD ? ACCELERATION_PENALTY : 0;
 
-        odometryError += swerveVelocity;//deltaDistance * DISTANCE_DRIVEN_ERROR_WEIGHT;
+        odometryError += swerveVelocity * 0.5;//deltaDistance * DISTANCE_DRIVEN_ERROR_WEIGHT;
         odometryError += accelerationPenalty;
         if(visionResult.isEmpty()) {
             hasUpdated = false;
@@ -83,7 +81,7 @@ public class PeaccyVision {
 
         if(odometryError < 0.01) odometryError = 0.01; //prevent division by zero
         stDev = 1/(odometryError * STDEV_ERROR_WEIGHT);
-        stDev += swerveVelocity;
+        stDev += Util.limit(swerveVelocity * 10, 5);
         stDev = Util.limit(stDev, MIN_STDEV, MAX_STDEV);
 
         SmartDashboard.putNumber("Odometry Error", odometryError);

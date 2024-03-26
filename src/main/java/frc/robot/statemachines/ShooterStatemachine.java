@@ -3,7 +3,6 @@ package frc.robot.statemachines;
 import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.state.StateMachine;
@@ -37,9 +36,9 @@ public class ShooterStatemachine extends StateMachine<ShooterStatemachine.Shoote
     private void updateState(){
         SmartDashboard.putBoolean("flywheel switch", shooter.flywheelSwitchTripped());
         SmartDashboard.putBoolean("trigger switch", shooter.triggerSwitchTripped());
-        if(state == ShooterState.RAMP_DOWN) if(shooter.flywheelSwitchTripped() || shooter.triggerSwitchTripped()) state = ShooterState.INDEX;
-        else if(state == ShooterState.INTAKE) if(shooter.flywheelSwitchTripped()) state = ShooterState.INDEX;
-        else if(state == ShooterState.AUTO_AIM) if(shooter.flywheelSwitchTripped() || shooter.triggerSwitchTripped()) state = ShooterState.INDEX;
+        if(state == ShooterState.RAMP_DOWN) if(shooter.flywheelSwitchTripped()) state = ShooterState.INDEX;
+        // else if(state == ShooterState.INTAKE) if(shooter.flywheelSwitchTripped()) state = ShooterState.INDEX;
+        // else if(state == ShooterState.AUTO_AIM) if(shooter.flywheelSwitchTripped() || shooter.triggerSwitchTripped()) state = ShooterState.INDEX;
         else if(state == ShooterState.INDEX) if(!(shooter.triggerSwitchTripped() || shooter.flywheelSwitchTripped())) state = ShooterState.RAMP_DOWN;
         if (
               (state == ShooterState.AUTO_AIM
@@ -62,6 +61,13 @@ public class ShooterStatemachine extends StateMachine<ShooterStatemachine.Shoote
      */
     @Override
     public void requestState(ShooterState state){
+        if(state == ShooterState.AUTO_AIM && (shooter.flywheelSwitchTripped() || shooter.triggerSwitchTripped())) {
+            this.state = ShooterState.INDEX;
+        }
+        if(state == ShooterState.AUTO_AIM && this.state == ShooterState.INTAKE) {
+            this.state = ShooterState.INDEX;
+            return;
+        }
         if(state == ShooterState.AUTO_AIM && this.state == ShooterState.SHOOT) return;
         if(state == ShooterState.SHOOT && this.state != ShooterState.SHOOT) printShotData();
         if(state == ShooterState.INTAKE && this.state == ShooterState.INDEX) return;
@@ -79,9 +85,12 @@ public class ShooterStatemachine extends StateMachine<ShooterStatemachine.Shoote
         if(shooter.triggerSwitchTripped() || shooter.flywheelSwitchTripped()) hasNote = true;
         if(shooter.shotDetected()) hasNote = false;
 
-        if(state == ShooterState.INTAKE && shooter.flywheelSwitchTripped() || shooter.triggerSwitchTripped()) {
+        if(state == ShooterState.INTAKE && shooter.flywheelSwitchTripped()) {
             state = ShooterState.INDEX;
         }
+        // if(state == ShooterState.INTAKE && DriverStation.isAutonomous() && shooter.triggerSwitchTripped()) {
+        //     state = ShooterState.INDEX;
+        // }
 
         if(state == ShooterState.AUTO_AIM) {
             shooter.setFlywheelVelocity(aimPlanner.getTargetFlywheelVelocityRPS());
@@ -106,9 +115,9 @@ public class ShooterStatemachine extends StateMachine<ShooterStatemachine.Shoote
         }
 
         if(state == ShooterState.INDEX){
-            if(shooter.flywheelSwitchTripped() && !shooter.triggerSwitchTripped()) shooter.setTrigerPercent(-state.getTriggerPercent());
+            if(shooter.flywheelSwitchTripped()) shooter.setTrigerPercent(-state.getTriggerPercent());
             else if (shooter.triggerSwitchTripped() && !shooter.flywheelSwitchTripped()) shooter.setTrigerPercent(state.getTriggerPercent());
-            else shooter.setTrigerPercent(0.0);
+            else shooter.setTrigerPercent(0);
 
             shooter.setFlywheelVelocity(state.flywheelVelocity);
             return;
@@ -127,7 +136,7 @@ public class ShooterStatemachine extends StateMachine<ShooterStatemachine.Shoote
         }
 
         if(state == ShooterState.AMP) {
-            shooter.setFlywheelVelocity(18.5, 4.3);
+            shooter.setFlywheelVelocity(18.5, 5.3);
             if(OI.Inputs.wantsPlace.getAsBoolean()) shooter.setTrigerPercent(0.4);
             else shooter.setTrigerPercent(0);
             return;
@@ -171,7 +180,7 @@ public class ShooterStatemachine extends StateMachine<ShooterStatemachine.Shoote
         RAMP_DOWN(0.0,0.0),
         COAST (0.0, 0.0),
         INTAKE(-10.0,1.0), //NOTE: this should fold flat if the flywheel-side intake is out
-        INDEX(-5.0,0.3),
+        INDEX(-5.0,0.15),
         AMP(10.0,1.0), //to diverter
         AIM_LAYUP(40.0,0.0),
         AIM_PROTECTED(80.0,0.0),

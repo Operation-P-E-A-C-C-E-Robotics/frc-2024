@@ -175,9 +175,9 @@ public class TeleopInputs {
      * Call this method after the state machines have been updated.
      */
     public void handleOverrides() {
-        if(OI.Overrides.forceTrigger.getAsBoolean()) {
-            Shooter.getInstance().setTrigerPercent(1);
-        }
+        // if(OI.Overrides.forceTrigger.getAsBoolean()) {
+        //     Shooter.getInstance().setTrigerPercent(1);
+        // }
 
         if(OI.Overrides.eject.getAsBoolean()) {
             TriggerIntake.getInstance().setRollerSpeed(-1);

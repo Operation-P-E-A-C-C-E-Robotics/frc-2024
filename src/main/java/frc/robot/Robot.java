@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import frc.lib.telemetry.ControlSystemTelemetry;
 import frc.lib.telemetry.MultiTracers;
-import frc.robot.auto.AutoTakeTwo;
+import frc.robot.auto.Autonomous;
 import frc.robot.subsystems.Swerve;
 
 public class Robot extends TimedRobot {
@@ -57,7 +57,7 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {
     RobotContainer.getInstance().zeroAutoHeading();
     Swerve.getInstance().periodic();
-    AutoTakeTwo.fourNote.reset();
+    Autonomous.fourNote.reset();
   }
 
   @Override
