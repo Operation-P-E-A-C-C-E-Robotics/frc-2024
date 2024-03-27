@@ -25,19 +25,23 @@ import frc.lib.util.AllianceFlipUtil;
 import frc.lib.vision.ApriltagCamera;
 import frc.lib.vision.PeaccyVision;
 import frc.robot.Constants;
-import frc.robot.FieldConstants;
-
 import static frc.robot.Constants.Swerve.*;
 
 public class Swerve extends SubsystemBase {
     protected final PeaccefulSwerve swerve;
-
+    
     private final SwerveRequest.ApplyChassisSpeeds autonomousRequest = new SwerveRequest.ApplyChassisSpeeds()
-                                                                                        .withDriveRequestType(DriveRequestType.Velocity);
+    .withDriveRequestType(DriveRequestType.Velocity);
     private final SendableChooser<Pose2d> poseSeedChooser = new SendableChooser<>();
-
+    
     private Transform2d visionDiscrepancy = new Transform2d();
     // private LimelightHelper limelight;
+
+    private static PeaccyVision eyes = new PeaccyVision(
+        Constants.Cameras.primaryPhotonvisionCamera,
+        // new ApriltagCamera.ApriltagPhotonvision(Constants.Cameras.secondaryPhotonvision, Constants.Cameras.robotToSecondaryPhotonvision, FieldConstants.aprilTags, 0.5),
+        new ApriltagCamera.ApriltagLimelight(Constants.Cameras.frontLimelight, 0.1)
+    );
 
     private Swerve() {
         swerve = SwerveDescription.generateDrivetrain(
@@ -91,18 +95,6 @@ public class Swerve extends SubsystemBase {
         //     speeds = new ChassisSpeeds();
         // }
         drive(autonomousRequest.withSpeeds(speeds));
-    }
-
-    public void characterizeSteer(){
-        swerve.setControl(new SwerveRequest.SysIdSwerveSteerGains().withVolts(null));
-    }
-
-    public void characterizeTranslation(){
-        swerve.setControl(new SwerveRequest.SysIdSwerveTranslation());
-    }
-
-    public void characterizeRotation(){
-        swerve.setControl(new SwerveRequest.SysIdSwerveRotation());
     }
 
     /**
@@ -174,11 +166,6 @@ public class Swerve extends SubsystemBase {
         swerve.applySteerConfigs(gains);
     }
 
-    private static PeaccyVision eyes = new PeaccyVision(
-        new ApriltagCamera.ApriltagPhotonvision(Constants.Cameras.primaryPhotonvision, Constants.Cameras.robotToPrimaryPhotonvision, FieldConstants.aprilTags, 1),
-        // new ApriltagCamera.ApriltagPhotonvision(Constants.Cameras.secondaryPhotonvision, Constants.Cameras.robotToSecondaryPhotonvision, FieldConstants.aprilTags, 0.5),
-        new ApriltagCamera.ApriltagLimelight(Constants.Cameras.frontLimelight, 0.1)
-    );
 
     @Override
     public void periodic() {
@@ -190,12 +177,13 @@ public class Swerve extends SubsystemBase {
         BaseStatusSignal.refreshAll(swerve.getPigeon2().getAccelerationX(), swerve.getPigeon2().getAccelerationY(), swerve.getPigeon2().getAccelerationZ());
         var acceleration = swerve.getPigeon2().getAccelerationX().getValue() + swerve.getPigeon2().getAccelerationY().getValue() + swerve.getPigeon2().getAccelerationZ().getValue();
         eyes.update(getPose(), acceleration, new Translation2d(getChassisSpeeds().vxMetersPerSecond, getChassisSpeeds().vyMetersPerSecond).getNorm());
-
-        swerve.addVisionMeasurement(
-            eyes.getPose(),
-            eyes.getTimestamp(),
-            eyes.getStDev()
-        );
+        if(eyes.hasUpdated()){
+            swerve.addVisionMeasurement(
+                eyes.getPose(),
+                eyes.getTimestamp(),
+                eyes.getStDev()
+            );
+        }
 
         //TODO: update limelight telemetry
         // LimelightTelemetry.update(Constants.Cameras.frontLimelight, swerve.getPose3d());

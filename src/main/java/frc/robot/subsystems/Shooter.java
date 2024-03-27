@@ -210,7 +210,7 @@ public class Shooter {
      * Set the trigger to a percent output
      * @param percent the percent output to set the trigger to
      */
-    public void setTrigerPercent (double percent) {
+    public void setTriggerPercent (double percent) {
         triggerPub.accept(percent);
         triggerMotor.set(percent);
         if(percent > 0.1){

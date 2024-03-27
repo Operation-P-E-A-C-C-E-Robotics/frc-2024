@@ -10,26 +10,35 @@ import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.StrictFollower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
+import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.lib.util.Reporter;
-import frc.lib.util.Util;
 
 public class Climber {
+    /* HARDWARE */
     private TalonFX leftMotor = new TalonFX(climberLeftMotorId);
     private TalonFX rightMotor = new TalonFX(climberRightMotorId);
-    //declare two TalonFXs, one for the left climber, one for the right climber
 
+    /* STATUS SIGNALS */
     private StatusSignal <Double> leftPosition = leftMotor.getPosition(), 
-                                    rightPosition = rightMotor.getPosition(),
                                     leftDutyCycle = leftMotor.getDutyCycle();
 
+    /* CONTROLLERS */
     private StrictFollower followControl = new StrictFollower(leftMotor.getDeviceID());
 
     private MotionMagicExpoTorqueCurrentFOC climbPositionControl = new MotionMagicExpoTorqueCurrentFOC(0);
     private DutyCycleOut climbDutyCycleControl = new DutyCycleOut(0).withEnableFOC(true);
 
-    private double setpoint = 0.0;
+    /* TELEMETRY */
+    private final NetworkTable networkTable = NetworkTableInstance.getDefault().getTable("Climber");
+    private final DoublePublisher setpointPublisher = networkTable.getDoubleTopic("Setpoint").publish();
+    private final DoublePublisher dutyCyclePublisher = networkTable.getDoubleTopic("Duty Cycle").publish();
+    private final DoublePublisher positionPublisher = networkTable.getDoubleTopic("Position").publish();
 
     private Climber () {
+        //configure motors
         var leftInversionConfig = new MotorOutputConfigs();
         leftInversionConfig.Inverted = climberLeftMotorIsInverted;
         leftInversionConfig.NeutralMode = NeutralModeValue.Brake;
@@ -50,7 +59,7 @@ public class Climber {
         leftMotor.optimizeBusUtilization();
         rightMotor.optimizeBusUtilization();
 
-        BaseStatusSignal.setUpdateFrequencyForAll(100, leftPosition, rightPosition, leftDutyCycle);
+        BaseStatusSignal.setUpdateFrequencyForAll(100, leftPosition, leftDutyCycle);
 
         rightMotor.setControl(followControl);
     }
@@ -60,23 +69,27 @@ public class Climber {
      * @param position
      */
     public void setClimberPosition (double position) {
+        setpointPublisher.accept(position);
         leftMotor.setControl (climbPositionControl.withPosition(position));
     }
 
     public void setClimberPercent (double percent) {
+        dutyCyclePublisher.accept(percent);
         leftMotor.setControl (climbDutyCycleControl.withOutput(percent));
     }
 
     public double getClimberPosition(){
         leftPosition.refresh();
-        return leftPosition.getValue();
+        var position = leftPosition.getValue();
+        positionPublisher.accept(position);
+        return position;
     }
 
     /**
      * get whether the climber is at its setpoint
      */
     public boolean atSetpoint () {
-         return Util.inRange(getClimberPosition() - setpoint, climberTolerance);
+         return true; //TODO
     }
 
     private static Climber instance = new Climber();

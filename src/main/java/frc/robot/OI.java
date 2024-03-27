@@ -6,8 +6,6 @@ import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import frc.robot.RobotStatemachine.SuperstructureState;
-import frc.robot.planners.NoteTracker;
-import frc.robot.planners.NoteTracker.NoteLocation;
 import frc.robot.subsystems.Shooter;
 
 /**
@@ -47,8 +45,6 @@ public class OI {
     }
 
     public static class Inputs {
-        public static final BooleanSupplier wantsIntake = () -> false; //general intake button, auto selects front/back based on velocity
-        public static final BooleanSupplier wantsShoot = () -> false; //lets the shooter shoot when it feels like it
         public static final BooleanSupplier wantsStow = () -> driverJoystick.getRawButton(5); //prevent decapitation
         public static final BooleanSupplier wantsPlace = () -> driverJoystick.getRawAxis(3) > 0.2; //general place button, varies by mode
 
@@ -62,24 +58,25 @@ public class OI {
         //they are not sticky, so the shooter only aims while the button is held down.
         public static final BooleanSupplier wantsAimLayup = () -> operatorJoystick.getPOV() == 0;
         public static final BooleanSupplier wantsAimProtected = () -> operatorJoystick.getPOV() == 180;
+        public static final BooleanSupplier wantsAimUnderStage = () -> false;
+        public static final BooleanSupplier wantsAimWingline = () -> false;
+        public static final BooleanSupplier wantsAimCenterline = () -> false;
+        public static final BooleanSupplier wantsAutoAim = () -> false;
 
         public static final BooleanSupplier wantsIntakeSource = () -> operatorJoystick.getPOV() == 90;
 
-        //let the shooter get steezy. Applies extra smoothing to the drive inputs to make a SOTM shot easier.
+        //let the shooter get steezy.
         public static final BooleanSupplier enableShootWhileMoving = () -> driverJoystick.getRawButton(6);
     }
     
     public static class Overrides {
         /* MODE OVERRIDES */ //overrides the state requested by the mode
         public static final BooleanSupplier forceAim = () -> operatorJoystick.getRawButton(6);//force the robot into auto aim state
-        public static final BooleanSupplier forceIntakeFront = () -> false; //force the robot to intake from the front
         public static final BooleanSupplier forceIntakeBack = () -> driverJoystick.getRawAxis(2) > 0.2 || operatorJoystick.getRawButton(7);
-        public static final BooleanSupplier forceHandoff = () -> false; //force the shooter to flipper handoff
         public static final BooleanSupplier forceAmp = () -> false; //force the robot to go into the place amp state
         
         /* DIRECT OVERRIDES */ //directly sets the state of the subsystem
-        private static final boolean disableAutoHeadingToggle = false;
-        public static final BooleanSupplier disableAutoHeading = () -> disableAutoHeadingToggle; //disables the auto heading of the swerve
+        public static final BooleanSupplier disableAutoHeading = () -> false; //disables the auto heading of the swerve
         public static final BooleanSupplier forceTrigger = () -> false; //force the trigger to run
         public static final BooleanSupplier eject = () -> operatorJoystick.getRawButton(5); //oopsie (very overridy) spins everything backwards
     }
@@ -97,27 +94,14 @@ public class OI {
         public static final BooleanSupplier resetManualInputs = () -> !operatorJoystick.getRawButton(8);
     }
 
-    private static final double swerveCurrentRumbleThreshold = 60*4; //Amps
-    // private static final double swerveCurrentRumbleScalar = 80*4; //Amps, how much current gives 100% rumble (0.5 on each side)
-
     public static void updateRumble () {
-        var driveCurrent = frc.robot.subsystems.Swerve.getInstance().getTotalDriveCurrent();
         if(Shooter.getInstance().shotDetected()) {
             driverJoystick.setRumble(RumbleType.kBothRumble, 0.5);
             operatorJoystick.setRumble(RumbleType.kBothRumble, 0.5);
-        } else if(RobotContainer.getInstance().getTeleopStatemachine().getState() == SuperstructureState.INTAKE_BACK && NoteTracker.getLocation() == NoteLocation.INDEXING) {
+        } else if(RobotContainer.getInstance().getTeleopStatemachine().getState() == SuperstructureState.INTAKE_BACK && Shooter.getInstance().flywheelSwitchTripped()) {
             driverJoystick.setRumble(RumbleType.kBothRumble, 0.5);
             operatorJoystick.setRumble(RumbleType.kBothRumble, 0.5);
-        } 
-        else if(driveCurrent > swerveCurrentRumbleThreshold) {
-            // var rumble = (driveCurrent - swerveCurrentRumbleThreshold) / swerveCurrentRumbleScalar;
-            // //divide based on strafe amount
-            // var left = rumble * (0.5 - (Swerve.strafe.getAsDouble() / 2));
-            // var right = rumble * (0.5 + (Swerve.strafe.getAsDouble() / 2));
-
-            // driverJoystick.setRumble(RumbleType.kLeftRumble, left);
-            // driverJoystick.setRumble(RumbleType.kRightRumble, right);
-        } else {
+        }  else {
             driverJoystick.setRumble(RumbleType.kBothRumble, 0);
             operatorJoystick.setRumble(RumbleType.kBothRumble, 0);
         }

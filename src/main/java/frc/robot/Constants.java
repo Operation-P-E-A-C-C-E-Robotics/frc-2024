@@ -32,6 +32,7 @@ import frc.lib.swerve.SwerveDescription.Inversion;
 import frc.lib.swerve.SwerveDescription.Physics;
 import frc.lib.swerve.SwerveDescription.PidGains;
 import frc.lib.util.JoystickCurves;
+import frc.lib.vision.ApriltagCamera.ApriltagPhotonvision;
 
 public final class Constants {
   public static final double period = 0.015;
@@ -59,6 +60,13 @@ public final class Constants {
             Units.degreesToRadians(45)
         )
     );
+
+    public static final ApriltagPhotonvision primaryPhotonvisionCamera = new ApriltagPhotonvision(
+        primaryPhotonvision, 
+        robotToPrimaryPhotonvision, 
+        FieldConstants.aprilTags,
+        0.9
+    );
   }
 
   public static final class Shooter {
@@ -82,7 +90,7 @@ public final class Constants {
     public static final double shotDetectionAccelerationThreshold = -70;
     public static final double shotDetectionTimeThreshold = 0.05;
     public static final double shotDetectionMinVelocity = 10;
-    public static final double shotDetectionResetTime = 0.1;
+    public static final double shotDetectionResetTime = 0.5;
 
     public static final TalonFXConfiguration flywheelConfigs = new TalonFXConfiguration();
     static {
