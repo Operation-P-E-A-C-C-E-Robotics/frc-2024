@@ -62,10 +62,14 @@ public class OI {
         //they are not sticky, so the shooter only aims while the button is held down.
         public static final BooleanSupplier wantsAimLayup = () -> operatorJoystick.getPOV() == 0;
         public static final BooleanSupplier wantsAimProtected = () -> operatorJoystick.getPOV() == 180;
+        public static final BooleanSupplier wantsAimUnderStage = () -> false;
+        public static final BooleanSupplier wantsAimWingline = () -> false;
+        public static final BooleanSupplier wantsAimCenterline = () -> false;
+        public static final BooleanSupplier wantsAutoAim = () -> false;
 
         public static final BooleanSupplier wantsIntakeSource = () -> operatorJoystick.getPOV() == 90;
 
-        //let the shooter get steezy. Applies extra smoothing to the drive inputs to make a SOTM shot easier.
+        //let the shooter get steezy.
         public static final BooleanSupplier enableShootWhileMoving = () -> driverJoystick.getRawButton(6);
     }
     
@@ -78,8 +82,7 @@ public class OI {
         public static final BooleanSupplier forceAmp = () -> false; //force the robot to go into the place amp state
         
         /* DIRECT OVERRIDES */ //directly sets the state of the subsystem
-        private static final boolean disableAutoHeadingToggle = false;
-        public static final BooleanSupplier disableAutoHeading = () -> disableAutoHeadingToggle; //disables the auto heading of the swerve
+        public static final BooleanSupplier disableAutoHeading = () -> false; //disables the auto heading of the swerve
         public static final BooleanSupplier forceTrigger = () -> false; //force the trigger to run
         public static final BooleanSupplier eject = () -> operatorJoystick.getRawButton(5); //oopsie (very overridy) spins everything backwards
     }
