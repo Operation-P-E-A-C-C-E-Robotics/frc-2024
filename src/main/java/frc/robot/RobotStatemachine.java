@@ -7,13 +7,11 @@ import frc.lib.telemetry.MultiTracers;
 import frc.robot.planners.AimPlanner;
 import frc.robot.planners.MotionPlanner;
 import frc.robot.statemachines.ClimberStatemachine;
-import frc.robot.statemachines.FlywheelIntakeStatemachine;
 import frc.robot.statemachines.PivotStatemachine;
 import frc.robot.statemachines.ShooterStatemachine;
 import frc.robot.statemachines.SwerveStatemachine;
 import frc.robot.statemachines.TriggerIntakeStatemachine;
 import frc.robot.statemachines.ClimberStatemachine.ClimberState;
-import frc.robot.statemachines.FlywheelIntakeStatemachine.FlywheelIntakeState;
 import frc.robot.statemachines.SwerveStatemachine.SwerveState;
 import frc.robot.statemachines.PivotStatemachine.PivotState;
 import frc.robot.statemachines.ShooterStatemachine.ShooterState;
@@ -28,7 +26,6 @@ public class RobotStatemachine extends StateMachine<RobotStatemachine.Superstruc
     private SuperstructureState state = SuperstructureState.REST;
     
     private final SwerveStatemachine swerveStatemachine;
-    private final FlywheelIntakeStatemachine flywheelIntakeStatemachine;
     private final TriggerIntakeStatemachine triggerIntakeStatemachine;
     private final ShooterStatemachine shooterStatemachine;
     private final PivotStatemachine pivotStatemachine;
@@ -39,7 +36,6 @@ public class RobotStatemachine extends StateMachine<RobotStatemachine.Superstruc
     //private final StageAvoidancePlanner stageAvoidancePlanner;
 
     public RobotStatemachine (SwerveStatemachine swerveStatemachine, 
-                            FlywheelIntakeStatemachine flywheelIntakeStatemachine, 
                             TriggerIntakeStatemachine triggerIntakeStatemachine, 
                             ShooterStatemachine shooterStatemachine, 
                             PivotStatemachine pivotStatemachine, 
@@ -47,7 +43,6 @@ public class RobotStatemachine extends StateMachine<RobotStatemachine.Superstruc
                             MotionPlanner intakeMotionPlanner,
                             AimPlanner aimPlanner) {
         this.swerveStatemachine = swerveStatemachine;
-        this.flywheelIntakeStatemachine = flywheelIntakeStatemachine;
         this.triggerIntakeStatemachine = triggerIntakeStatemachine;
         this.shooterStatemachine = shooterStatemachine;
         this.pivotStatemachine = pivotStatemachine;
@@ -92,8 +87,6 @@ public class RobotStatemachine extends StateMachine<RobotStatemachine.Superstruc
     public void update(){
         SmartDashboard.putString("Robot State", state.name());
         MultiTracers.trace("TeleopStatemachine", "start update");
-        flywheelIntakeStatemachine.requestState(state.getFlywheelIntakeState());
-        MultiTracers.trace("TeleopStatemachine", "flywheelIntakeStatemachine.requestState");
         triggerIntakeStatemachine.requestState(state.getTriggerIntakeState());
         MultiTracers.trace("TeleopStatemachine", "triggerIntakeStatemachine.requestState");
         shooterStatemachine.requestState(state.getShooterState());
@@ -123,8 +116,7 @@ public class RobotStatemachine extends StateMachine<RobotStatemachine.Superstruc
      */
     @Override
     public boolean transitioning(){
-        return flywheelIntakeStatemachine.transitioning() ||
-                triggerIntakeStatemachine.transitioning() ||
+        return triggerIntakeStatemachine.transitioning() ||
                 shooterStatemachine.transitioning() ||
                 pivotStatemachine.transitioning() ||
                 climberStatemachine.transitioning();
@@ -134,19 +126,16 @@ public class RobotStatemachine extends StateMachine<RobotStatemachine.Superstruc
     public enum SuperstructureState {
         REST,
         STOW(
-            FlywheelIntakeState.RETRACT,
             TriggerIntakeState.RETRACT,
             ShooterState.RAMP_DOWN,
             PivotState.STOW
         ),
         INTAKE_FRONT (
-            FlywheelIntakeState.INTAKE,
             TriggerIntakeState.RETRACT,
             ShooterState.INTAKE,
             PivotState.INTAKE
         ),
         INTAKE_BACK (
-            FlywheelIntakeState.RETRACT,
             TriggerIntakeState.INTAKE,
             ShooterState.INTAKE,
             PivotState.INTAKE
@@ -206,33 +195,25 @@ public class RobotStatemachine extends StateMachine<RobotStatemachine.Superstruc
             PivotState.INTAKE_SOURCE
         ),
         INTAKE_N_AIM(
-            FlywheelIntakeState.RETRACT,
             TriggerIntakeState.INTAKE,
             ShooterState.INTAKE_N_AIM,
             PivotState.INTAKE
         ),
         INTAKE_N_PIVOT_AIM(
-            FlywheelIntakeState.RETRACT,
             TriggerIntakeState.INTAKE,
             ShooterState.INTAKE_N_AIM,
             PivotState.AUTO_AIM
         ),
         INTAKE_N_SHOOT(
-            FlywheelIntakeState.RETRACT,
             TriggerIntakeState.INTAKE,
             ShooterState.SHOOT,
             PivotState.AUTO_AIM
         );
 
-        private FlywheelIntakeState flywheelIntakeState;
         private TriggerIntakeState triggerIntakeState;
         private ShooterState shooterState;
         private PivotState pivotState;
         private ClimberState climberState;
-
-        public FlywheelIntakeState getFlywheelIntakeState() {
-            return flywheelIntakeState;
-        }
 
         public TriggerIntakeState getTriggerIntakeState(){
             return triggerIntakeState;
@@ -250,41 +231,37 @@ public class RobotStatemachine extends StateMachine<RobotStatemachine.Superstruc
             return climberState;
         }
 
-        private SuperstructureState (FlywheelIntakeState flywheelIntakeState,
-                                TriggerIntakeState triggerIntakeState,
+        private SuperstructureState (TriggerIntakeState triggerIntakeState,
                                 ShooterState shooterState,
                                 PivotState pivotState,
                                 ClimberState climberState){
-            this.flywheelIntakeState = flywheelIntakeState;
             this.triggerIntakeState = triggerIntakeState;
             this.shooterState = shooterState;
             this.pivotState = pivotState;
             this.climberState = climberState;
         }
 
-        private SuperstructureState(FlywheelIntakeState flywheelIntakeState,
-                                TriggerIntakeState triggerIntakeState,
+        private SuperstructureState(TriggerIntakeState triggerIntakeState,
                                 ShooterState shooterState) {
-            this(flywheelIntakeState, triggerIntakeState, shooterState, PivotState.REST, ClimberState.RETRACT);
+            this(triggerIntakeState, shooterState, PivotState.REST, ClimberState.RETRACT);
         }
 
-        private SuperstructureState(FlywheelIntakeState flywheelIntakeState,
-                                TriggerIntakeState triggerIntakeState,
+        private SuperstructureState(TriggerIntakeState triggerIntakeState,
                                 ShooterState shooterState,
                                 PivotState pivotState) {
-            this(flywheelIntakeState, triggerIntakeState, shooterState, pivotState, ClimberState.RETRACT);
+            this(triggerIntakeState, shooterState, pivotState, ClimberState.RETRACT);
         }
 
         private SuperstructureState(ShooterState shooterState, PivotState pivotState){
-            this(FlywheelIntakeState.RETRACT, TriggerIntakeState.RETRACT, shooterState, pivotState, ClimberState.RETRACT);
+            this(TriggerIntakeState.RETRACT, shooterState, pivotState, ClimberState.RETRACT);
         }
 
         private SuperstructureState(TriggerIntakeState triggerIntakeState, PivotState pivotState, ClimberState climberState){
-            this(FlywheelIntakeState.RETRACT, triggerIntakeState, ShooterState.RAMP_DOWN, pivotState, climberState);
+            this(triggerIntakeState, ShooterState.RAMP_DOWN, pivotState, climberState);
         }
 
         private SuperstructureState(){
-            this(FlywheelIntakeState.RETRACT, TriggerIntakeState.RETRACT, ShooterState.RAMP_DOWN, PivotState.REST, ClimberState.RETRACT);
+            this(TriggerIntakeState.RETRACT, ShooterState.RAMP_DOWN, PivotState.REST, ClimberState.RETRACT);
         }
     }
 }

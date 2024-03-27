@@ -13,13 +13,11 @@ import frc.robot.planners.AimPlanner;
 import frc.robot.planners.MotionPlanner;
 import frc.robot.planners.NoteTracker;
 import frc.robot.statemachines.ClimberStatemachine;
-import frc.robot.statemachines.FlywheelIntakeStatemachine;
 import frc.robot.statemachines.PivotStatemachine;
 import frc.robot.statemachines.ShooterStatemachine;
 import frc.robot.statemachines.SwerveStatemachine;
 import frc.robot.statemachines.TriggerIntakeStatemachine;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.FlywheelIntake;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.TriggerIntake;
@@ -33,7 +31,6 @@ public class RobotContainer {
 
     /* SUBSYSTEMS */
     private final Swerve swerve = Swerve.getInstance();
-    private final FlywheelIntake flywheelIntake = FlywheelIntake.getInstance();
     private final TriggerIntake triggerIntake = TriggerIntake.getInstance();
     private final Pivot pivot = Pivot.getInstance();
     private final Shooter shooter = Shooter.getInstance();
@@ -50,7 +47,6 @@ public class RobotContainer {
 
     /* STATE MACHINES */
     private final SwerveStatemachine swerveStatemachine = new SwerveStatemachine(swerve, aimPlanner);
-    private final FlywheelIntakeStatemachine flywheelIntakeStatemachine = new FlywheelIntakeStatemachine(flywheelIntake, motionPlanner);
     private final TriggerIntakeStatemachine triggerIntakeStatemachine = new TriggerIntakeStatemachine(triggerIntake, motionPlanner);
     private final PivotStatemachine pivotStatemachine = new PivotStatemachine(pivot, aimPlanner, motionPlanner);
     private final ShooterStatemachine shooterStatemachine = new ShooterStatemachine(shooter, aimPlanner, this::readyToShoot);
@@ -58,7 +54,6 @@ public class RobotContainer {
 
     private final RobotStatemachine teleopStatemachine = new RobotStatemachine(
         swerveStatemachine,
-        flywheelIntakeStatemachine,
         triggerIntakeStatemachine,
         shooterStatemachine,
         pivotStatemachine,
@@ -163,7 +158,6 @@ public class RobotContainer {
 
         /* TEST DASHBOARD */
         if(RobotState.isTest()) {
-            Swerve.getInstance().characterizeSteer();
             return;
         }
 
