@@ -21,8 +21,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.state.StateMachine;
 import frc.lib.swerve.PeaccyRequest;
 import frc.lib.telemetry.SwerveTelemetry;
-import frc.lib.util.AllianceFlipUtil;
-import frc.lib.vision.LimelightHelpers;
 import frc.robot.Constants;
 import frc.robot.OI;
 import frc.robot.Robot;
@@ -270,15 +268,15 @@ public class SwerveStatemachine extends StateMachine<SwerveStatemachine.SwerveSt
 
         if(state == SwerveState.ALIGN_INTAKING){
             //align with a note automatically for intaking, using the limelight
-            var results = LimelightHelpers.getLatestResults(Constants.Cameras.rearLimelight).targetingResults.targets_Detector;
-            if(results.length > 0){
-                var heading = Swerve.getInstance().getPose().getRotation().getRadians() - Units.degreesToRadians(results[0].tx * 0.5);
-                heading = noteTrackingFliter.calculate(AllianceFlipUtil.shouldFlip() ? heading - Math.PI - 0.06 : heading - 0.06);
-                request.withHeading(heading);
+            // var results = LimelightHelpers.getLatestResults(Constants.Cameras.rearLimelight).targetingResults.targets_Detector;
+            // if(results.length > 0){
+            //     var heading = Swerve.getInstance().getPose().getRotation().getRadians() - Units.degreesToRadians(results[0].tx * 0.5);
+            //     heading = noteTrackingFliter.calculate(AllianceFlipUtil.shouldFlip() ? heading - Math.PI - 0.06 : heading - 0.06);
+            //     request.withHeading(heading);
 
-                request.withLockHeading(true);
-                request.withLockHeadingVelocity(0);
-            }
+            //     request.withLockHeading(true);
+            //     request.withLockHeadingVelocity(0);
+            // }
         } else {
             noteTrackingFliter.reset();
         }

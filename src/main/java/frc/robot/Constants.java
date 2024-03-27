@@ -45,7 +45,7 @@ public final class Constants {
 
     public static final Transform3d robotToPrimaryPhotonvision = new Transform3d(
         Units.inchesToMeters(10.5), 
-        Units.inchesToMeters(-6),
+        Units.inchesToMeters(6),
         Units.inchesToMeters(8.5), 
         new Rotation3d(0,Units.degreesToRadians(15),0)
     );
@@ -200,19 +200,19 @@ public final class Constants {
     }
   }
 
-  public static final class Diverter {
-    public static final int diverterRollerMotorId = 50;
-    public static final int diverterDeployMotorId = 26;
-// 
+  public static final class Thing {
+    // public static final int thingRollerMotorId = 50;
+    public static final int thingDeployMotorId = 26;
+
     public static final double diverterDeployGearRatio = 1;
-    public static final double diverterDeployTolerance = 0; //how close to the target position the deployer needs to be to be considered "deployed"
+    public static final double diverterDeployTolerance = 0.1; //how close to the target position the deployer needs to be to be considered "deployed"
 
     public static final double maxDiverterExtension = 0; //in meters
 
     public static final TalonFXConfiguration diverterDeployConfigs = new TalonFXConfiguration();
     static {
-      diverterDeployConfigs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-      diverterDeployConfigs.CurrentLimits.StatorCurrentLimit = 20;
+      diverterDeployConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+      diverterDeployConfigs.CurrentLimits.StatorCurrentLimit = 40;
       diverterDeployConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
       diverterDeployConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
       
@@ -249,7 +249,7 @@ public final class Constants {
 
     public static final TalonFXConfiguration climberConfigs = new TalonFXConfiguration();
     static {
-      climberConfigs.CurrentLimits.StatorCurrentLimit = 80;
+      climberConfigs.CurrentLimits.StatorCurrentLimit = 10;
       climberConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
 
       climberConfigs.Slot0.kP = 0;
@@ -263,13 +263,15 @@ public final class Constants {
       climberConfigs.MotionMagic.MotionMagicExpo_kV = 0;
       climberConfigs.MotionMagic.MotionMagicCruiseVelocity = 0;
 
-      climberConfigs.HardwareLimitSwitch.ReverseLimitEnable = true;
-      climberConfigs.HardwareLimitSwitch.ReverseLimitAutosetPositionEnable = true;
-      climberConfigs.HardwareLimitSwitch.ReverseLimitAutosetPositionValue = 0;
+      climberConfigs.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
+      climberConfigs.SoftwareLimitSwitch.ReverseSoftLimitThreshold = 0;
+
+      climberConfigs.SoftwareLimitSwitch.ForwardSoftLimitEnable = false; //TODO
+      climberConfigs.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 10;
     }
 
-    public static final InvertedValue climberLeftMotorIsInverted = InvertedValue.Clockwise_Positive;
-    public static final InvertedValue climberRightMotorIsInverted = InvertedValue.CounterClockwise_Positive;
+    public static final InvertedValue climberLeftMotorIsInverted = InvertedValue.CounterClockwise_Positive;
+    public static final InvertedValue climberRightMotorIsInverted = InvertedValue.Clockwise_Positive;
     // todo delete this comment when sure the booleans are what we want
   }
   public static final class Swerve {
@@ -327,7 +329,7 @@ public final class Constants {
     public static final Inversion inversion = new Inversion(false, true, false, true);
 
     //inertia only used for simulation
-    public static final Physics physics = new Physics(0.05,0.01, Robot.isReal() ? 70 : 800, 7);
+    public static final Physics physics = new Physics(0.05,0.01, Robot.isReal() ? 80 : 800, 7);
     public static final double steerMotorCurrentLimit = Robot.isReal() ? 40 : 120; //amps
     
     public static final PidGains driveGains = new PidGains(2, 0, 0, 0.2, 0.6); 

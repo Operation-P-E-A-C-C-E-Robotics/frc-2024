@@ -55,7 +55,6 @@ public class OI {
         //climber states. these are all mutually exclusive, and will override each other if multiple are true.
         //they are also sticky, so the climber will stay in the state until another state is requested.
         public static final BooleanSupplier wantsAlign = () -> false; //aligns the robot to drive under the chain
-        public static final BooleanSupplier wantsBalance = () -> false; //retracts the sides and adjusts them individually to balance the robot
         public static final BooleanSupplier wantsClimbExtend = () -> false; //extends the climber
         public static final BooleanSupplier wantsClimbRetract = () -> false; //retracts the climber fully to climb
 
@@ -72,7 +71,7 @@ public class OI {
     
     public static class Overrides {
         /* MODE OVERRIDES */ //overrides the state requested by the mode
-        public static final BooleanSupplier forceAim = () -> operatorJoystick.getRawButton(5);//force the robot into auto aim state
+        public static final BooleanSupplier forceAim = () -> operatorJoystick.getRawButton(6);//force the robot into auto aim state
         public static final BooleanSupplier forceIntakeFront = () -> false; //force the robot to intake from the front
         public static final BooleanSupplier forceIntakeBack = () -> driverJoystick.getRawAxis(2) > 0.2 || operatorJoystick.getRawButton(7);
         public static final BooleanSupplier forceHandoff = () -> false; //force the shooter to flipper handoff
@@ -82,7 +81,7 @@ public class OI {
         private static final boolean disableAutoHeadingToggle = false;
         public static final BooleanSupplier disableAutoHeading = () -> disableAutoHeadingToggle; //disables the auto heading of the swerve
         public static final BooleanSupplier forceTrigger = () -> false; //force the trigger to run
-        public static final BooleanSupplier eject = () -> operatorJoystick.getRawButton(6); //oopsie (very overridy) spins everything backwards
+        public static final BooleanSupplier eject = () -> operatorJoystick.getRawButton(5); //oopsie (very overridy) spins everything backwards
     }
 
     public static class ManualInputs {
@@ -91,15 +90,15 @@ public class OI {
         //(well the trigger might but the pivot and climber won't)
         public static final DoubleSupplier jogTrigger = () -> -operatorJoystick.getRawAxis(1);
         public static final DoubleSupplier jogPivot = () -> -operatorJoystick.getRawAxis(3);
-        public static final DoubleSupplier jogClimberLeft = () -> -operatorJoystick.getRawAxis(3);
-        public static final DoubleSupplier jogClimberRight = () -> -operatorJoystick.getRawAxis(1);
-        public static final DoubleSupplier jogFlipper = () -> 0.0;
+        public static final DoubleSupplier jogClimber = () -> -operatorJoystick.getRawAxis(3);
+        public static final DoubleSupplier jogThing = () -> -operatorJoystick.getRawAxis(1);
+  
 
-        public static final BooleanSupplier resetManualInputs = () -> operatorJoystick.getRawButton(7);
+        public static final BooleanSupplier resetManualInputs = () -> !operatorJoystick.getRawButton(8);
     }
 
     private static final double swerveCurrentRumbleThreshold = 60*4; //Amps
-    private static final double swerveCurrentRumbleScalar = 80*4; //Amps, how much current gives 100% rumble (0.5 on each side)
+    // private static final double swerveCurrentRumbleScalar = 80*4; //Amps, how much current gives 100% rumble (0.5 on each side)
 
     public static void updateRumble () {
         var driveCurrent = frc.robot.subsystems.Swerve.getInstance().getTotalDriveCurrent();

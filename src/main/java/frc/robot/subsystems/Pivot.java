@@ -30,6 +30,7 @@ public class Pivot {
 
     /* CONTROLLERS / CONTROL REQUESTS */
     private final MotionMagicExpoVoltage pivotControl = new MotionMagicExpoVoltage(restingAngle).withEnableFOC(true);
+    private final DutyCycleOut pivotSpringy = new DutyCycleOut(0.001);
     private final ArmFeedforward gravityFeedforward = new ArmFeedforward(0, gravityFeedforwardkG, 0);
 
     /* TELEMETRY */
@@ -94,7 +95,7 @@ public class Pivot {
         // return;
         var gravity = gravityFeedforward.calculate(getPivotPosition().getRadians(), 0);
 
-        pivotControl.withFeedForward(gravity).withPosition(position.getRotations());
+        pivotControl.withFeedForward(gravity).withPosition(position.getRotations() + 0.005); //fudge factor because of goddamnclimber
 
         Reporter.log(pivotMaster.setControl(pivotControl), "couldn't set pivot position");
 
@@ -110,6 +111,9 @@ public class Pivot {
         pivotMaster.setControl(new DutyCycleOut(percent));
     }
 
+    public void climbMode(){
+        pivotMaster.setControl(pivotSpringy);
+    }
     /**
      * Get the latency-compensated pivot position
      * @return the pivot position with 0 being fully horizontal

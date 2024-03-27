@@ -7,24 +7,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.telemetry.MultiTracers;
 import frc.lib.telemetry.StrategyTelemetry;
-import frc.lib.vision.ApriltagCamera;
-import frc.lib.vision.PeaccyVision;
-import frc.robot.auto.AutoTakeTwo;
 import frc.robot.auto.Autonomous;
-import frc.robot.auto.AutoTakeTwo.TimedAuto;
-import frc.robot.auto.Autonomous.AutoMode;
+import frc.robot.auto.Autonomous.TimedAuto;
 import frc.robot.planners.AimPlanner;
 import frc.robot.planners.MotionPlanner;
 import frc.robot.planners.NoteTracker;
 import frc.robot.statemachines.ClimberStatemachine;
-import frc.robot.statemachines.FlipperStatemachine;
+import frc.robot.statemachines.ThingStatemachine;
 import frc.robot.statemachines.FlywheelIntakeStatemachine;
 import frc.robot.statemachines.PivotStatemachine;
 import frc.robot.statemachines.ShooterStatemachine;
 import frc.robot.statemachines.SwerveStatemachine;
 import frc.robot.statemachines.TriggerIntakeStatemachine;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Diverter;
+import frc.robot.subsystems.Thing;
 import frc.robot.subsystems.FlywheelIntake;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
@@ -43,7 +39,7 @@ public class RobotContainer {
     private final TriggerIntake triggerIntake = TriggerIntake.getInstance();
     private final Pivot pivot = Pivot.getInstance();
     private final Shooter shooter = Shooter.getInstance();
-    private final Diverter diverter = Diverter.getInstance();
+    private final Thing thing = Thing.getInstance();
     private final Climber climber = Climber.getInstance();
 
     /* PLANNERS */
@@ -61,7 +57,7 @@ public class RobotContainer {
     private final TriggerIntakeStatemachine triggerIntakeStatemachine = new TriggerIntakeStatemachine(triggerIntake, motionPlanner);
     private final PivotStatemachine pivotStatemachine = new PivotStatemachine(pivot, aimPlanner, motionPlanner);
     private final ShooterStatemachine shooterStatemachine = new ShooterStatemachine(shooter, aimPlanner, this::readyToShoot);
-    private final FlipperStatemachine diverterStatemachine = new FlipperStatemachine(diverter, motionPlanner);
+    private final ThingStatemachine thingStatemachine = new ThingStatemachine(thing, motionPlanner);
     private final ClimberStatemachine climberStatemachine = new ClimberStatemachine(climber, () -> swerve.getGyroAngle().getX());
 
     private final RobotStatemachine teleopStatemachine = new RobotStatemachine(
@@ -70,7 +66,7 @@ public class RobotContainer {
         triggerIntakeStatemachine,
         shooterStatemachine,
         pivotStatemachine,
-        diverterStatemachine,
+        thingStatemachine,
         climberStatemachine,
         motionPlanner,
         aimPlanner
@@ -79,21 +75,26 @@ public class RobotContainer {
     private SendableChooser<TimedAuto> autoChooser = new SendableChooser<>();
 
     private RobotContainer() {
-        autoChooser.setDefaultOption("do nothing", AutoTakeTwo.doNothing);
-        autoChooser.addOption("LAYUP", AutoTakeTwo.layupOnly);
-        autoChooser.addOption("START 1 + WING 1", AutoTakeTwo.twoNoteStageSide);
-        autoChooser.addOption("START 2 + WING 2", AutoTakeTwo.twoNoteCenter);
-        autoChooser.addOption("START 3 + WING 3", AutoTakeTwo.twoNoteAmpSide);
-        autoChooser.addOption("START 3 + WING 3 + WING 2 + WING 1", AutoTakeTwo.fourNote);
-        autoChooser.addOption("START 3 + WING 3 + CENTER 5", AutoTakeTwo.start3ThreeNote);
-        autoChooser.addOption("START 1 + WING 1 + CENTER 2", AutoTakeTwo.start1ThreeNoteCenter2);
-        autoChooser.addOption("START 1 + WINT 1 + CENTER 3", AutoTakeTwo.start1ThreeNoteCenter3);
-        autoChooser.addOption("DEFENCE 1", AutoTakeTwo.defence1);
-        autoChooser.addOption("DEFENCE 2", AutoTakeTwo.defence2);
-        autoChooser.addOption("DEFENCE 3", AutoTakeTwo.defence3);
-        autoChooser.addOption("DEFENCE 4", AutoTakeTwo.defence4L);
-        autoChooser.addOption("DEFENCE 4 (start amp)", AutoTakeTwo.defence4R);
-        autoChooser.addOption("DEFENCE 5 (start amp)", AutoTakeTwo.defence5R);
+        autoChooser.setDefaultOption("do nothing", Autonomous.doNothing);
+        autoChooser.addOption("LAYUP", Autonomous.layupOnly);
+        autoChooser.addOption("SHOOT", Autonomous.shootOnly);
+        autoChooser.addOption("START 1 + WING 1", Autonomous.twoNoteStageSide);
+        autoChooser.addOption("START 2 + WING 2", Autonomous.twoNoteCenter);
+        autoChooser.addOption("START 3 + WING 3", Autonomous.twoNoteAmpSide);
+        autoChooser.addOption("START 3 + WING 3 + WING 2 + WING 1", Autonomous.fourNote);
+        autoChooser.addOption("START 3 + WING 3 + CENTER 5", Autonomous.start3ThreeNoteCenter5);
+        autoChooser.addOption("START 1 + WING 1 + CENTER 2", Autonomous.start1ThreeNoteCenter2);
+        autoChooser.addOption("START 1 + WING 1 + CENTER 3", Autonomous.start1ThreeNoteCenter3);
+        autoChooser.addOption("(new) START 2 + WING 2 + CENTER 4", Autonomous.start2ThreeNoteCenter4);
+        autoChooser.addOption("(new) START 2 + WING 2 + CENTER 4 + CENTER 3", Autonomous.start2FourNote);
+        autoChooser.addOption("(new) START 3 + WING 3 + CENTER 4)", Autonomous.start3ThreeNoteCenter4);
+        autoChooser.addOption("NEW CENTER 3 + CENTER 4", Autonomous.newAutoThing);
+        autoChooser.addOption("DEFENCE 1", Autonomous.defence1);
+        autoChooser.addOption("DEFENCE 2", Autonomous.defence2);
+        autoChooser.addOption("DEFENCE 3", Autonomous.defence3);
+        autoChooser.addOption("DEFENCE 4", Autonomous.defence4L);
+        autoChooser.addOption("DEFENCE 4 (start amp)", Autonomous.defence4R);
+        autoChooser.addOption("DEFENCE 5 (start amp)", Autonomous.defence5R);
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
@@ -108,22 +109,24 @@ public class RobotContainer {
         if(!shooter.flywheelAtTargetVelocity()) return false;
         if(!pivot.atSetpoint()) return false;
         if(!swerveStatemachine.transitioning()) return false;
-        if((swerve.getChassisSpeeds().vxMetersPerSecond > 0.001 && swerve.getChassisSpeeds().vyMetersPerSecond > 0.001) && !OI.Inputs.enableShootWhileMoving.getAsBoolean()) return false;
-        if(OI.Inputs.wantsPlace.getAsBoolean()) return false;
-        if(swerve.getEyes().getOdometryError() > 0.5) return false;
+        if((swerve.getChassisSpeeds().vxMetersPerSecond > 0.005 && swerve.getChassisSpeeds().vyMetersPerSecond > 0.005) && !OI.Inputs.enableShootWhileMoving.getAsBoolean()) return false;
+        // if(OI.Inputs.wantsPlace.getAsBoolean()) return false;
+        if(swerve.getEyes().getOdometryError() > 25) return false;
         return true;
         // return OI.Inputs.wantsPlace.getAsBoolean();
     }
 
     public boolean readyToShoot(){
         if(OI.Inputs.wantsPlace.getAsBoolean()) {
-            readyTimer.reset();
-            readyTimer.stop();
+            // if(OI.Inputs.enableShootWhileMoving.getAsBoolean()) return true;
+            return false;
+        } else if (OI.Inputs.enableShootWhileMoving.getAsBoolean()) {
+            return true;
         }
         if(kindaReadyToShoot()) {
             readyTimer.start();
         }
-        if(readyTimer.get() > aimPlanner.getDistanceToTarget()/3){
+        if(readyTimer.get() > aimPlanner.getDistanceToTarget()/6){
             readyTimer.stop();
             readyTimer.reset();
             return true;
@@ -183,8 +186,8 @@ public class RobotContainer {
             MultiTracers.trace("RobotContainer::run", "pivotStatemachine.update");
             shooterStatemachine.update();
             MultiTracers.trace("RobotContainer::run", "shooterStatemachine.update");
-            // diverterStatemachine.update();
-            // MultiTracers.trace("RobotContainer::run", "diverterStatemachine.update");
+            thingStatemachine.update();
+            MultiTracers.trace("RobotContainer::run", "diverterStatemachine.update");
             climberStatemachine.update();
             MultiTracers.trace("RobotContainer::run", "climberStatemachine.update");
             
