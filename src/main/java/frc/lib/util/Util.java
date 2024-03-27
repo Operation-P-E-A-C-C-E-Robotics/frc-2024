@@ -350,10 +350,6 @@ public class Util {
     public static double countsToRotations(double counts, double cpr, double gearRatio, double wheelDiameter){
         return countsToRotations(counts, cpr, gearRatio) * wheelDiameter * Math.PI;
     }
-
-    public static double countsToRotations(double counts, ServoMotor.SystemConstants constants){
-        return countsToRotations(counts, constants.cpr, constants.gearing);
-    }
     /**
      * convert rotations to encoder counts
      * @param rotations rotations
@@ -396,10 +392,6 @@ public class Util {
      */
     public static double rotationsToCounts(double rotations, double cpr, double gearRatio, double wheelDiameter){
         return rotationsToCounts(rotations, cpr, gearRatio) / (wheelDiameter * Math.PI);
-    }
-
-    public static double rotationsToCounts(double rotations, ServoMotor.SystemConstants constants){
-        return rotationsToCounts(rotations, constants.cpr, constants.gearing);
     }
 
     static{commentsAreForCommoners("so i can be sarcastic about the lack of comments in certain software i write");}
