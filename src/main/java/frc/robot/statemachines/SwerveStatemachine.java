@@ -189,8 +189,6 @@ public class SwerveStatemachine extends StateMachine<SwerveStatemachine.SwerveSt
         boolean isZeroOdometry = isZeroOdometrySup.getAsBoolean();
 
         if(isZeroOdometry) {
-            // var cpose = driveTrain.getPose();
-            // driveTrain.resetOdometry(new Pose2d(cpose.getX(), cpose.getY(), Rotation2d.fromDegrees(cpose.getRotation().getDegrees() + 180)));
             driveTrain.resetOdometry();
             request.withHeading(driveTrain.getPose().getRotation().getRadians());
         }
@@ -257,9 +255,6 @@ public class SwerveStatemachine extends StateMachine<SwerveStatemachine.SwerveSt
             //use smooth auto heading for the first part of the motion before
             //locking on aggressively, to avoid excessive current draw
             var wantedAngle = aimPlanner.getTargetDrivetrainAngle().getRadians();
-            // var error = Math.abs(driveTrain.getPose().getRotation().getRadians() - wantedAngle);
-            // var headingTargetError = Math.abs(aimTargetHeading - wantedAngle);
-            // if(headingTargetError > 0.5 || error < 0.5) aimTargetHeading = wantedAngle;
 
             request.withHeading(wantedAngle);
             request.withLockHeading(true);

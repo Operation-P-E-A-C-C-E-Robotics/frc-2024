@@ -104,7 +104,6 @@ public class TeleopInputs {
 
         // operator overrides - these take precedence over everything else
         if(OI.Inputs.wantsStow.getAsBoolean())  return SuperstructureState.STOW;
-        if(OI.Overrides.forceHandoff.getAsBoolean()) return SuperstructureState.ALIGN_AMP;
         if(OI.Overrides.forceAim.getAsBoolean()) return SuperstructureState.AUTO_AIM;
 
         //handle the drivers' intaking requests, these take precedence over modes & automation
@@ -262,12 +261,7 @@ public class TeleopInputs {
         if(OI.Overrides.forceIntakeFront.getAsBoolean()) return IntakingMode.FRONT;
         if(OI.Overrides.forceIntakeBack.getAsBoolean()) return IntakingMode.BACK;
 
-        // if the driver doesn't want to intake, return NONE
-        // otherwise, default to the back intake
-        if(!OI.Inputs.wantsIntake.getAsBoolean()) return IntakingMode.NONE;
-        else if(NoteTracker.getLocation() == NoteLocation.NONE)intakingMode = IntakingMode.BACK;
-
-        return intakingMode;
+        return IntakingMode.NONE;
     }
 
     private ClimbMode wantedClimbMode() {

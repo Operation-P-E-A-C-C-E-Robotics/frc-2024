@@ -90,7 +90,7 @@ public final class Constants {
     public static final double shotDetectionAccelerationThreshold = -70;
     public static final double shotDetectionTimeThreshold = 0.05;
     public static final double shotDetectionMinVelocity = 10;
-    public static final double shotDetectionResetTime = 0.1;
+    public static final double shotDetectionResetTime = 0.5;
 
     public static final TalonFXConfiguration flywheelConfigs = new TalonFXConfiguration();
     static {
