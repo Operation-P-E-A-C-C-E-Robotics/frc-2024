@@ -180,7 +180,7 @@ public class TeleopInputs {
 
         if(OI.Overrides.eject.getAsBoolean()) {
             TriggerIntake.getInstance().setRollerSpeed(-1);
-            Shooter.getInstance().setTrigerPercent(-1);
+            Shooter.getInstance().setTriggerPercent(-1);
             Shooter.getInstance().setFlywheelVelocity(10);
         }
 
@@ -215,7 +215,7 @@ public class TeleopInputs {
 
         if(jogTriggerMode || Math.abs(manualTrigger) > 0.1 && mode != TeleopMode.CLIMB) {
             jogTriggerMode = true;
-            Shooter.getInstance().setTrigerPercent(manualTrigger/2);
+            Shooter.getInstance().setTriggerPercent(manualTrigger/2);
             if(manualTrigger < 0) {
                 //don't let notes stay stuck in the flywheel.
                 Shooter.getInstance().setFlywheelVelocity(manualTrigger * 10);
