@@ -26,7 +26,7 @@ public class NoteTracker {
             location = NoteLocation.FLIPPER;
         }
 
-        if(state == SuperstructureState.PLACE_AMP || state == SuperstructureState.PLACE_TRAP) {
+        if(state == SuperstructureState.PLACE_AMP) {
             location = NoteLocation.NONE;
         }
 

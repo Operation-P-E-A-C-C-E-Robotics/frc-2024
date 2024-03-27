@@ -9,7 +9,6 @@ import frc.robot.planners.NoteTracker;
 import frc.robot.planners.NoteTracker.NoteLocation;
 import frc.robot.statemachines.SwerveStatemachine.SwerveState;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Thing;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
@@ -38,7 +37,6 @@ public class TeleopInputs {
     //whether the joystick is overriding the pivot
     private boolean jogPivotMode = false;
     private boolean jogClimberMode = false;
-    private boolean jogFlipperMode = false;
     private boolean jogTriggerMode = false;
 
     private Timer ampResetTimer = new Timer();
@@ -129,7 +127,6 @@ public class TeleopInputs {
                 case AMP:
                     // return SuperstructureState.PLACE_AMP;
                 case CLIMB:
-                    if(climbMode == ClimbMode.RETRACT) return SuperstructureState.PLACE_TRAP;
                 case SPEAKER:
                     // return TeleopState.SHOOT;
                 default:
@@ -190,23 +187,19 @@ public class TeleopInputs {
         var manualPivot = OI.ManualInputs.jogPivot.getAsDouble() * 0.35;
         var manualTrigger = OI.ManualInputs.jogTrigger.getAsDouble();
         var manualClimber = OI.ManualInputs.jogClimber.getAsDouble();
-        var manualThing = OI.ManualInputs.jogThing.getAsDouble();
 
         if(mode != TeleopMode.CLIMB) {
             manualClimber = 0;
-            manualThing = 0;
         }
 
         if(OI.ManualInputs.resetManualInputs.getAsBoolean()) {
             jogPivotMode = false;
             jogClimberMode = false;
-            jogFlipperMode = false;
             jogTriggerMode = false;
         }
 
         if(mode != TeleopMode.CLIMB) {
             jogClimberMode = false;
-            jogFlipperMode = false;
         }
 
         if(jogPivotMode || Math.abs(manualPivot) > 0.2 && mode != TeleopMode.CLIMB) {
@@ -218,11 +211,6 @@ public class TeleopInputs {
             jogClimberMode = true;
             Pivot.getInstance().climbMode();
             Climber.getInstance().setClimberPercent(manualClimber);
-        }
-
-        if(jogFlipperMode || Math.abs(manualThing) > 0.2 && mode == TeleopMode.CLIMB) {
-            jogFlipperMode = true;
-            Thing.getInstance().setThingExtensionPercent(manualThing);
         }
 
         if(jogTriggerMode || Math.abs(manualTrigger) > 0.1 && mode != TeleopMode.CLIMB) {

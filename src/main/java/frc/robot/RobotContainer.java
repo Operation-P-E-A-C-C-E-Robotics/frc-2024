@@ -13,14 +13,12 @@ import frc.robot.planners.AimPlanner;
 import frc.robot.planners.MotionPlanner;
 import frc.robot.planners.NoteTracker;
 import frc.robot.statemachines.ClimberStatemachine;
-import frc.robot.statemachines.ThingStatemachine;
 import frc.robot.statemachines.FlywheelIntakeStatemachine;
 import frc.robot.statemachines.PivotStatemachine;
 import frc.robot.statemachines.ShooterStatemachine;
 import frc.robot.statemachines.SwerveStatemachine;
 import frc.robot.statemachines.TriggerIntakeStatemachine;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Thing;
 import frc.robot.subsystems.FlywheelIntake;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
@@ -39,7 +37,6 @@ public class RobotContainer {
     private final TriggerIntake triggerIntake = TriggerIntake.getInstance();
     private final Pivot pivot = Pivot.getInstance();
     private final Shooter shooter = Shooter.getInstance();
-    private final Thing thing = Thing.getInstance();
     private final Climber climber = Climber.getInstance();
 
     /* PLANNERS */
@@ -57,7 +54,6 @@ public class RobotContainer {
     private final TriggerIntakeStatemachine triggerIntakeStatemachine = new TriggerIntakeStatemachine(triggerIntake, motionPlanner);
     private final PivotStatemachine pivotStatemachine = new PivotStatemachine(pivot, aimPlanner, motionPlanner);
     private final ShooterStatemachine shooterStatemachine = new ShooterStatemachine(shooter, aimPlanner, this::readyToShoot);
-    private final ThingStatemachine thingStatemachine = new ThingStatemachine(thing, motionPlanner);
     private final ClimberStatemachine climberStatemachine = new ClimberStatemachine(climber, () -> swerve.getGyroAngle().getX());
 
     private final RobotStatemachine teleopStatemachine = new RobotStatemachine(
@@ -66,7 +62,6 @@ public class RobotContainer {
         triggerIntakeStatemachine,
         shooterStatemachine,
         pivotStatemachine,
-        thingStatemachine,
         climberStatemachine,
         motionPlanner,
         aimPlanner
@@ -191,8 +186,6 @@ public class RobotContainer {
             MultiTracers.trace("RobotContainer::run", "pivotStatemachine.update");
             shooterStatemachine.update();
             MultiTracers.trace("RobotContainer::run", "shooterStatemachine.update");
-            thingStatemachine.update();
-            MultiTracers.trace("RobotContainer::run", "diverterStatemachine.update");
             climberStatemachine.update();
             MultiTracers.trace("RobotContainer::run", "climberStatemachine.update");
             
