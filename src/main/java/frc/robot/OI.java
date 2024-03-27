@@ -101,7 +101,7 @@ public class OI {
         if(Shooter.getInstance().shotDetected()) {
             driverJoystick.setRumble(RumbleType.kBothRumble, 0.5);
             operatorJoystick.setRumble(RumbleType.kBothRumble, 0.5);
-        } else if(RobotContainer.getInstance().getTeleopStatemachine().getState() == SuperstructureState.INTAKE_BACK && NoteTracker.getLocation() == NoteLocation.INDEXING) {
+        } else if(RobotContainer.getInstance().getTeleopStatemachine().getState() == SuperstructureState.INTAKE_BACK && Shooter.getInstance().flywheelSwitchTripped()) {
             driverJoystick.setRumble(RumbleType.kBothRumble, 0.5);
             operatorJoystick.setRumble(RumbleType.kBothRumble, 0.5);
         }  else {
