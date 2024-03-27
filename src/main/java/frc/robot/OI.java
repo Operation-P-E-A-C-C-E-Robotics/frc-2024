@@ -72,7 +72,6 @@ public class OI {
     public static class Overrides {
         /* MODE OVERRIDES */ //overrides the state requested by the mode
         public static final BooleanSupplier forceAim = () -> operatorJoystick.getRawButton(6);//force the robot into auto aim state
-        public static final BooleanSupplier forceIntakeFront = () -> false; //force the robot to intake from the front
         public static final BooleanSupplier forceIntakeBack = () -> driverJoystick.getRawAxis(2) > 0.2 || operatorJoystick.getRawButton(7);
         public static final BooleanSupplier forceAmp = () -> false; //force the robot to go into the place amp state
         

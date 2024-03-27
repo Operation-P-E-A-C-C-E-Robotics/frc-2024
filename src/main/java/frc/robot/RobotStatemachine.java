@@ -31,10 +31,6 @@ public class RobotStatemachine extends StateMachine<RobotStatemachine.Superstruc
     private final PivotStatemachine pivotStatemachine;
     private final ClimberStatemachine climberStatemachine;
 
-    // private final MotionPlanner intakeMotionPlanner;
-    // private final AimPlanner aimPlanner;
-    //private final StageAvoidancePlanner stageAvoidancePlanner;
-
     public RobotStatemachine (SwerveStatemachine swerveStatemachine, 
                             TriggerIntakeStatemachine triggerIntakeStatemachine, 
                             ShooterStatemachine shooterStatemachine, 
