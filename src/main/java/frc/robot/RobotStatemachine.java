@@ -47,9 +47,6 @@ public class RobotStatemachine extends StateMachine<RobotStatemachine.Superstruc
         this.shooterStatemachine = shooterStatemachine;
         this.pivotStatemachine = pivotStatemachine;
         this.climberStatemachine = climberStatemachine;
-        // this.intakeMotionPlanner = intakeMotionPlanner;
-        // this.aimPlanner = aimPlanner;
-        // this.stageAvoidancePlanner = stageAvoidancePlanner;
     }
 
     /**
@@ -167,10 +164,6 @@ public class RobotStatemachine extends StateMachine<RobotStatemachine.Superstruc
         SHOOT(
             ShooterState.SHOOT,
             PivotState.AUTO_AIM
-        ),
-        PLACE_AMP(
-            ShooterState.RAMP_DOWN,
-            PivotState.AMP
         ),
         ALIGN_CLIMB(
             ShooterState.RAMP_DOWN,

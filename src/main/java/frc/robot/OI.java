@@ -6,8 +6,6 @@ import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import frc.robot.RobotStatemachine.SuperstructureState;
-import frc.robot.planners.NoteTracker;
-import frc.robot.planners.NoteTracker.NoteLocation;
 import frc.robot.subsystems.Shooter;
 
 /**

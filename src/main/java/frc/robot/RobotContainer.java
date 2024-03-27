@@ -100,28 +100,29 @@ public class RobotContainer {
         if(!pivot.atSetpoint()) return false;
         if(!swerveStatemachine.transitioning()) return false;
         if((swerve.getChassisSpeeds().vxMetersPerSecond > 0.005 && swerve.getChassisSpeeds().vyMetersPerSecond > 0.005) && !OI.Inputs.enableShootWhileMoving.getAsBoolean()) return false;
-        // if(OI.Inputs.wantsPlace.getAsBoolean()) return false;
         if(swerve.getEyes().getOdometryError() > 25) return false;
         return true;
-        // return OI.Inputs.wantsPlace.getAsBoolean();
+    }
+
+    public boolean readyToAutoShoot() {
+        if(OI.Inputs.wantsPlace.getAsBoolean()) {
+            // if(OI.Inputs.enableShootWhileMoving.getAsBoolean()) return true;
+            return false;
+        } else if (OI.Inputs.enableShootWhileMoving.getAsBoolean()) {
+            return true;
+        }
+        if(kindaReadyToShoot()) {
+            readyTimer.start();
+        }
+        if(readyTimer.get() > aimPlanner.getDistanceToTarget()/6){
+            readyTimer.stop();
+            readyTimer.reset();
+            return true;
+        }
+        return false;
     }
 
     public boolean readyToShoot(){
-        // if(OI.Inputs.wantsPlace.getAsBoolean()) {
-        //     // if(OI.Inputs.enableShootWhileMoving.getAsBoolean()) return true;
-        //     return false;
-        // } else if (OI.Inputs.enableShootWhileMoving.getAsBoolean()) {
-        //     return true;
-        // }
-        // if(kindaReadyToShoot()) {
-        //     readyTimer.start();
-        // }
-        // if(readyTimer.get() > aimPlanner.getDistanceToTarget()/6){
-        //     readyTimer.stop();
-        //     readyTimer.reset();
-        //     return true;
-        // }
-        // return false;
         return OI.Inputs.wantsPlace.getAsBoolean();
     }
 
@@ -148,6 +149,7 @@ public class RobotContainer {
      */
     public void run() {
         MultiTracers.trace("RobotContainer::run", "RobotContainer::run");
+
         /* UPDATE PLANNERS */
         motionPlanner.update();
         MultiTracers.trace("RobotContainer::run", "motionPlanner.update");
@@ -206,7 +208,7 @@ public class RobotContainer {
         }
         NoteTracker.update(teleopStatemachine.getState());
 
-        MultiTracers.print("RobotContainer::run (end)");
+        MultiTracers.print("RobotContainer::run");
     }
 
     public void resetAuto(){
