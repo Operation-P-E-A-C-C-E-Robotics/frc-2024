@@ -25,8 +25,6 @@ import frc.lib.util.AllianceFlipUtil;
 import frc.lib.vision.ApriltagCamera;
 import frc.lib.vision.PeaccyVision;
 import frc.robot.Constants;
-import frc.robot.FieldConstants;
-
 import static frc.robot.Constants.Swerve.*;
 
 public class Swerve extends SubsystemBase {
@@ -175,7 +173,7 @@ public class Swerve extends SubsystemBase {
     }
 
     private static PeaccyVision eyes = new PeaccyVision(
-        new ApriltagCamera.ApriltagPhotonvision(Constants.Cameras.primaryPhotonvision, Constants.Cameras.robotToPrimaryPhotonvision, FieldConstants.aprilTags, 1),
+        Constants.Cameras.primaryPhotonvisionCamera,
         // new ApriltagCamera.ApriltagPhotonvision(Constants.Cameras.secondaryPhotonvision, Constants.Cameras.robotToSecondaryPhotonvision, FieldConstants.aprilTags, 0.5),
         new ApriltagCamera.ApriltagLimelight(Constants.Cameras.frontLimelight, 0.1)
     );

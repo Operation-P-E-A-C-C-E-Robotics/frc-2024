@@ -32,6 +32,7 @@ import frc.lib.swerve.SwerveDescription.Inversion;
 import frc.lib.swerve.SwerveDescription.Physics;
 import frc.lib.swerve.SwerveDescription.PidGains;
 import frc.lib.util.JoystickCurves;
+import frc.lib.vision.ApriltagCamera.ApriltagPhotonvision;
 
 public final class Constants {
   public static final double period = 0.015;
@@ -58,6 +59,13 @@ public final class Constants {
             Units.degreesToRadians(15), 
             Units.degreesToRadians(45)
         )
+    );
+
+    public static final ApriltagPhotonvision primaryPhotonvisionCamera = new ApriltagPhotonvision(
+        primaryPhotonvision, 
+        robotToPrimaryPhotonvision, 
+        FieldConstants.aprilTags,
+        0.9
     );
   }
 
