@@ -44,6 +44,8 @@ public final class Constants {
     public static final String primaryPhotonvision = "leftcamera";
     public static final String secondaryPhotonvision = "rightcamera";
 
+    public static final double LIMELIGHT_FOCAL_LENGTH = (1*83)/0.32;//(1 * 240) / 0.32; //183 px = 0.21 meters // (distance * pixels) / size
+
     public static final Transform3d robotToPrimaryPhotonvision = new Transform3d(
         Units.inchesToMeters(10.5), 
         Units.inchesToMeters(6),

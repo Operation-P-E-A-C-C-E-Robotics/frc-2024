@@ -5,14 +5,16 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,9 +25,12 @@ import frc.lib.swerve.SwerveDescription.PidGains;
 import frc.lib.telemetry.SwerveTelemetry;
 import frc.lib.util.AllianceFlipUtil;
 import frc.lib.vision.ApriltagCamera;
+import frc.lib.vision.LimelightHelpers;
 import frc.lib.vision.PeaccyVision;
 import frc.robot.Constants;
 import static frc.robot.Constants.Swerve.*;
+
+import java.util.Optional;
 
 public class Swerve extends SubsystemBase {
     protected final PeaccefulSwerve swerve;
@@ -33,8 +38,15 @@ public class Swerve extends SubsystemBase {
     private final SwerveRequest.ApplyChassisSpeeds autonomousRequest = new SwerveRequest.ApplyChassisSpeeds()
     .withDriveRequestType(DriveRequestType.Velocity);
     private final SendableChooser<Pose2d> poseSeedChooser = new SendableChooser<>();
-    
+
+    private final NetworkTableEntry floorNoteWidth = LimelightHelpers.getLimelightNTTableEntry(Constants.Cameras.rearLimelight, "thor");
+    private final NetworkTableEntry floorNoteHeight = LimelightHelpers.getLimelightNTTableEntry(Constants.Cameras.rearLimelight, "tvert");
+    private final double NOTE_WIDTH = Units.inchesToMeters(14);
+
     private Transform2d visionDiscrepancy = new Transform2d();
+    private Optional<Translation2d> noteFromRobot = Optional.empty();
+    private Optional<Translation2d> noteFromField = Optional.empty();
+    private Timer timeSinceFloorNoteUpdate = new Timer();
     // private LimelightHelper limelight;
 
     private static PeaccyVision eyes = new PeaccyVision(
@@ -185,8 +197,32 @@ public class Swerve extends SubsystemBase {
             );
         }
 
+        //update floor note tracking:
+        var width = floorNoteWidth.getDouble(-1);
+        var height = floorNoteHeight.getDouble(-1);
+
+        if(width > 0 && height > 0) {
+            var distance = (NOTE_WIDTH * Constants.Cameras.LIMELIGHT_FOCAL_LENGTH) / width;
+            var angle = LimelightHelpers.getTX(Constants.Cameras.rearLimelight) + 180;
+            noteFromRobot = Optional.of(new Translation2d(distance, Rotation2d.fromDegrees(angle)));
+            noteFromField = Optional.of(getPose().getTranslation().plus(noteFromRobot.get()));
+            timeSinceFloorNoteUpdate.restart();
+        }
+        if(timeSinceFloorNoteUpdate.get() > 0.2) {
+            noteFromRobot = Optional.empty();
+            noteFromField = Optional.empty();
+        }
+
         //TODO: update limelight telemetry
         // LimelightTelemetry.update(Constants.Cameras.frontLimelight, swerve.getPose3d());
+    }
+
+    public Optional<Translation2d> getNoteFromRobot() {
+        return noteFromRobot;
+    }
+
+    public Optional<Translation2d> getNoteFromField() {
+        return noteFromField;
     }
 
     @Override
