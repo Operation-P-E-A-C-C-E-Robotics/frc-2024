@@ -30,6 +30,10 @@ public class TeleopInputs {
 
     private final double AUTO_AIM_X = 7; // distance from left wall to start aiming.
     private final double LAYUP_X = 2; // distance from left wall to start aiming.
+    private final double PROTECTED_X = 4;
+    private final double UNDER_STAGE_X = 7;
+    private final double WINGLINE_X = 10;
+    private final double CENTERLINE_X = 15;
 
     //whether the joystick is overriding the pivot
     private boolean jogPivotMode = false;
@@ -199,9 +203,31 @@ public class TeleopInputs {
 
     private boolean wantsAim(Pose2d blueAlliancePose) {
         if(NoteTracker.getLocation() != NoteLocation.SHOOTER) return false;
-        if (blueAlliancePose.getX() > LAYUP_X && aimMode == AimMode.LAYUP) return false;
-        if (blueAlliancePose.getX() < AUTO_AIM_X) return true;
-        return false;
+        var x = Swerve.getInstance().getPose().getX();
+        switch (aimMode) {
+            case AUTO:
+                if (x > AUTO_AIM_X) return false;
+                break;
+            case CENTERLINE:
+                if (x > CENTERLINE_X) return false;
+                break;
+            case LAYUP:
+                if (x > LAYUP_X) return false;
+                break;
+            case PROTECTED:
+                if (x > PROTECTED_X) return false;
+                break;
+            case UNDER_STAGE:
+                if (x > UNDER_STAGE_X) return false;
+                break;
+            case WINGLINE:
+                if (x > WINGLINE_X) return false;
+                break;
+            default:
+                return false;
+            
+        }
+        return true;
     }
 
     private SuperstructureState aimState() {
