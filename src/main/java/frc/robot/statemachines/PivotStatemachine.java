@@ -79,7 +79,7 @@ public class PivotStatemachine extends StateMachine<PivotStatemachine.PivotState
         AIM_PROTECTED(Rotation2d.fromDegrees(40)),
         AIM_UNDER_STAGE(Rotation2d.fromDegrees(40)),
         AIM_WINGLINE(Rotation2d.fromDegrees(40)),
-        AIM_CENTERLINE(Rotation2d.fromDegrees(40)),
+        AIM_CENTERLINE(Rotation2d.fromDegrees(20)),
         AUTO_AIM(Rotation2d.fromDegrees(30));
 
         private Rotation2d angle;
