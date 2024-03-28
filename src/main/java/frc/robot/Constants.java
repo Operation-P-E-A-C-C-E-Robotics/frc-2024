@@ -185,6 +185,16 @@ public final class Constants {
       pivotConfigs.Slot0.kG = 0.17;//0.23;//0.25;//0.23;
       pivotConfigs.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
 
+      pivotConfigs.Slot1.kP = 24;//6;//8;//6;
+      pivotConfigs.Slot1.kI = 6;//0;
+      pivotConfigs.Slot1.kD = 5;//0.0;//0;
+      pivotConfigs.Slot1.kS = 0.3;//0;
+      pivotConfigs.Slot1.kV = 16.5;//14.5;//20;//14.5;
+      pivotConfigs.Slot1.kA = 1.25;//0;//0.01;//0;
+      pivotConfigs.Slot1.kG = 0.17;//0.23;//0.25;//0.23;
+      pivotConfigs.Slot1.GravityType = GravityTypeValue.Arm_Cosine;
+
+
       pivotConfigs.MotionMagic.MotionMagicExpo_kA = 10;
       pivotConfigs.MotionMagic.MotionMagicExpo_kV = 20;
       pivotConfigs.MotionMagic.MotionMagicCruiseVelocity = 0;
@@ -205,45 +215,6 @@ public final class Constants {
       cancoderConfiguration.MagnetSensor.MagnetOffset = -0.613281;
       cancoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
       cancoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
-    }
-  }
-
-  public static final class Thing {
-    // public static final int thingRollerMotorId = 50;
-    public static final int thingDeployMotorId = 26;
-
-    public static final double diverterDeployGearRatio = 1;
-    public static final double diverterDeployTolerance = 0.1; //how close to the target position the deployer needs to be to be considered "deployed"
-
-    public static final double maxDiverterExtension = 0; //in meters
-
-    public static final TalonFXConfiguration diverterDeployConfigs = new TalonFXConfiguration();
-    static {
-      diverterDeployConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-      diverterDeployConfigs.CurrentLimits.StatorCurrentLimit = 40;
-      diverterDeployConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
-      diverterDeployConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-      
-      diverterDeployConfigs.Slot0.kP = 0;
-      diverterDeployConfigs.Slot0.kI = 0;
-      diverterDeployConfigs.Slot0.kD = 0;
-      diverterDeployConfigs.Slot0.kS = 0;
-      diverterDeployConfigs.Slot0.kV = 0;
-      diverterDeployConfigs.Slot0.kA = 0;
-      
-      diverterDeployConfigs.MotionMagic.MotionMagicExpo_kA = 0;
-      diverterDeployConfigs.MotionMagic.MotionMagicExpo_kV = 0;
-      diverterDeployConfigs.MotionMagic.MotionMagicCruiseVelocity = 0;
-    }
-
-    public static final TalonFXConfiguration diverterRollerConfigs = new TalonFXConfiguration();
-    static {
-      diverterRollerConfigs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-      diverterRollerConfigs.CurrentLimits.StatorCurrentLimit = 20;
-      diverterRollerConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
-      diverterRollerConfigs.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-
-      diverterRollerConfigs.Slot0.kP = 0; //for holding position
     }
   }
 
