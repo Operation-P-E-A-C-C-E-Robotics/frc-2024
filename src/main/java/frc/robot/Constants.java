@@ -44,6 +44,8 @@ public final class Constants {
     public static final String primaryPhotonvision = "leftcamera";
     public static final String secondaryPhotonvision = "rightcamera";
 
+    public static final double LIMELIGHT_FOCAL_LENGTH = (1*83)/0.32;//(1 * 240) / 0.32; //183 px = 0.21 meters // (distance * pixels) / size
+
     public static final Transform3d robotToPrimaryPhotonvision = new Transform3d(
         Units.inchesToMeters(10.5), 
         Units.inchesToMeters(6),
@@ -108,30 +110,9 @@ public final class Constants {
     public static final double flywheelEfficiency = 2.4; // percentage of flywheel surface speed to exit velocity
     public static final double flywheelTolerance = 4; //how close to the target velocity the flywheel needs to be considered ready
   }
-
-  public static final class FlywheelIntake {
-    public static final int flywheelIntakeRollerMotorId = 16;
-    public static final int flywheelIntakeDeployMotorId = 17;
-
-    public static final double flywheelIntakeDeployKp = 2;
-    public static final double flywheelIntakeDeployKi = 0;
-    public static final double flywheelIntakeDeployKd = 0;
-
-    public static final float flywheelIntakeDeployMinAngle = 0.0f;
-    public static final float flywheelIntakeDeployMaxAngle = 0.0f;
-
-    public static final double flywheelIntakeDeployGearing = 0.01;
-    public static final double flywheelIntakeDeployTolerance = 1; //how close to the target position the deployer needs to be to be considered "deployed"
-
-    public static final boolean flywheelIntakeDeployMotorInverted = true;
-    public static final boolean flywheelIntakeRollerMotorInverted = false;
-
-    public static final int flywheelIntakeDeployFreeCurrentLimit = 5; //TODO low for testing
-    public static final int flywheelIntakeDeployStallCurrentLimit = 5; //TODO low for testing
-  }
-
   public static final class TriggerIntake {
     public static final int triggerIntakeRollerMotorId = 16;
+    public static final int triggerIntakeRollerMotor2Id = 20;
     public static final int triggerIntakeDeployMotorId = 19;
 
     public static final double triggerIntakeDeployKp = 4;
@@ -146,6 +127,7 @@ public final class Constants {
 
     public static final boolean triggerIntakeDeployMotorInverted = false;
     public static final boolean triggerIntakeRollerMotorInverted = true;
+    public static final boolean triggerIntakeRollerMotor2Inverted = true;
 
     public static final int triggerIntakeDeployFreeCurrentLimit = 15;
     public static final int triggerIntakeDeployStallCurrentLimit = 10;
@@ -185,6 +167,16 @@ public final class Constants {
       pivotConfigs.Slot0.kG = 0.17;//0.23;//0.25;//0.23;
       pivotConfigs.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
 
+      pivotConfigs.Slot1.kP = 24;//6;//8;//6;
+      pivotConfigs.Slot1.kI = 6;//0;
+      pivotConfigs.Slot1.kD = 5;//0.0;//0;
+      pivotConfigs.Slot1.kS = 0.3;//0;
+      pivotConfigs.Slot1.kV = 16.5;//14.5;//20;//14.5;
+      pivotConfigs.Slot1.kA = 1.25;//0;//0.01;//0;
+      pivotConfigs.Slot1.kG = 0.17;//0.23;//0.25;//0.23;
+      pivotConfigs.Slot1.GravityType = GravityTypeValue.Arm_Cosine;
+
+
       pivotConfigs.MotionMagic.MotionMagicExpo_kA = 10;
       pivotConfigs.MotionMagic.MotionMagicExpo_kV = 20;
       pivotConfigs.MotionMagic.MotionMagicCruiseVelocity = 0;
@@ -205,45 +197,6 @@ public final class Constants {
       cancoderConfiguration.MagnetSensor.MagnetOffset = -0.613281;
       cancoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
       cancoderConfiguration.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
-    }
-  }
-
-  public static final class Thing {
-    // public static final int thingRollerMotorId = 50;
-    public static final int thingDeployMotorId = 26;
-
-    public static final double diverterDeployGearRatio = 1;
-    public static final double diverterDeployTolerance = 0.1; //how close to the target position the deployer needs to be to be considered "deployed"
-
-    public static final double maxDiverterExtension = 0; //in meters
-
-    public static final TalonFXConfiguration diverterDeployConfigs = new TalonFXConfiguration();
-    static {
-      diverterDeployConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-      diverterDeployConfigs.CurrentLimits.StatorCurrentLimit = 40;
-      diverterDeployConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
-      diverterDeployConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-      
-      diverterDeployConfigs.Slot0.kP = 0;
-      diverterDeployConfigs.Slot0.kI = 0;
-      diverterDeployConfigs.Slot0.kD = 0;
-      diverterDeployConfigs.Slot0.kS = 0;
-      diverterDeployConfigs.Slot0.kV = 0;
-      diverterDeployConfigs.Slot0.kA = 0;
-      
-      diverterDeployConfigs.MotionMagic.MotionMagicExpo_kA = 0;
-      diverterDeployConfigs.MotionMagic.MotionMagicExpo_kV = 0;
-      diverterDeployConfigs.MotionMagic.MotionMagicCruiseVelocity = 0;
-    }
-
-    public static final TalonFXConfiguration diverterRollerConfigs = new TalonFXConfiguration();
-    static {
-      diverterRollerConfigs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-      diverterRollerConfigs.CurrentLimits.StatorCurrentLimit = 20;
-      diverterRollerConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
-      diverterRollerConfigs.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-
-      diverterRollerConfigs.Slot0.kP = 0; //for holding position
     }
   }
 

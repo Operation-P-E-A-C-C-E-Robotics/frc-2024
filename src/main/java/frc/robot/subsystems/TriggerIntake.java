@@ -28,6 +28,7 @@ public class TriggerIntake {
     /* HARDWARE */
     private CANSparkMax deployMotor = new CANSparkMax(triggerIntakeDeployMotorId, MotorType.kBrushless);
     private WPI_TalonSRX rollerMotor = new WPI_TalonSRX(triggerIntakeRollerMotorId);
+    private WPI_TalonSRX rollerMotor2 = new WPI_TalonSRX(triggerIntakeRollerMotor2Id);
 
     private RelativeEncoder deployEncoder = deployMotor.getEncoder();
 
@@ -51,6 +52,7 @@ public class TriggerIntake {
         deployMotor.restoreFactoryDefaults();
 
         rollerMotor.setInverted(triggerIntakeRollerMotorInverted);
+        rollerMotor.setInverted(triggerIntakeRollerMotor2Inverted);
         deployMotor.setInverted(triggerIntakeDeployMotorInverted);
         
         Reporter.report(
@@ -99,6 +101,7 @@ public class TriggerIntake {
         );
 
         rollerMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, triggerIntakeCurrentLimit, triggerIntakeCurrentLimit, 0.01));
+        rollerMotor2.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, triggerIntakeCurrentLimit, triggerIntakeCurrentLimit, 0.01));
     }
 
     /**
@@ -126,6 +129,7 @@ public class TriggerIntake {
     public void setRollerSpeed (double speed) {
         rollerSpeedLog.append(speed);
         rollerMotor.set(speed);
+        rollerMotor2.set(speed);
     }
 
     /**
