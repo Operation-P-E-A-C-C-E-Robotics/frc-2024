@@ -17,16 +17,14 @@ public class ShooterStatemachine extends StateMachine<ShooterStatemachine.Shoote
 
     private final Shooter shooter;
     private final AimPlanner aimPlanner;
-    private final BooleanSupplier alignedToShoot;
-
-    private boolean hasNote = false;
+    private final BooleanSupplier FIRE;
 
     private final Timer sketchyTimer = new Timer();
 
-    public ShooterStatemachine(Shooter shooter, AimPlanner aimPlanner, BooleanSupplier alignedToShoot){
+    public ShooterStatemachine(Shooter shooter, AimPlanner aimPlanner, BooleanSupplier FIRE){
         this.shooter = shooter;
         this.aimPlanner = aimPlanner;
-        this.alignedToShoot = alignedToShoot;
+        this.FIRE = FIRE;
     }
 
     /**
@@ -36,20 +34,25 @@ public class ShooterStatemachine extends StateMachine<ShooterStatemachine.Shoote
     private void updateState(){
         SmartDashboard.putBoolean("flywheel switch", shooter.flywheelSwitchTripped());
         SmartDashboard.putBoolean("trigger switch", shooter.triggerSwitchTripped());
+
         if(state == ShooterState.RAMP_DOWN) if(shooter.flywheelSwitchTripped()) state = ShooterState.INDEX;
-        // else if(state == ShooterState.INTAKE) if(shooter.flywheelSwitchTripped()) state = ShooterState.INDEX;
-        // else if(state == ShooterState.AUTO_AIM) if(shooter.flywheelSwitchTripped() || shooter.triggerSwitchTripped()) state = ShooterState.INDEX;
         else if(state == ShooterState.INDEX) if(!(shooter.triggerSwitchTripped() || shooter.flywheelSwitchTripped())) state = ShooterState.RAMP_DOWN;
         if (
               (state == ShooterState.AUTO_AIM
             ||state == ShooterState.AIM_LAYUP
-            ||state == ShooterState.AIM_PROTECTED)
-            && alignedToShoot.getAsBoolean()
+            ||state == ShooterState.AIM_PROTECTED
+            ||state == ShooterState.AIM_UNDER_STAGE
+            ||state == ShooterState.AIM_WINGLINE
+            ||state == ShooterState.AIM_CENTERLINE)
+            && FIRE.getAsBoolean()
             && DriverStation.isTeleop()
         ) {
             lastAimingState = state;
             state = ShooterState.SHOOT;
             printShotData();
+        }
+        if(state == ShooterState.INTAKE && shooter.flywheelSwitchTripped()) {
+            state = ShooterState.INDEX;
         }
     }
 
@@ -81,43 +84,34 @@ public class ShooterStatemachine extends StateMachine<ShooterStatemachine.Shoote
     public void update(){
         updateState();
         SmartDashboard.putString("Shooter State", state.name());
-
-        if(shooter.triggerSwitchTripped() || shooter.flywheelSwitchTripped()) hasNote = true;
-        if(shooter.shotDetected()) hasNote = false;
-
-        if(state == ShooterState.INTAKE && shooter.flywheelSwitchTripped()) {
-            state = ShooterState.INDEX;
-        }
-        // if(state == ShooterState.INTAKE && DriverStation.isAutonomous() && shooter.triggerSwitchTripped()) {
-        //     state = ShooterState.INDEX;
-        // }
-
+        
         if(state == ShooterState.AUTO_AIM) {
             shooter.setFlywheelVelocity(aimPlanner.getTargetFlywheelVelocityRPS());
-            shooter.setTrigerPercent(0);
+            shooter.setTriggerPercent(0);
             return;
         }
 
         if(state == ShooterState.SHOOT) {
             if(lastAimingState == ShooterState.AUTO_AIM) shooter.setFlywheelVelocity(aimPlanner.getTargetFlywheelVelocityRPS());
             else shooter.setFlywheelVelocity(lastAimingState.getFlywheelVelocity());
-            shooter.setTrigerPercent(state.getTriggerPercent());
+            shooter.setTriggerPercent(state.getTriggerPercent());
             return;
         }
+
         if (state == ShooterState.INTAKE_N_AIM){
             shooter.setFlywheelVelocity(aimPlanner.getTargetFlywheelVelocityRPS());
             if(shooter.triggerSwitchTripped()) sketchyTimer.restart();
             if(!shooter.triggerSwitchTripped() || sketchyTimer.get() < 0.3) {
-                shooter.setTrigerPercent(1);
+                shooter.setTriggerPercent(1);
             }
-            else shooter.setTrigerPercent(0);
+            else shooter.setTriggerPercent(0);
             return;
         }
 
         if(state == ShooterState.INDEX){
-            if(shooter.flywheelSwitchTripped()) shooter.setTrigerPercent(-state.getTriggerPercent());
-            else if (shooter.triggerSwitchTripped() && !shooter.flywheelSwitchTripped()) shooter.setTrigerPercent(state.getTriggerPercent());
-            else shooter.setTrigerPercent(0);
+            if(shooter.flywheelSwitchTripped()) shooter.setTriggerPercent(-state.getTriggerPercent());
+            else if (shooter.triggerSwitchTripped() && !shooter.flywheelSwitchTripped()) shooter.setTriggerPercent(state.getTriggerPercent());
+            else shooter.setTriggerPercent(0);
 
             shooter.setFlywheelVelocity(state.flywheelVelocity);
             return;
@@ -125,25 +119,25 @@ public class ShooterStatemachine extends StateMachine<ShooterStatemachine.Shoote
 
         if (state == ShooterState.COAST) {
             shooter.coastFlywheel();
-            shooter.setTrigerPercent(0.0);
+            shooter.setTriggerPercent(0.0);
             return;
         }
 
         if (state == ShooterState.RAMP_DOWN) {
             shooter.brakeFlywheel();
-            shooter.setTrigerPercent(0.0);
+            shooter.setTriggerPercent(0.0);
             return;
         }
 
         if(state == ShooterState.AMP) {
             shooter.setFlywheelVelocity(18.5, 5.3);
-            if(OI.Inputs.wantsPlace.getAsBoolean()) shooter.setTrigerPercent(0.4);
-            else shooter.setTrigerPercent(0);
+            if(OI.Inputs.wantsPlace.getAsBoolean()) shooter.setTriggerPercent(0.4);
+            else shooter.setTriggerPercent(0);
             return;
         }
 
         shooter.setFlywheelVelocity(state.getFlywheelVelocity());
-        shooter.setTrigerPercent(state.getTriggerPercent());
+        shooter.setTriggerPercent(state.getTriggerPercent());
     }
 
     @Override
@@ -159,10 +153,6 @@ public class ShooterStatemachine extends StateMachine<ShooterStatemachine.Shoote
     @Override
     public boolean isDynamic() {
         return true;
-    }
-
-    public boolean hasNote(){
-        return hasNote;
     }
 
     private int shotsFired = 0;

@@ -9,7 +9,6 @@ import frc.robot.planners.NoteTracker;
 import frc.robot.planners.NoteTracker.NoteLocation;
 import frc.robot.statemachines.SwerveStatemachine.SwerveState;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Thing;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
@@ -30,15 +29,11 @@ public class TeleopInputs {
     private boolean aiming = false;
 
     private final double AUTO_AIM_X = 7; // distance from left wall to start aiming.
-    private final double LAYUP_X = 1.5; // distance from left wall to start aiming.
-    // private final double AMP_HANDOFF_X = 5; // distance from left wall to start handoff.
-    // private final double AMP_ALIGN_X = 3; // distance from left wall to start aligning.
-    // private final double AMP_ALIGN_Y = 3; // distance from bottom wall to start aligning.
+    private final double LAYUP_X = 2; // distance from left wall to start aiming.
 
     //whether the joystick is overriding the pivot
     private boolean jogPivotMode = false;
     private boolean jogClimberMode = false;
-    private boolean jogFlipperMode = false;
     private boolean jogTriggerMode = false;
 
     private Timer ampResetTimer = new Timer();
@@ -53,20 +48,16 @@ public class TeleopInputs {
      * @return
      */
     public SwerveState getWantedSwerveState() {
-        if(OI.Overrides.forceAim.getAsBoolean() || (aiming && mode == TeleopMode.SPEAKER)) {
+        if(OI.Overrides.forceAim.getAsBoolean() || (aiming && mode == TeleopMode.SPEAKER && intakingMode == IntakingMode.NONE)) {
             return SwerveState.AIM;
-        }
-
-        if(intakingMode == IntakingMode.BACK || RobotContainer.getInstance().getTeleopStatemachine().getState() == SuperstructureState.INTAKE_BACK) {
-            return SwerveState.ALIGN_INTAKING;
-        }
-
-        if(OI.Swerve.isRobotCentric.getAsBoolean()) {
-            return SwerveState.ROBOT_CENTRIC;
         }
 
         if(OI.Swerve.isLockIn.getAsBoolean()) {
             return SwerveState.LOCK_IN;
+        }
+
+        if(OI.Swerve.isRobotCentric.getAsBoolean()) {
+            return SwerveState.ROBOT_CENTRIC;
         }
 
         return OI.Swerve.isOpenLoop.getAsBoolean() ? SwerveState.OPEN_LOOP_TELEOP : SwerveState.CLOSED_LOOP_TELEOP;
@@ -106,14 +97,13 @@ public class TeleopInputs {
 
         // operator overrides - these take precedence over everything else
         if(OI.Inputs.wantsStow.getAsBoolean())  return SuperstructureState.STOW;
-        if(OI.Overrides.forceHandoff.getAsBoolean()) return SuperstructureState.ALIGN_AMP;
         if(OI.Overrides.forceAim.getAsBoolean()) return SuperstructureState.AUTO_AIM;
 
         //handle the drivers' intaking requests, these take precedence over modes & automation
         intakingMode = wantedIntakeMode();
         SmartDashboard.putString("Intaking Mode", intakingMode.name());
         if(intakingMode != IntakingMode.NONE) {
-            return intakingMode == IntakingMode.FRONT ? SuperstructureState.INTAKE_FRONT : SuperstructureState.INTAKE_BACK;
+            return SuperstructureState.INTAKE_BACK;
         }
 
         if(OI.Inputs.wantsAimLayup.getAsBoolean()) aimMode = AimMode.LAYUP;
@@ -123,20 +113,6 @@ public class TeleopInputs {
         if(OI.Inputs.wantsAimCenterline.getAsBoolean()) aimMode = AimMode.CENTERLINE;
         if(OI.Inputs.wantsAutoAim.getAsBoolean()) aimMode = AimMode.AUTO;
 
-        //handle the driver's request to "place" (a button that does different things based on the mode)
-        if(OI.Inputs.wantsPlace.getAsBoolean()) {
-            switch (mode) {
-                case AMP:
-                    // return SuperstructureState.PLACE_AMP;
-                case CLIMB:
-                    if(climbMode == ClimbMode.RETRACT) return SuperstructureState.PLACE_TRAP;
-                case SPEAKER:
-                    // return TeleopState.SHOOT;
-                default:
-                    break;
-            }
-        }
-
         if(mode == TeleopMode.PANIC) return SuperstructureState.REST;
 
 
@@ -144,9 +120,6 @@ public class TeleopInputs {
         switch (mode) {
             case AMP:
                 aiming = false;
-                // if(wantsAlignAmp(blueAlliancePose)) {
-                //     return SuperstructureState.ALIGN_AMP;
-                // }
                 return SuperstructureState.ALIGN_AMP;
             case CLIMB:
                 aiming = false;
@@ -157,7 +130,6 @@ public class TeleopInputs {
                 return SuperstructureState.ALIGN_CLIMB;
             case SPEAKER:
                 aiming = wantsAim(blueAlliancePose); // stored for use in swerve state
-                // if(OI.Inputs.wantsShoot.getAsBoolean()) return TeleopState.SHOOT;
                 if(aiming) {
                     return aimState();
                 }
@@ -166,7 +138,6 @@ public class TeleopInputs {
                 aiming = false;
                 break;
         }
-
 
         return SuperstructureState.REST;
     }
@@ -177,36 +148,28 @@ public class TeleopInputs {
      * Call this method after the state machines have been updated.
      */
     public void handleOverrides() {
-        // if(OI.Overrides.forceTrigger.getAsBoolean()) {
-        //     Shooter.getInstance().setTrigerPercent(1);
-        // }
-
         if(OI.Overrides.eject.getAsBoolean()) {
             TriggerIntake.getInstance().setRollerSpeed(-1);
-            Shooter.getInstance().setTrigerPercent(-1);
-            Shooter.getInstance().setFlywheelVelocity(10);
+            Shooter.getInstance().setTriggerPercent(1);
+            Shooter.getInstance().setFlywheelVelocity(20);
         }
 
         var manualPivot = OI.ManualInputs.jogPivot.getAsDouble() * 0.35;
         var manualTrigger = OI.ManualInputs.jogTrigger.getAsDouble();
         var manualClimber = OI.ManualInputs.jogClimber.getAsDouble();
-        var manualThing = OI.ManualInputs.jogThing.getAsDouble();
 
         if(mode != TeleopMode.CLIMB) {
             manualClimber = 0;
-            manualThing = 0;
         }
 
         if(OI.ManualInputs.resetManualInputs.getAsBoolean()) {
             jogPivotMode = false;
             jogClimberMode = false;
-            jogFlipperMode = false;
             jogTriggerMode = false;
         }
 
         if(mode != TeleopMode.CLIMB) {
             jogClimberMode = false;
-            jogFlipperMode = false;
         }
 
         if(jogPivotMode || Math.abs(manualPivot) > 0.2 && mode != TeleopMode.CLIMB) {
@@ -220,23 +183,14 @@ public class TeleopInputs {
             Climber.getInstance().setClimberPercent(manualClimber);
         }
 
-        if(jogFlipperMode || Math.abs(manualThing) > 0.2 && mode == TeleopMode.CLIMB) {
-            jogFlipperMode = true;
-            Thing.getInstance().setThingExtensionPercent(manualThing);
-        }
-
         if(jogTriggerMode || Math.abs(manualTrigger) > 0.1 && mode != TeleopMode.CLIMB) {
             jogTriggerMode = true;
-            Shooter.getInstance().setTrigerPercent(manualTrigger/2);
+            Shooter.getInstance().setTriggerPercent(manualTrigger/2);
             if(manualTrigger < 0) {
                 //don't let notes stay stuck in the flywheel.
                 Shooter.getInstance().setFlywheelVelocity(manualTrigger * 10);
             }
         }
-
-        // if((OI.Inputs.wantsAimLayup.getAsBoolean() || OI.Inputs.wantsAimProtected.getAsBoolean()) && OI.Inputs.wantsPlace.getAsBoolean()) {
-        //     Shooter.getInstance().setTrigerPercent(1);
-        // }
     }
     
     public TeleopMode getMode() {
@@ -271,15 +225,9 @@ public class TeleopInputs {
 
     private IntakingMode wantedIntakeMode() {
         // operator overrides
-        if(OI.Overrides.forceIntakeFront.getAsBoolean()) return IntakingMode.FRONT;
         if(OI.Overrides.forceIntakeBack.getAsBoolean()) return IntakingMode.BACK;
 
-        // if the driver doesn't want to intake, return NONE
-        // otherwise, default to the back intake
-        if(!OI.Inputs.wantsIntake.getAsBoolean()) return IntakingMode.NONE;
-        else if(NoteTracker.getLocation() == NoteLocation.NONE)intakingMode = IntakingMode.BACK;
-
-        return intakingMode;
+        return IntakingMode.NONE;
     }
 
     private ClimbMode wantedClimbMode() {
@@ -294,7 +242,7 @@ public class TeleopInputs {
     }
 
     public enum IntakingMode {
-        FRONT, BACK, NONE
+        BACK, NONE
     }
 
     public enum ClimbMode {
