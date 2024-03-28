@@ -110,30 +110,9 @@ public final class Constants {
     public static final double flywheelEfficiency = 2.4; // percentage of flywheel surface speed to exit velocity
     public static final double flywheelTolerance = 4; //how close to the target velocity the flywheel needs to be considered ready
   }
-
-  public static final class FlywheelIntake {
-    public static final int flywheelIntakeRollerMotorId = 16;
-    public static final int flywheelIntakeDeployMotorId = 17;
-
-    public static final double flywheelIntakeDeployKp = 2;
-    public static final double flywheelIntakeDeployKi = 0;
-    public static final double flywheelIntakeDeployKd = 0;
-
-    public static final float flywheelIntakeDeployMinAngle = 0.0f;
-    public static final float flywheelIntakeDeployMaxAngle = 0.0f;
-
-    public static final double flywheelIntakeDeployGearing = 0.01;
-    public static final double flywheelIntakeDeployTolerance = 1; //how close to the target position the deployer needs to be to be considered "deployed"
-
-    public static final boolean flywheelIntakeDeployMotorInverted = true;
-    public static final boolean flywheelIntakeRollerMotorInverted = false;
-
-    public static final int flywheelIntakeDeployFreeCurrentLimit = 5; //TODO low for testing
-    public static final int flywheelIntakeDeployStallCurrentLimit = 5; //TODO low for testing
-  }
-
   public static final class TriggerIntake {
     public static final int triggerIntakeRollerMotorId = 16;
+    public static final int triggerIntakeRollerMotor2Id = 20;
     public static final int triggerIntakeDeployMotorId = 19;
 
     public static final double triggerIntakeDeployKp = 4;
@@ -148,6 +127,7 @@ public final class Constants {
 
     public static final boolean triggerIntakeDeployMotorInverted = false;
     public static final boolean triggerIntakeRollerMotorInverted = true;
+    public static final boolean triggerIntakeRollerMotor2Inverted = true;
 
     public static final int triggerIntakeDeployFreeCurrentLimit = 15;
     public static final int triggerIntakeDeployStallCurrentLimit = 10;
