@@ -28,7 +28,7 @@ public class OI {
         public static final BooleanSupplier isLockIn = () -> driverJoystick.getRawButton(1); //make the wheels point in
         public static final BooleanSupplier isOpenLoop = () -> true; //how hard should we try to actually follow the inputs (false = use the PID, which feels unnatural to me)
         
-        public static final BooleanSupplier isZeroOdometry = () -> driverJoystick.getRawButton(8); //zero the odometry
+        public static final BooleanSupplier isZeroOdometry = () -> driverJoystick.getRawButton(9); //zero the odometry
         public static final BooleanSupplier isFastVisionReset = () -> driverJoystick.getRawButton(9); //reset pose from vision quickly
         public static final BooleanSupplier isAttemptProperZero = () -> driverJoystick.getRawButton(8); //zero field centric properly
         
@@ -65,8 +65,8 @@ public class OI {
         public static final BooleanSupplier wantsAimProtected = () -> operatorJoystick.getPOV() == 270 || driverJoystick.getPOV() == 270;
         public static final BooleanSupplier wantsAimUnderStage = () -> operatorJoystick.getPOV() == 90 || driverJoystick.getPOV() == 90;
         public static final BooleanSupplier wantsAimWingline = () -> operatorJoystick.getPOV() == 0 || driverJoystick.getPOV() == 0;
-        public static final BooleanSupplier wantsAimCenterline = () -> operatorJoystick.getRawButton(0);
-        public static final BooleanSupplier wantsAutoAim = () -> driverJoystick.getRawButton(14);
+        public static final BooleanSupplier wantsAimCenterline = () -> operatorJoystick.getRawButton(14);
+        public static final BooleanSupplier wantsAutoAim = () -> driverJoystick.getRawButton(6);
 
         public static final BooleanSupplier wantsIntakeSource = () -> operatorJoystick.getRawButton(5);
 

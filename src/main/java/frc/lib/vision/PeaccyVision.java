@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.util.Util;
 import frc.lib.vision.ApriltagCamera.*;
+import frc.robot.OI;
 
 /**
  * PeaccyVision is a class that manages multiple ApriltagCameras and their results.
@@ -31,7 +32,7 @@ public class PeaccyVision {
     private static final double MAX_STDEV = 5.5;
     private static final double STDEV_ERROR_WEIGHT = 4;
     
-    private static final double STDEV_YAW_MULTIPLIER = 4.61345989;
+    private static final double STDEV_YAW_MULTIPLIER = 30;
 
 
     private ApriltagCamera[] cameras;
@@ -94,7 +95,7 @@ public class PeaccyVision {
     }
 
     public Matrix<N3, N1> getStDev(){
-        return VecBuilder.fill(stDev, stDev, stDev * STDEV_YAW_MULTIPLIER);
+        return VecBuilder.fill(stDev, stDev, OI.Swerve.isFastVisionReset.getAsBoolean() ? 0.1 : Util.limit(stDev * STDEV_YAW_MULTIPLIER, 5, 30));
     }
 
     public double getTimestamp(){

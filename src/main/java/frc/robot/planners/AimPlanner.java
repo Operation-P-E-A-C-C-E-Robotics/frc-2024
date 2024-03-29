@@ -128,31 +128,31 @@ public class AimPlanner {
         var hasPhotonvisionHeading = false;
         for(var target : photonTargetingResults.getTargets()) {
             if(target.getFiducialId() == (AllianceFlipUtil.shouldFlip() ? 4 : 7)){
-                angleToTarget = AllianceFlipUtil.apply(Swerve.getInstance().getPose()).getRotation().plus(Rotation2d.fromDegrees((AllianceFlipUtil.shouldFlip() ? 1 : -1) *(target.getYaw()*0.8) - 180 /*- limelighttXOffset*/));
+                angleToTarget = AllianceFlipUtil.apply(Swerve.getInstance().getPose()).getRotation().plus(Rotation2d.fromDegrees((AllianceFlipUtil.shouldFlip() ? 1 : -1) *(target.getYaw()*0.5) - 180 /*- limelighttXOffset*/));
                 angleToTarget = new Rotation2d(llAngleFilter.calculate((AllianceFlipUtil.shouldFlip() ? -1 : 1) * angleToTarget.getRadians()));
                 if(AllianceFlipUtil.shouldFlip()) angleToTarget = angleToTarget.minus(Rotation2d.fromDegrees(180));
                 hasPhotonvisionHeading = true;
-                if(RobotContainer.getInstance().getOdometryError() > 5) {
-                    distanceToTarget = ((TARGET_HEIGHT - PHOTONVISION_CAMERA_HEIGHT) / Math.tan(PHOTONVISION_CAMERA_ANGLE + Units.degreesToRadians(target.getPitch()))) + SIMPLE_LOCALIZER_DISTANCE_FUDGE;
-                    isSimpleLocalizer = true;
-                }
+                // if(RobotContainer.getInstance().getOdometryError() > 5) {
+                //     distanceToTarget = ((TARGET_HEIGHT - PHOTONVISION_CAMERA_HEIGHT) / Math.tan(PHOTONVISION_CAMERA_ANGLE + Units.degreesToRadians(target.getPitch()))) + SIMPLE_LOCALIZER_DISTANCE_FUDGE;
+                //     isSimpleLocalizer = true;
+                // }
             }
         }
 
-        if(!hasPhotonvisionHeading) {
-            var targetingResults = LimelightHelpers.getLatestResults(Constants.Cameras.frontLimelight);
-            for(var result : targetingResults.targetingResults.targets_Fiducials) {
-                if(result.fiducialID == (AllianceFlipUtil.shouldFlip() ? 4 : 7)) {
-                    angleToTarget = AllianceFlipUtil.apply(Swerve.getInstance().getPose()).getRotation().plus(Rotation2d.fromDegrees((AllianceFlipUtil.shouldFlip() ? 1 : -1) *(result.tx*0.8) - 180 /*- limelighttXOffset*/));
-                    angleToTarget = new Rotation2d(llAngleFilter.calculate((AllianceFlipUtil.shouldFlip() ? -1 : 1) * angleToTarget.getRadians()));
-                    if(AllianceFlipUtil.shouldFlip()) angleToTarget = angleToTarget.minus(Rotation2d.fromDegrees(180));
-                    if(RobotContainer.getInstance().getOdometryError() > 5) {
-                        distanceToTarget = ((TARGET_HEIGHT - LIMELIGHT_CAMERA_HEIGHT) / Math.tan(LIMELIGHT_CAMERA_ANGLE + Units.degreesToRadians(result.ty))) + SIMPLE_LOCALIZER_DISTANCE_FUDGE;
-                        isSimpleLocalizer = true;
-                    }
-                }
-            }
-        }
+        // if(!hasPhotonvisionHeading) {
+        //     var targetingResults = LimelightHelpers.getLatestResults(Constants.Cameras.frontLimelight);
+        //     for(var result : targetingResults.targetingResults.targets_Fiducials) {
+        //         if(result.fiducialID == (AllianceFlipUtil.shouldFlip() ? 4 : 7)) {
+        //             angleToTarget = AllianceFlipUtil.apply(Swerve.getInstance().getPose()).getRotation().plus(Rotation2d.fromDegrees((AllianceFlipUtil.shouldFlip() ? 1 : -1) *(result.tx*0.8) - 180 /*- limelighttXOffset*/));
+        //             angleToTarget = new Rotation2d(llAngleFilter.calculate((AllianceFlipUtil.shouldFlip() ? -1 : 1) * angleToTarget.getRadians()));
+        //             if(AllianceFlipUtil.shouldFlip()) angleToTarget = angleToTarget.minus(Rotation2d.fromDegrees(180));
+        //             if(RobotContainer.getInstance().getOdometryError() > 5) {
+        //                 distanceToTarget = ((TARGET_HEIGHT - LIMELIGHT_CAMERA_HEIGHT) / Math.tan(LIMELIGHT_CAMERA_ANGLE + Units.degreesToRadians(result.ty))) + SIMPLE_LOCALIZER_DISTANCE_FUDGE;
+        //                 isSimpleLocalizer = true;
+        //             }
+        //         }
+        //     }
+        // }
 
         if(!isSimpleLocalizer) {
             llAngleFilter.reset();

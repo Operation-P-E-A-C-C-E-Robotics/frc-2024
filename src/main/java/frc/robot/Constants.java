@@ -82,12 +82,12 @@ public final class Constants {
     public static final double flywheelMaxControllableVelocity = 0; //rotations per second
     public static final double flywheelGearRatio = 1;
     public static final double flywheelDiameter = Units.inchesToMeters(5);
-    public static final double flywheelKv = 0.12;//0.115;
+    public static final double flywheelKv = 0.125;//0.115;
     public static final double flywheelKa = 0.0001;
     public static final double flywheelModelStDev = 3;
     public static final double flywheelEncoderStDev = 0.01;
     public static final double flywheelControlEffort = 12;
-    public static final double flywheelErrorTolerance = 5;
+    public static final double flywheelErrorTolerance = 7;
 
     public static final double shotDetectionAccelerationThreshold = -70;
     public static final double shotDetectionTimeThreshold = 0.05;
@@ -127,10 +127,10 @@ public final class Constants {
 
     public static final boolean triggerIntakeDeployMotorInverted = false;
     public static final boolean triggerIntakeRollerMotorInverted = true;
-    public static final boolean triggerIntakeRollerMotor2Inverted = true;
+    public static final boolean triggerIntakeRollerMotor2Inverted = false;
 
-    public static final int triggerIntakeDeployFreeCurrentLimit = 15;
-    public static final int triggerIntakeDeployStallCurrentLimit = 10;
+    public static final int triggerIntakeDeployFreeCurrentLimit = 25;
+    public static final int triggerIntakeDeployStallCurrentLimit = 25;
 
     public static final double triggerIntakeCurrentLimit = 60;
   }

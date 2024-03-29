@@ -203,7 +203,7 @@ public class TeleopInputs {
 
     private boolean wantsAim(Pose2d blueAlliancePose) {
         if(NoteTracker.getLocation() != NoteLocation.SHOOTER) return false;
-        var x = Swerve.getInstance().getPose().getX();
+        var x = AllianceFlipUtil.apply(Swerve.getInstance().getPose()).getX();
         switch (aimMode) {
             case AUTO:
                 if (x > AUTO_AIM_X) return false;
