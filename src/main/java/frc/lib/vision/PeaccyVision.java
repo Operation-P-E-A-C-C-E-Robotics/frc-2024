@@ -95,7 +95,7 @@ public class PeaccyVision {
     }
 
     public Matrix<N3, N1> getStDev(){
-        return VecBuilder.fill(stDev, stDev, OI.Swerve.isFastVisionReset.getAsBoolean() ? 0.1 : Util.limit(stDev * STDEV_YAW_MULTIPLIER, 5, 30));
+        return VecBuilder.fill(stDev, stDev, OI.Swerve.isFastVisionReset.getAsBoolean() ? 0.1 : Util.limit(stDev * STDEV_YAW_MULTIPLIER, 1, 10));
     }
 
     public double getTimestamp(){

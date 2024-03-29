@@ -180,8 +180,8 @@ public class Autonomous {
     private static Action[] intakeAndFollowPath(Path path){
         return new Action[]{
             // new Action(SuperstructureState.INTAKE_BACK, 0.5),
-            new Action(SuperstructureState.INTAKE_BACK, path.command, path.duration),
-            new Action(0.3)
+            new Action(SuperstructureState.INTAKE_BACK, path.command, path.duration + 0.5),
+            new Action(0.1)
         };
     }
 

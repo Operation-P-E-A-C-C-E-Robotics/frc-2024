@@ -12,7 +12,7 @@ public class NoteTracker {
     private static NoteLocation location = NoteLocation.NONE;
 
     public static void update (SuperstructureState state) {
-        if(Shooter.getInstance().flywheelSwitchTripped() || Shooter.getInstance().triggerSwitchTripped()) {
+        if(Shooter.getInstance().triggerSwitchTripped()) {
             location = NoteLocation.INDEXING;
         } else {
             if (location == NoteLocation.INDEXING) location = NoteLocation.SHOOTER;
