@@ -5,14 +5,16 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,21 +25,35 @@ import frc.lib.swerve.SwerveDescription.PidGains;
 import frc.lib.telemetry.SwerveTelemetry;
 import frc.lib.util.AllianceFlipUtil;
 import frc.lib.vision.ApriltagCamera;
+import frc.lib.vision.LimelightHelpers;
 import frc.lib.vision.PeaccyVision;
 import frc.robot.Constants;
-import frc.robot.FieldConstants;
-
 import static frc.robot.Constants.Swerve.*;
+
+import java.util.Optional;
 
 public class Swerve extends SubsystemBase {
     protected final PeaccefulSwerve swerve;
-
+    
     private final SwerveRequest.ApplyChassisSpeeds autonomousRequest = new SwerveRequest.ApplyChassisSpeeds()
-                                                                                        .withDriveRequestType(DriveRequestType.Velocity);
+    .withDriveRequestType(DriveRequestType.Velocity);
     private final SendableChooser<Pose2d> poseSeedChooser = new SendableChooser<>();
 
+    private final NetworkTableEntry floorNoteWidth = LimelightHelpers.getLimelightNTTableEntry(Constants.Cameras.rearLimelight, "thor");
+    private final NetworkTableEntry floorNoteHeight = LimelightHelpers.getLimelightNTTableEntry(Constants.Cameras.rearLimelight, "tvert");
+    private final double NOTE_WIDTH = Units.inchesToMeters(14);
+
     private Transform2d visionDiscrepancy = new Transform2d();
+    private Optional<Translation2d> noteFromRobot = Optional.empty();
+    private Optional<Translation2d> noteFromField = Optional.empty();
+    private Timer timeSinceFloorNoteUpdate = new Timer();
     // private LimelightHelper limelight;
+
+    private static PeaccyVision eyes = new PeaccyVision(
+        Constants.Cameras.primaryPhotonvisionCamera,
+        // new ApriltagCamera.ApriltagPhotonvision(Constants.Cameras.secondaryPhotonvision, Constants.Cameras.robotToSecondaryPhotonvision, FieldConstants.aprilTags, 0.5),
+        new ApriltagCamera.ApriltagLimelight(Constants.Cameras.frontLimelight, 0.1)
+    );
 
     private Swerve() {
         swerve = SwerveDescription.generateDrivetrain(
@@ -91,18 +107,6 @@ public class Swerve extends SubsystemBase {
         //     speeds = new ChassisSpeeds();
         // }
         drive(autonomousRequest.withSpeeds(speeds));
-    }
-
-    public void characterizeSteer(){
-        swerve.setControl(new SwerveRequest.SysIdSwerveSteerGains().withVolts(null));
-    }
-
-    public void characterizeTranslation(){
-        swerve.setControl(new SwerveRequest.SysIdSwerveTranslation());
-    }
-
-    public void characterizeRotation(){
-        swerve.setControl(new SwerveRequest.SysIdSwerveRotation());
     }
 
     /**
@@ -174,11 +178,6 @@ public class Swerve extends SubsystemBase {
         swerve.applySteerConfigs(gains);
     }
 
-    private static PeaccyVision eyes = new PeaccyVision(
-        new ApriltagCamera.ApriltagPhotonvision(Constants.Cameras.primaryPhotonvision, Constants.Cameras.robotToPrimaryPhotonvision, FieldConstants.aprilTags, 1),
-        // new ApriltagCamera.ApriltagPhotonvision(Constants.Cameras.secondaryPhotonvision, Constants.Cameras.robotToSecondaryPhotonvision, FieldConstants.aprilTags, 0.5),
-        new ApriltagCamera.ApriltagLimelight(Constants.Cameras.frontLimelight, 0.1)
-    );
 
     @Override
     public void periodic() {
@@ -190,15 +189,40 @@ public class Swerve extends SubsystemBase {
         BaseStatusSignal.refreshAll(swerve.getPigeon2().getAccelerationX(), swerve.getPigeon2().getAccelerationY(), swerve.getPigeon2().getAccelerationZ());
         var acceleration = swerve.getPigeon2().getAccelerationX().getValue() + swerve.getPigeon2().getAccelerationY().getValue() + swerve.getPigeon2().getAccelerationZ().getValue();
         eyes.update(getPose(), acceleration, new Translation2d(getChassisSpeeds().vxMetersPerSecond, getChassisSpeeds().vyMetersPerSecond).getNorm());
+        if(eyes.hasUpdated()){
+            swerve.addVisionMeasurement(
+                eyes.getPose(),
+                eyes.getTimestamp(),
+                eyes.getStDev()
+            );
+        }
 
-        swerve.addVisionMeasurement(
-            eyes.getPose(),
-            eyes.getTimestamp(),
-            eyes.getStDev()
-        );
+        //update floor note tracking:
+        var width = floorNoteWidth.getDouble(-1);
+        var height = floorNoteHeight.getDouble(-1);
+
+        if(width > 0 && height > 0) {
+            var distance = (NOTE_WIDTH * Constants.Cameras.LIMELIGHT_FOCAL_LENGTH) / width;
+            var angle = LimelightHelpers.getTX(Constants.Cameras.rearLimelight) + 180;
+            noteFromRobot = Optional.of(new Translation2d(distance, Rotation2d.fromDegrees(angle)));
+            noteFromField = Optional.of(getPose().getTranslation().plus(noteFromRobot.get()));
+            timeSinceFloorNoteUpdate.restart();
+        }
+        if(timeSinceFloorNoteUpdate.get() > 0.2) {
+            noteFromRobot = Optional.empty();
+            noteFromField = Optional.empty();
+        }
 
         //TODO: update limelight telemetry
         // LimelightTelemetry.update(Constants.Cameras.frontLimelight, swerve.getPose3d());
+    }
+
+    public Optional<Translation2d> getNoteFromRobot() {
+        return noteFromRobot;
+    }
+
+    public Optional<Translation2d> getNoteFromField() {
+        return noteFromField;
     }
 
     @Override

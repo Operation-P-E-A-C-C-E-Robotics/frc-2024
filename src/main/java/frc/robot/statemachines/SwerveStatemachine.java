@@ -7,9 +7,11 @@ import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
@@ -55,6 +57,7 @@ public class SwerveStatemachine extends StateMachine<SwerveStatemachine.SwerveSt
 
     /* the path we're following if the state has a path in it */
     private Command pathCommand = null;
+    private Command driveToNoteCommand = null;
     private boolean pathInitialized = false;
     private boolean pathFinished = false;
     private Timer pathTimer = new Timer();
@@ -120,6 +123,20 @@ public class SwerveStatemachine extends StateMachine<SwerveStatemachine.SwerveSt
             pathFinished = false;
             pathTimer.reset();
         }
+
+        //handle drive to note
+        //handle command end function
+        if(this.state == SwerveState.DRIVE_TO_NOTE && state != SwerveState.DRIVE_TO_NOTE && driveToNoteCommand != null){
+            driveToNoteCommand.end(!pathFinished);
+            driveToNoteCommand = null;
+            pathTimer.stop();
+        }
+        if(state == SwerveState.FOLLOW_PATH && this.state != SwerveState.FOLLOW_PATH){
+            pathInitialized = false;
+            pathFinished = false;
+            driveToNoteCommand = null;
+            pathTimer.reset();
+        }
         this.state = state;
     }
 
@@ -174,6 +191,19 @@ public class SwerveStatemachine extends StateMachine<SwerveStatemachine.SwerveSt
             return;
         }
 
+        /* GO TO NOTEZ */
+        if(state == SwerveState.DRIVE_TO_NOTE && driveToNoteCommand != null && RobotState.isEnabled()){
+            if(!pathInitialized){
+                driveToNoteCommand.initialize();
+                pathTimer.reset();
+                pathTimer.start();
+                pathInitialized = true;
+            }
+            driveToNoteCommand.execute();
+            pathFinished = driveToNoteCommand.isFinished();
+            return;
+        }
+
         /* TELEOP */
         //get the values from the suppliers
         double xVelocity = xVelocitySup.getAsDouble();
@@ -189,8 +219,6 @@ public class SwerveStatemachine extends StateMachine<SwerveStatemachine.SwerveSt
         boolean isZeroOdometry = isZeroOdometrySup.getAsBoolean();
 
         if(isZeroOdometry) {
-            // var cpose = driveTrain.getPose();
-            // driveTrain.resetOdometry(new Pose2d(cpose.getX(), cpose.getY(), Rotation2d.fromDegrees(cpose.getRotation().getDegrees() + 180)));
             driveTrain.resetOdometry();
             request.withHeading(driveTrain.getPose().getRotation().getRadians());
         }
@@ -257,9 +285,6 @@ public class SwerveStatemachine extends StateMachine<SwerveStatemachine.SwerveSt
             //use smooth auto heading for the first part of the motion before
             //locking on aggressively, to avoid excessive current draw
             var wantedAngle = aimPlanner.getTargetDrivetrainAngle().getRadians();
-            // var error = Math.abs(driveTrain.getPose().getRotation().getRadians() - wantedAngle);
-            // var headingTargetError = Math.abs(aimTargetHeading - wantedAngle);
-            // if(headingTargetError > 0.5 || error < 0.5) aimTargetHeading = wantedAngle;
 
             request.withHeading(wantedAngle);
             request.withLockHeading(true);
@@ -297,6 +322,17 @@ public class SwerveStatemachine extends StateMachine<SwerveStatemachine.SwerveSt
         //for the rest of my life.
         // -peaccy
         driveTrain.drive(request);
+
+        //create drive to note command:
+        //if we're in the right state and the note is detected, create a command to drive to the note
+        if(state == SwerveState.DRIVE_TO_NOTE && driveToNoteCommand == null){
+            var noteTranslation = driveTrain.getNoteFromField();
+            if(noteTranslation.isEmpty()) return;
+            driveToNoteCommand = AutoBuilder.pathfindToPose(
+                new Pose2d(noteTranslation.get(), driveTrain.getPose().getRotation()), 
+                Constants.Swerve.autoMaxSpeed
+            );
+        }
     }
 
     public void zeroAutoHeading() {
@@ -400,7 +436,8 @@ public class SwerveStatemachine extends StateMachine<SwerveStatemachine.SwerveSt
         LOCK_IN             (true, false, true, false),
         AIM,
         ALIGN_INTAKING, //align to the note with vision
-        FOLLOW_PATH; // follow the path thats been set with setPathCommand
+        FOLLOW_PATH,
+        DRIVE_TO_NOTE; // follow the path thats been set with setPathCommand
 
         boolean openLoop = false;
         boolean robotCentric = false;

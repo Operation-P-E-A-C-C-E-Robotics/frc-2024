@@ -69,6 +69,10 @@ public interface ApriltagCamera {
             return last;
         }
 
+        public PhotonCamera getCamera(){
+            return camera;
+        }
+
         @Override
         public double getTrust() {
             return trust;

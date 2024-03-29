@@ -69,14 +69,17 @@ public class PivotStatemachine extends StateMachine<PivotStatemachine.PivotState
 
     public enum PivotState {
         REST(Rotation2d.fromDegrees(33)),
-        INTAKE(Rotation2d.fromDegrees(19)),
+        INTAKE(Rotation2d.fromDegrees(17)),
         STOW(Rotation2d.fromDegrees(20)),
         AMP(Rotation2d.fromDegrees(78)),
         INTAKE_SOURCE(Rotation2d.fromDegrees(56)),
         PRE_CLIMB(Rotation2d.fromDegrees(110)),
         CLIMB(Rotation2d.fromDegrees(30)),
         AIM_LAYUP(Rotation2d.fromDegrees(53)),
-        AIM_PROTECTED(Rotation2d.fromDegrees(15)),
+        AIM_PROTECTED(Rotation2d.fromDegrees(37)),
+        AIM_UNDER_STAGE(Rotation2d.fromDegrees(30)),
+        AIM_WINGLINE(Rotation2d.fromDegrees(22)),
+        AIM_CENTERLINE(Rotation2d.fromDegrees(18)),
         AUTO_AIM(Rotation2d.fromDegrees(30));
 
         private Rotation2d angle;
