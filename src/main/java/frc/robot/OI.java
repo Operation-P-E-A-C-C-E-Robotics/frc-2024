@@ -6,8 +6,6 @@ import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import frc.robot.RobotStatemachine.SuperstructureState;
-import frc.robot.planners.NoteTracker;
-import frc.robot.planners.NoteTracker.NoteLocation;
 import frc.robot.subsystems.Shooter;
 
 /**
@@ -22,14 +20,19 @@ public class OI {
         public static final DoubleSupplier translation = () -> -driverJoystick.getRawAxis(5); //how fast the robot should be going forward
         public static final DoubleSupplier strafe = () -> -driverJoystick.getRawAxis(4); //how fast the robot should be going sideways
         public static final DoubleSupplier rotation = () -> -driverJoystick.getRawAxis(0); //how fast the robot should be rotating
-        public static final DoubleSupplier heading = () -> (double) -driverJoystick.getPOV(); //the angle the robot should be facing
-        public static final BooleanSupplier useHeading = () -> driverJoystick.getPOV() != -1; //whether the robot should use the heading above
-        public static final BooleanSupplier isRobotCentric = () -> driverJoystick.getRawButton(7); //is forward always forward?
+        
+        public static final DoubleSupplier heading = () -> 0;//(double) -driverJoystick.getPOV(); //the angle the robot should be facing
+        public static final BooleanSupplier useHeading = () -> false;//driverJoystick.getPOV() != -1; //whether the robot should use the heading above
+        
+        public static final BooleanSupplier isRobotCentric = () -> false; //is forward always forward?
         public static final BooleanSupplier isLockIn = () -> driverJoystick.getRawButton(1); //make the wheels point in
-        public static final BooleanSupplier isZeroOdometry = () -> driverJoystick.getRawButton(8); //zero the odometry
+        public static final BooleanSupplier isOpenLoop = () -> true; //how hard should we try to actually follow the inputs (false = use the PID, which feels unnatural to me)
+        
+        public static final BooleanSupplier isZeroOdometry = () -> driverJoystick.getRawButton(9); //zero the odometry
         public static final BooleanSupplier isFastVisionReset = () -> driverJoystick.getRawButton(9); //reset pose from vision quickly
-        public static final BooleanSupplier isAttemptProperZero = () -> driverJoystick.getRawButton(10); //zero field centric properly
-        public static final BooleanSupplier isOpenLoop = () -> false; //how hard should we try to actually follow the inputs (false = use the PID, which feels unnatural to me)
+        public static final BooleanSupplier isAttemptProperZero = () -> driverJoystick.getRawButton(8); //zero field centric properly
+        
+        public static final BooleanSupplier wantsDriveToNote = () -> driverJoystick.getRawButton(3);
     }
     
     public static class Modes {
@@ -47,9 +50,7 @@ public class OI {
     }
 
     public static class Inputs {
-        public static final BooleanSupplier wantsIntake = () -> false; //general intake button, auto selects front/back based on velocity
-        public static final BooleanSupplier wantsShoot = () -> false; //lets the shooter shoot when it feels like it
-        public static final BooleanSupplier wantsStow = () -> driverJoystick.getRawButton(5); //prevent decapitation
+        public static final BooleanSupplier wantsStow = () -> false; //prevent decapitation
         public static final BooleanSupplier wantsPlace = () -> driverJoystick.getRawAxis(3) > 0.2; //general place button, varies by mode
 
         //climber states. these are all mutually exclusive, and will override each other if multiple are true.
@@ -60,28 +61,29 @@ public class OI {
 
         //shooter setpoints. these are all mutually exclusive, and will override each other if multiple are true.
         //they are not sticky, so the shooter only aims while the button is held down.
-        public static final BooleanSupplier wantsAimLayup = () -> operatorJoystick.getPOV() == 0;
-        public static final BooleanSupplier wantsAimProtected = () -> operatorJoystick.getPOV() == 180;
+        public static final BooleanSupplier wantsAimLayup = () -> operatorJoystick.getPOV() == 180 || driverJoystick.getPOV() == 180;
+        public static final BooleanSupplier wantsAimProtected = () -> operatorJoystick.getPOV() == 270 || driverJoystick.getPOV() == 270;
+        public static final BooleanSupplier wantsAimUnderStage = () -> operatorJoystick.getPOV() == 90 || driverJoystick.getPOV() == 90;
+        public static final BooleanSupplier wantsAimWingline = () -> operatorJoystick.getPOV() == 0 || driverJoystick.getPOV() == 0;
+        public static final BooleanSupplier wantsAimCenterline = () -> operatorJoystick.getRawButton(14);
+        public static final BooleanSupplier wantsAutoAim = () -> driverJoystick.getRawButton(6);
 
-        public static final BooleanSupplier wantsIntakeSource = () -> operatorJoystick.getPOV() == 90;
+        public static final BooleanSupplier wantsIntakeSource = () -> operatorJoystick.getRawButton(5);
 
-        //let the shooter get steezy. Applies extra smoothing to the drive inputs to make a SOTM shot easier.
+        //let the shooter get steezy.
         public static final BooleanSupplier enableShootWhileMoving = () -> driverJoystick.getRawButton(6);
     }
     
     public static class Overrides {
         /* MODE OVERRIDES */ //overrides the state requested by the mode
-        public static final BooleanSupplier forceAim = () -> operatorJoystick.getRawButton(6);//force the robot into auto aim state
-        public static final BooleanSupplier forceIntakeFront = () -> false; //force the robot to intake from the front
+        public static final BooleanSupplier forceAim = () -> operatorJoystick.getRawButton(9);//force the robot into auto aim state
         public static final BooleanSupplier forceIntakeBack = () -> driverJoystick.getRawAxis(2) > 0.2 || operatorJoystick.getRawButton(7);
-        public static final BooleanSupplier forceHandoff = () -> false; //force the shooter to flipper handoff
         public static final BooleanSupplier forceAmp = () -> false; //force the robot to go into the place amp state
         
         /* DIRECT OVERRIDES */ //directly sets the state of the subsystem
-        private static final boolean disableAutoHeadingToggle = false;
-        public static final BooleanSupplier disableAutoHeading = () -> disableAutoHeadingToggle; //disables the auto heading of the swerve
+        public static final BooleanSupplier disableAutoHeading = () -> driverJoystick.getRawButton(5); //disables the auto heading of the swerve
         public static final BooleanSupplier forceTrigger = () -> false; //force the trigger to run
-        public static final BooleanSupplier eject = () -> operatorJoystick.getRawButton(5); //oopsie (very overridy) spins everything backwards
+        public static final BooleanSupplier eject = () -> operatorJoystick.getRawButton(6); //oopsie (very overridy) spins everything backwards
     }
 
     public static class ManualInputs {
@@ -97,27 +99,14 @@ public class OI {
         public static final BooleanSupplier resetManualInputs = () -> !operatorJoystick.getRawButton(8);
     }
 
-    private static final double swerveCurrentRumbleThreshold = 60*4; //Amps
-    // private static final double swerveCurrentRumbleScalar = 80*4; //Amps, how much current gives 100% rumble (0.5 on each side)
-
     public static void updateRumble () {
-        var driveCurrent = frc.robot.subsystems.Swerve.getInstance().getTotalDriveCurrent();
         if(Shooter.getInstance().shotDetected()) {
             driverJoystick.setRumble(RumbleType.kBothRumble, 0.5);
             operatorJoystick.setRumble(RumbleType.kBothRumble, 0.5);
-        } else if(RobotContainer.getInstance().getTeleopStatemachine().getState() == SuperstructureState.INTAKE_BACK && NoteTracker.getLocation() == NoteLocation.INDEXING) {
+        } else if(RobotContainer.getInstance().getTeleopStatemachine().getState() == SuperstructureState.INTAKE_BACK && Shooter.getInstance().flywheelSwitchTripped()) {
             driverJoystick.setRumble(RumbleType.kBothRumble, 0.5);
             operatorJoystick.setRumble(RumbleType.kBothRumble, 0.5);
-        } 
-        else if(driveCurrent > swerveCurrentRumbleThreshold) {
-            // var rumble = (driveCurrent - swerveCurrentRumbleThreshold) / swerveCurrentRumbleScalar;
-            // //divide based on strafe amount
-            // var left = rumble * (0.5 - (Swerve.strafe.getAsDouble() / 2));
-            // var right = rumble * (0.5 + (Swerve.strafe.getAsDouble() / 2));
-
-            // driverJoystick.setRumble(RumbleType.kLeftRumble, left);
-            // driverJoystick.setRumble(RumbleType.kRightRumble, right);
-        } else {
+        }  else {
             driverJoystick.setRumble(RumbleType.kBothRumble, 0);
             operatorJoystick.setRumble(RumbleType.kBothRumble, 0);
         }

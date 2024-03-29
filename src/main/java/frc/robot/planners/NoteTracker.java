@@ -21,15 +21,6 @@ public class NoteTracker {
         if(Shooter.getInstance().shotDetected()) {
             location = NoteLocation.NONE;
         }
-
-        if(state == SuperstructureState.ALIGN_AMP) {
-            location = NoteLocation.FLIPPER;
-        }
-
-        if(state == SuperstructureState.PLACE_AMP || state == SuperstructureState.PLACE_TRAP) {
-            location = NoteLocation.NONE;
-        }
-
     }
 
     public static NoteLocation getLocation () {
@@ -37,6 +28,6 @@ public class NoteTracker {
     }
     
     public enum NoteLocation {
-        NONE, INDEXING, SHOOTER, FLIPPER,
+        NONE, INDEXING, SHOOTER
     }
 }

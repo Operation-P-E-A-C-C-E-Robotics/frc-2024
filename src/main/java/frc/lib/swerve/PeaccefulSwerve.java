@@ -15,6 +15,8 @@ import edu.wpi.first.math.geometry.Quaternion;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.RobotState;
@@ -70,6 +72,14 @@ public class PeaccefulSwerve extends SwerveDrivetrain {
         var moduleStates = getState().ModuleStates;
         if (moduleStates == null) return new ChassisSpeeds();
         return m_kinematics.toChassisSpeeds(moduleStates);
+    }
+
+    public SwerveDriveKinematics getKinematics() {
+        return m_kinematics;
+    }
+
+    public SwerveModulePosition[] getModulePositions() {
+        return m_modulePositions;
     }
 
     /**

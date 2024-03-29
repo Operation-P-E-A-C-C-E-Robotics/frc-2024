@@ -16,8 +16,10 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.lib.util.AllianceFlipUtil;
 import frc.lib.util.LinearInterpolate;
+import frc.lib.vision.LimelightHelpers;
 import frc.robot.Constants;
 import frc.robot.FieldConstants;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
@@ -49,9 +51,15 @@ public class AimPlanner {
         FieldConstants.aprilTags.getTagPose(7).get().getTranslation().getY()
     );
 
-    // private final double TARGET_HEIGHT = Units.inchesToMeters(57.5); //TODO: get actual height
-    // private final double CAMERA_HEIGHT = Units.inchesToMeters(6.5); //TODO: get actual height
-    // private final double CAMERA_ANGLE = Units.degreesToRadians(34.311); //TODO: get actual angle
+    private final double TARGET_HEIGHT = Units.inchesToMeters(57.5);
+    private final double LIMELIGHT_CAMERA_HEIGHT = Units.inchesToMeters(6.5);
+    private final double LIMELIGHT_CAMERA_ANGLE = Units.degreesToRadians(34.311);
+
+    //TODO
+    private final double PHOTONVISION_CAMERA_HEIGHT = Units.inchesToMeters(6.5);
+    private final double PHOTONVISION_CAMERA_ANGLE = Units.degreesToRadians(34.311);
+
+    private final double SIMPLE_LOCALIZER_DISTANCE_FUDGE = -0.3;
 
     private final double[][] distanceCalibrationData = {
         {54, 41, 31, 27, 24}, // pivot angles (deg)
@@ -116,14 +124,33 @@ public class AimPlanner {
 
         //experimental: use the old-style limelight targeting to get the angle and distance to the target
         //to aim faster with accumulated odometry error
-        // var targetingResults = LimelightHelpers.getLatestResults(Constants.Cameras.frontLimelight);
-        // for(var result : targetingResults.targetingResults.targets_Fiducials) {
-        //     if(result.fiducialID == (AllianceFlipUtil.shouldFlip() ? 4 : 7)) { //TODO make this work on both sides
-        //         angleToTarget = AllianceFlipUtil.apply(Swerve.getInstance().getPose()).getRotation().plus(Rotation2d.fromDegrees((AllianceFlipUtil.shouldFlip() ? 1 : -1) *(result.tx*0.8) - 180 /*- limelighttXOffset*/));
-        //         angleToTarget = new Rotation2d(llAngleFilter.calculate((AllianceFlipUtil.shouldFlip() ? -1 : 1) * angleToTarget.getRadians()));
-        //         if(AllianceFlipUtil.shouldFlip()) angleToTarget = angleToTarget.minus(Rotation2d.fromDegrees(180));
-        //         distanceToTarget = ((TARGET_HEIGHT - CAMERA_HEIGHT) / Math.tan(CAMERA_ANGLE + Units.degreesToRadians(result.ty))) - 0.3;
-        //         isSimpleLocalizer = true;
+        var photonTargetingResults = Constants.Cameras.primaryPhotonvisionCamera.getCamera().getLatestResult();
+        var hasPhotonvisionHeading = false;
+        for(var target : photonTargetingResults.getTargets()) {
+            if(target.getFiducialId() == (AllianceFlipUtil.shouldFlip() ? 4 : 7)){
+                angleToTarget = AllianceFlipUtil.apply(Swerve.getInstance().getPose()).getRotation().plus(Rotation2d.fromDegrees((AllianceFlipUtil.shouldFlip() ? 1 : -1) *(target.getYaw()*0.5) - 180 /*- limelighttXOffset*/));
+                angleToTarget = new Rotation2d(llAngleFilter.calculate((AllianceFlipUtil.shouldFlip() ? -1 : 1) * angleToTarget.getRadians()));
+                if(AllianceFlipUtil.shouldFlip()) angleToTarget = angleToTarget.minus(Rotation2d.fromDegrees(180));
+                hasPhotonvisionHeading = true;
+                // if(RobotContainer.getInstance().getOdometryError() > 5) {
+                //     distanceToTarget = ((TARGET_HEIGHT - PHOTONVISION_CAMERA_HEIGHT) / Math.tan(PHOTONVISION_CAMERA_ANGLE + Units.degreesToRadians(target.getPitch()))) + SIMPLE_LOCALIZER_DISTANCE_FUDGE;
+                //     isSimpleLocalizer = true;
+                // }
+            }
+        }
+
+        // if(!hasPhotonvisionHeading) {
+        //     var targetingResults = LimelightHelpers.getLatestResults(Constants.Cameras.frontLimelight);
+        //     for(var result : targetingResults.targetingResults.targets_Fiducials) {
+        //         if(result.fiducialID == (AllianceFlipUtil.shouldFlip() ? 4 : 7)) {
+        //             angleToTarget = AllianceFlipUtil.apply(Swerve.getInstance().getPose()).getRotation().plus(Rotation2d.fromDegrees((AllianceFlipUtil.shouldFlip() ? 1 : -1) *(result.tx*0.8) - 180 /*- limelighttXOffset*/));
+        //             angleToTarget = new Rotation2d(llAngleFilter.calculate((AllianceFlipUtil.shouldFlip() ? -1 : 1) * angleToTarget.getRadians()));
+        //             if(AllianceFlipUtil.shouldFlip()) angleToTarget = angleToTarget.minus(Rotation2d.fromDegrees(180));
+        //             if(RobotContainer.getInstance().getOdometryError() > 5) {
+        //                 distanceToTarget = ((TARGET_HEIGHT - LIMELIGHT_CAMERA_HEIGHT) / Math.tan(LIMELIGHT_CAMERA_ANGLE + Units.degreesToRadians(result.ty))) + SIMPLE_LOCALIZER_DISTANCE_FUDGE;
+        //                 isSimpleLocalizer = true;
+        //             }
+        //         }
         //     }
         // }
 
