@@ -1,5 +1,6 @@
 package frc.robot.auto;
 
+import frc.robot.Constants;
 import frc.robot.RobotStatemachine;
 import frc.robot.RobotStatemachine.SuperstructureState;
 import frc.robot.statemachines.SwerveStatemachine.SwerveState;
@@ -10,6 +11,7 @@ import java.util.function.BooleanSupplier;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -17,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 public class Autonomous {
 
     public static final TimedAuto twoNoteCenter = new TimedAuto(
+        Path.START2_WING2,
         shoot(),
         intakeAndFollowPath(Path.START2_WING2),
         shoot(),
@@ -24,6 +27,7 @@ public class Autonomous {
     );
 
     public static final TimedAuto twoNoteAmpSide = new TimedAuto(
+        Path.START3_WING3,
         shoot(),
         intakeAndFollowPath(Path.START3_WING3),
         shoot(),
@@ -31,6 +35,7 @@ public class Autonomous {
     );
 
     public static final TimedAuto twoNoteStageSide = new TimedAuto(
+        Path.START1_WING1,
         shoot(),
         intakeAndFollowPath(Path.START1_WING1),
         shoot(),
@@ -38,6 +43,7 @@ public class Autonomous {
     );
 
     public static final TimedAuto fourNote = new TimedAuto(
+        Path.START3_WING3,
         shoot(),
         intakeAndFollowPath(Path.START3_WING3),
         shoot(),
@@ -49,6 +55,7 @@ public class Autonomous {
     );
 
     public static final TimedAuto start3ThreeNoteCenter5 = new TimedAuto(
+        Path.START3_WING3,
         shoot(),
         intakeAndFollowPath(Path.START3_WING3),
         shoot(),
@@ -60,6 +67,7 @@ public class Autonomous {
     );
 
     public static final TimedAuto start1ThreeNoteCenter2 = new TimedAuto(
+        Path.START1_WING1,
         shoot(),
         intakeAndFollowPath(Path.START1_WING1),
         shoot(),
@@ -70,6 +78,7 @@ public class Autonomous {
     );
 
     public static final TimedAuto start1ThreeNoteCenter3 = new TimedAuto(
+        Path.START1_WING1,
         shoot(),
         intakeAndFollowPath(Path.START1_WING1),
         shoot(),
@@ -81,6 +90,7 @@ public class Autonomous {
     );
 
     public static final TimedAuto start2ThreeNoteCenter4 = new TimedAuto(
+        Path.START2_WING2,
         shoot(),
         intakeAndFollowPath(Path.START2_WING2),
         shoot(),
@@ -91,6 +101,7 @@ public class Autonomous {
     );
 
     public static final TimedAuto start2FourNote = new TimedAuto(
+        Path.START2_WING2,
         shoot(),
         intakeAndFollowPath(Path.START2_WING2),
         shoot(),
@@ -104,6 +115,7 @@ public class Autonomous {
     );
 
     public static final TimedAuto start3ThreeNoteCenter4 = new TimedAuto(
+        Path.START3_WING3,
         shoot(),
         intakeAndFollowPath(Path.START3_WING3),
         shoot(),
@@ -115,6 +127,7 @@ public class Autonomous {
     );
 
     public static final TimedAuto newAutoThing = new TimedAuto(
+        Path.NEW_INTAKE_1,
         shoot(),
         intakeAndFollowPath(Path.NEW_INTAKE_1),
         followPath(Path.NEW_SHOOT_1),
@@ -126,47 +139,56 @@ public class Autonomous {
     );
 
     public static final TimedAuto defence1 = new TimedAuto(
+        Path.DEFENCE_1,
         shoot(),
         followPath(Path.DEFENCE_1),
         end()
     );
     public static final TimedAuto defence2 = new TimedAuto(
+        Path.DEFENCE_2,
         shoot(),
         followPath(Path.DEFENCE_2),
         end()
     );
     public static final TimedAuto defence3 = new TimedAuto(
+        Path.DEFENCE_3,
         shoot(),
         followPath(Path.DEFENCE_3),
         end()
     );
     public static final TimedAuto defence4R = new TimedAuto(
+        Path.DEFENCE_4_R,
         shoot(),
         followPath(Path.DEFENCE_4_R),
         end()
     );
     public static final TimedAuto defence4L = new TimedAuto(
+        Path.DEFENCE_4_L,
         shoot(),
         followPath(Path.DEFENCE_4_L),
         end()
     );
     public static final TimedAuto defence5R = new TimedAuto(
+        Path.DEFENCE_4_R,
         shoot(),
         followPath(Path.DEFENCE_5_R),
         end()
     );
 
     public static final TimedAuto layupOnly = new TimedAuto(
+        Path.START2_WING2,
         layupShot(),
         end()
     );
 
     public static final TimedAuto shootOnly = new TimedAuto(
+        Path.START2_WING2,
         shoot(),
         end()
     );
 
     public static final TimedAuto doNothing = new TimedAuto(
+        Path.START2_WING2,
         end()
     );
 
@@ -180,7 +202,7 @@ public class Autonomous {
     private static Action[] intakeAndFollowPath(Path path){
         return new Action[]{
             // new Action(SuperstructureState.INTAKE_BACK, 0.5),
-            new Action(SuperstructureState.INTAKE_BACK, path.command, path.duration + 0.5),
+            new Action(SuperstructureState.INTAKE_BACK, path.followPathCommand, path.duration + 0.5),
             new Action(0.1)
         };
     }
@@ -194,7 +216,7 @@ public class Autonomous {
 
     private static Action[] followPath(Path path) {
         return new Action[] {
-            new Action(path.command, path.duration),
+            new Action(path.followPathCommand, path.duration),
         };
     }
 
@@ -227,12 +249,15 @@ public class Autonomous {
         private final Action[] actions;
         private final Timer timer = new Timer();
         private int currentAction = 0;
+        private final Pose2d startPose;
 
-        public TimedAuto(Action... actions) {
+        public TimedAuto(Path initialPath, Action... actions) {
+            this.startPose = initialPath.path.getPreviewStartingHolonomicPose();
             this.actions = actions;
         }
 
-        public TimedAuto(Action[]... actions){
+        public TimedAuto(Path initialPath, Action[]... actions){
+            this.startPose = initialPath.path.getPreviewStartingHolonomicPose();
             //concatenate the arrays
             int totalLength = 0;
             for (Action[] action : actions) {
@@ -246,6 +271,10 @@ public class Autonomous {
                     index++;
                 }
             }
+        }
+
+        public Pose2d getStartPose(){
+            return startPose;
         }
 
         public void reset() {
@@ -398,13 +427,19 @@ public class Autonomous {
         NEW_SHOOT_2("sketch new auto pt4", 3.4);
     
         public final String pathName;
-        public final Command command;
+        public final PathPlannerPath path;
+        public final Command followPathCommand, pathfindAndFollowPathCommand;
         public final double duration;
     
         private Path(String pathName, double duration) {
             this.pathName = pathName;
             this.duration = duration;
-            this.command = AutoBuilder.followPath(PathPlannerPath.fromChoreoTrajectory(pathName));
+            this.path = PathPlannerPath.fromChoreoTrajectory(pathName);
+            this.followPathCommand = AutoBuilder.followPath(path);
+            this.pathfindAndFollowPathCommand = AutoBuilder.pathfindThenFollowPath(
+                path, 
+                Constants.Swerve.autoMaxSpeed
+            );
         }
     }
 }

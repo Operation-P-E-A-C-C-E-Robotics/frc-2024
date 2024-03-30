@@ -28,6 +28,8 @@ import frc.lib.vision.ApriltagCamera;
 import frc.lib.vision.LimelightHelpers;
 import frc.lib.vision.PeaccyVision;
 import frc.robot.Constants;
+import frc.robot.auto.Autonomous;
+
 import static frc.robot.Constants.Swerve.*;
 
 import java.util.Optional;
@@ -84,6 +86,12 @@ public class Swerve extends SubsystemBase {
 
         poseSeedChooser.setDefaultOption("zero", new Pose2d());
         poseSeedChooser.addOption("test", new Pose2d(1, 1, new Rotation2d()));
+        poseSeedChooser.addOption("START 1", Autonomous.twoNoteStageSide.getStartPose());
+        poseSeedChooser.addOption("START 2", Autonomous.twoNoteCenter.getStartPose());
+        poseSeedChooser.addOption("START 3", Autonomous.twoNoteAmpSide.getStartPose());
+        poseSeedChooser.addOption("START NEW AUTO", Autonomous.newAutoThing.getStartPose());
+        poseSeedChooser.addOption("START DEFENCE", Autonomous.defence1.getStartPose());
+
         SmartDashboard.putData("POSE SEED", poseSeedChooser);
         SmartDashboard.putBoolean("seed pose", false);
 
