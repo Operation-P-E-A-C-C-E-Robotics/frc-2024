@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.state.StateMachine;
 import frc.robot.planners.MotionPlanner;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.TriggerIntake;
 
 public class TriggerIntakeStatemachine extends StateMachine<TriggerIntakeStatemachine.TriggerIntakeState>{
@@ -49,10 +50,14 @@ public class TriggerIntakeStatemachine extends StateMachine<TriggerIntakeStatema
 
         triggerIntake.setDeploymentAngle(state.deployAngle);
         triggerIntake.setRollerSpeed(state.speed);
+
+        if(state == TriggerIntakeState.INTAKE && Shooter.getInstance().triggerSwitchTripped()) {
+            triggerIntake.setRollerSpeed(0.5);
+        }
         
         if(state == TriggerIntakeState.INTAKE || state == TriggerIntakeState.EXTEND) {
             if(triggerIntake.getDeploymentAngle().getDegrees() > 145) {
-                triggerIntake.setDeploymentSpeed(0.1);
+                triggerIntake.setDeploymentSpeed(0.05);
             }
         }
     }
