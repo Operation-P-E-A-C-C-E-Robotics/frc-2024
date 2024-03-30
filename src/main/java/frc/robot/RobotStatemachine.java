@@ -157,6 +157,10 @@ public class RobotStatemachine extends StateMachine<RobotStatemachine.Superstruc
             ShooterState.AUTO_AIM,
             PivotState.AUTO_AIM
         ),
+        AIM_SHUTTLE (
+            ShooterState.AIM_SHUTTLE,
+            PivotState.AIM_SHUTTLE
+        ),
         SHOOT(
             ShooterState.SHOOT,
             PivotState.AUTO_AIM
