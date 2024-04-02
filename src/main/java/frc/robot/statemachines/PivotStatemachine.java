@@ -3,6 +3,7 @@ package frc.robot.statemachines;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.state.StateMachine;
+import frc.robot.OI;
 import frc.robot.planners.AimPlanner;
 import frc.robot.planners.MotionPlanner;
 import frc.robot.subsystems.Pivot;
@@ -47,6 +48,8 @@ public class PivotStatemachine extends StateMachine<PivotStatemachine.PivotState
                 return;
         }
 
+        if(state == PivotState.AMP && OI.Inputs.wantsPlace.getAsBoolean()) state = PivotState.AMP_PUSH;
+
         var angle = state.getAngle();
         if(angle.getDegrees() > 80 && !motionPlanner.canFlipPivot()) angle = Rotation2d.fromDegrees(80);
 
@@ -72,8 +75,8 @@ public class PivotStatemachine extends StateMachine<PivotStatemachine.PivotState
         REST(Rotation2d.fromDegrees(33)),
         INTAKE(Rotation2d.fromDegrees(17)),
         STOW(Rotation2d.fromDegrees(20)),
-        AMP(Rotation2d.fromDegrees(78)),
-        AMP_PUSH(Rotation2d.fromDegrees(85)),
+        AMP(Rotation2d.fromDegrees(82)),
+        AMP_PUSH(Rotation2d.fromDegrees(50)),
         INTAKE_SOURCE(Rotation2d.fromDegrees(56)),
         PRE_CLIMB(Rotation2d.fromDegrees(110)),
         CLIMB(Rotation2d.fromDegrees(30)),

@@ -32,7 +32,7 @@ public class TeleopInputs {
     private final double LAYUP_X = 2; // distance from left wall to start aiming.
     private final double PROTECTED_X = 3.5;
     private final double UNDER_STAGE_X = 7;
-    private final double WINGLINE_X = FieldConstants.wingX;
+    private final double WINGLINE_X = FieldConstants.wingX + 1.5;
     private final double CENTERLINE_X = 15;
 
     //whether the joystick is overriding the pivot
@@ -62,6 +62,10 @@ public class TeleopInputs {
 
         if(OI.Swerve.isRobotCentric.getAsBoolean()) {
             return SwerveState.ROBOT_CENTRIC;
+        }
+
+        if(OI.Swerve.wantsDriveToNote.getAsBoolean()){
+            return SwerveState.DRIVE_TO_NOTE;
         }
 
         return OI.Swerve.isOpenLoop.getAsBoolean() ? SwerveState.OPEN_LOOP_TELEOP : SwerveState.CLOSED_LOOP_TELEOP;

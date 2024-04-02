@@ -14,6 +14,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Timer;
 import frc.lib.util.AllianceFlipUtil;
 import frc.lib.util.LinearInterpolate;
 import frc.lib.vision.LimelightHelpers;
@@ -109,9 +110,12 @@ public class AimPlanner {
     private final DoublePublisher pivotAngularVelocityPublisher = aimTable.getDoubleTopic("SuperSOTM Pivot Angular Velocity").publish();
     private final DoublePublisher shooterAngularAccelerationPublisher = aimTable.getDoubleTopic("SuperSOTM Shooter Angular Acceleration").publish();
 
+    private final Timer returnToOdometryTimer = new Timer();
+
     public AimPlanner (Supplier<Pose2d> robotPoseSupplier, Supplier<ChassisSpeeds> robotRelativeChassisSpeeds, BooleanSupplier shootWhileMoving) {
         this.robotRelativeChassisSpeeds = robotRelativeChassisSpeeds;
         this.shootWhileMoving = shootWhileMoving;
+        returnToOdometryTimer.start();
     }
 
     public void update() {
@@ -134,8 +138,9 @@ public class AimPlanner {
         var hasPhotonvisionHeading = false;
         // for(var target : photonTargetingResults.getTargets()) {
         //     if(target.getFiducialId() == (AllianceFlipUtil.shouldFlip() ? 4 : 7)){
-        //         angleToTarget = AllianceFlipUtil.apply(Swerve.getInstance().getPose()).getRotation().plus(Rotation2d.fromDegrees((AllianceFlipUtil.shouldFlip() ? 1 : -1) *(target.getYaw()*0.5) - 180 /*- limelighttXOffset*/));
-        //         angleToTarget = new Rotation2d(llAngleFilter.calculate((AllianceFlipUtil.shouldFlip() ? -1 : 1) * angleToTarget.getRadians()));
+        //         var yaw = target.getYaw();
+        //         angleToTarget = AllianceFlipUtil.apply(Swerve.getInstance().getPose()).getRotation().plus(Rotation2d.fromDegrees((AllianceFlipUtil.shouldFlip() ? -1 : 1) *(Math.min(yaw, Math.sqrt(yaw))) - 180 /*- limelighttXOffset*/));
+        //         // angleToTarget = new Rotation2d(llAngleFilter.calculate((AllianceFlipUtil.shouldFlip() ? -1 : 1) * angleToTarget.getRadians()));
         //         if(AllianceFlipUtil.shouldFlip()) angleToTarget = angleToTarget.minus(Rotation2d.fromDegrees(180));
         //         hasPhotonvisionHeading = true;
         //         // if(RobotContainer.getInstance().getOdometryError() > 5) {
@@ -144,6 +149,8 @@ public class AimPlanner {
         //         // }
         //     }
         // }
+
+        // if(!hasPhotonvisionHeading) returnToOdometryTimer.restart();
 
         // if(!hasPhotonvisionHeading) {
         //     var targetingResults = LimelightHelpers.getLatestResults(Constants.Cameras.frontLimelight);

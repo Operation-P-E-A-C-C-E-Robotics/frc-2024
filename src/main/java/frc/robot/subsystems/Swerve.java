@@ -215,11 +215,15 @@ public class Swerve extends SubsystemBase {
             noteFromRobot = Optional.of(new Translation2d(distance, Rotation2d.fromDegrees(angle)));
             noteFromField = Optional.of(getPose().getTranslation().plus(noteFromRobot.get()));
             timeSinceFloorNoteUpdate.restart();
+            SmartDashboard.putNumber("distance to note", distance);
+            SmartDashboard.putNumber("angle to note", angle);
         }
         if(timeSinceFloorNoteUpdate.get() > 0.2) {
             noteFromRobot = Optional.empty();
             noteFromField = Optional.empty();
         }
+
+        SmartDashboard.putString("note translation", noteFromField.toString());
 
         //TODO: update limelight telemetry
         // LimelightTelemetry.update(Constants.Cameras.frontLimelight, swerve.getPose3d());

@@ -167,13 +167,13 @@ public final class Constants {
       pivotConfigs.Slot0.kG = 0.17;//0.23;//0.25;//0.23;
       pivotConfigs.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
 
-      pivotConfigs.Slot1.kP = 24;//6;//8;//6;
+      pivotConfigs.Slot1.kP = 25;//6;//8;//6;
       pivotConfigs.Slot1.kI = 6;//0;
       pivotConfigs.Slot1.kD = 5;//0.0;//0;
-      pivotConfigs.Slot1.kS = 0.3;//0;
-      pivotConfigs.Slot1.kV = 16.5;//14.5;//20;//14.5;
+      pivotConfigs.Slot1.kS = 1;//0;
+      pivotConfigs.Slot1.kV = 18;//14.5;//20;//14.5;
       pivotConfigs.Slot1.kA = 1.25;//0;//0.01;//0;
-      pivotConfigs.Slot1.kG = 0.17;//0.23;//0.25;//0.23;
+      pivotConfigs.Slot1.kG = 0.4;//0.23;//0.25;//0.23;
       pivotConfigs.Slot1.GravityType = GravityTypeValue.Arm_Cosine;
 
 
