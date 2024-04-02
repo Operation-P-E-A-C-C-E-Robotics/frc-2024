@@ -1,20 +1,9 @@
- - drivetrain
-    - [todo] teleop limits and deadbands
-    - [todo] angle pid
-    - [todo] drive pid
-    - [todo] autoheading pid & constraints
-    - [todo] pathfollowing constraints & pid
-    - [todo] exact wheel radius
- - [todo] flywheel State-Space
- - [todo] trigger PID
- - [todo] pivot PID
- - [todo] intake PIDs
- - [todo] diverter PID
- - [todo] climber PID
- - [todo] climber balance
- - [todo] aim exit velocity to flywheel rps
- - [todo] limelight velocity
- - [todo] aim target switching cutoff
+ - [todo] test and calibrate autos
+ - [todo] test autos without vision
+ - [todo] tune vision stdevs in auto
+ - [todo] tune vision stdevs when shooting (especially heading)
+ - [todo] tune setpoints really really well (use slow-motion footage)
+ - [todo] tune shuttling setpoint
  - [todo]
  - [todo]
  - [todo]
@@ -29,11 +18,3 @@
  - [todo]
  - [todo]
  - [todo]
- - [todo]
- - [todo]
- - [todo]
- - [todo]
- - [todo]
- - [todo]
- - [todo]
- - 

@@ -291,6 +291,17 @@ public class SwerveStatemachine extends StateMachine<SwerveStatemachine.SwerveSt
             request.withLockHeadingVelocity(Units.degreesToRadians(aimPlanner.getDrivetrainAngularVelocity()));
         }
 
+        if(state == SwerveState.AIM_SHUTTLE){
+            //set the target to heading to the heading from the aim planner
+            //use smooth auto heading for the first part of the motion before
+            //locking on aggressively, to avoid excessive current draw
+            var wantedAngle = aimPlanner.getShuttleDrivetrainAngle().getRadians();
+
+            request.withHeading(wantedAngle);
+            request.withLockHeading(true);
+            request.withLockHeadingVelocity(Units.degreesToRadians(aimPlanner.getDrivetrainAngularVelocity()));
+        }
+
         if(state == SwerveState.ALIGN_INTAKING){
             //align with a note automatically for intaking, using the limelight
             // var results = LimelightHelpers.getLatestResults(Constants.Cameras.rearLimelight).targetingResults.targets_Detector;
@@ -435,6 +446,7 @@ public class SwerveStatemachine extends StateMachine<SwerveStatemachine.SwerveSt
         ROBOT_CENTRIC       (true, true, false, false),
         LOCK_IN             (true, false, true, false),
         AIM,
+        AIM_SHUTTLE,
         ALIGN_INTAKING, //align to the note with vision
         FOLLOW_PATH,
         DRIVE_TO_NOTE; // follow the path thats been set with setPathCommand

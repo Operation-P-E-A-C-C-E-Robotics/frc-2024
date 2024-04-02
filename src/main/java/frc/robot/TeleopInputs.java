@@ -30,9 +30,9 @@ public class TeleopInputs {
 
     private final double AUTO_AIM_X = 7; // distance from left wall to start aiming.
     private final double LAYUP_X = 2; // distance from left wall to start aiming.
-    private final double PROTECTED_X = 4;
+    private final double PROTECTED_X = 3.5;
     private final double UNDER_STAGE_X = 7;
-    private final double WINGLINE_X = 10;
+    private final double WINGLINE_X = FieldConstants.wingX;
     private final double CENTERLINE_X = 15;
 
     //whether the joystick is overriding the pivot
@@ -53,7 +53,7 @@ public class TeleopInputs {
      */
     public SwerveState getWantedSwerveState() {
         if(OI.Overrides.forceAim.getAsBoolean() || (aiming && mode == TeleopMode.SPEAKER && intakingMode == IntakingMode.NONE)) {
-            return SwerveState.AIM;
+            return aimMode == AimMode.SHUTTLE ? SwerveState.AIM_SHUTTLE : SwerveState.AIM;
         }
 
         if(OI.Swerve.isLockIn.getAsBoolean()) {
@@ -116,6 +116,7 @@ public class TeleopInputs {
         if(OI.Inputs.wantsAimWingline.getAsBoolean()) aimMode = AimMode.WINGLINE;
         if(OI.Inputs.wantsAimCenterline.getAsBoolean()) aimMode = AimMode.CENTERLINE;
         if(OI.Inputs.wantsAutoAim.getAsBoolean()) aimMode = AimMode.AUTO;
+        if(OI.Inputs.wantsAimShuttle.getAsBoolean()) aimMode = AimMode.SHUTTLE;
 
         if(mode == TeleopMode.PANIC) return SuperstructureState.REST;
 
@@ -223,6 +224,8 @@ public class TeleopInputs {
             case WINGLINE:
                 if (x > WINGLINE_X) return false;
                 break;
+            case SHUTTLE:
+                return x > FieldConstants.fieldLength - WINGLINE_X;
             default:
                 return false;
             
@@ -276,7 +279,7 @@ public class TeleopInputs {
     }
 
     public enum AimMode {
-        LAYUP, PROTECTED, UNDER_STAGE, WINGLINE, CENTERLINE, AUTO
+        LAYUP, PROTECTED, UNDER_STAGE, WINGLINE, CENTERLINE, AUTO, SHUTTLE
     }
 
     private static TeleopInputs instance = new TeleopInputs();

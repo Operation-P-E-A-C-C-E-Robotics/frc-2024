@@ -51,6 +51,8 @@ public class AimPlanner {
         FieldConstants.aprilTags.getTagPose(7).get().getTranslation().getY()
     );
 
+    private final Translation2d shuttleTranslation = FieldConstants.ampCenter;
+
     private final double TARGET_HEIGHT = Units.inchesToMeters(57.5);
     private final double LIMELIGHT_CAMERA_HEIGHT = Units.inchesToMeters(6.5);
     private final double LIMELIGHT_CAMERA_ANGLE = Units.degreesToRadians(34.311);
@@ -77,6 +79,7 @@ public class AimPlanner {
     private final LinearInterpolate flywheelAngularVelocityInterpolater = new LinearInterpolate(distanceCalibrationData[2], distanceCalibrationData[1]);
 
     private Rotation2d drivetrainAngle = new Rotation2d();
+    private Rotation2d shuttleDrivetrainAngle = new Rotation2d();
     private Rotation2d pivotAngle = new Rotation2d();
     private double flywheelAngularVelocity = 0;
 
@@ -114,10 +117,13 @@ public class AimPlanner {
     public void update() {
         var blueOriginPose = Swerve.getInstance().getPose();
         var blueTargetTranslation = AllianceFlipUtil.apply(targetCenterTranslation);
+        var blueTagTranslation = AllianceFlipUtil.apply(apriltagTranslation);
+        var blueShuttleTranslation = AllianceFlipUtil.apply(shuttleTranslation);
         distanceToTarget = blueOriginPose.getTranslation().getDistance(blueTargetTranslation);
 
         Rotation2d angleToTarget = blueOriginPose.getTranslation().minus(blueTargetTranslation).getAngle();
-        Rotation2d angleToTag = blueOriginPose.getTranslation().minus(apriltagTranslation).getAngle();
+        Rotation2d angleToTag = blueOriginPose.getTranslation().minus(blueTagTranslation).getAngle();
+        shuttleDrivetrainAngle = blueOriginPose.getTranslation().minus(blueShuttleTranslation).getAngle();
         isSimpleLocalizer = false;
 
         limelighttXOffset = angleToTag.getDegrees() - angleToTarget.getDegrees();
@@ -219,6 +225,10 @@ public class AimPlanner {
 
     public Rotation2d getTargetDrivetrainAngle() {
         return drivetrainAngle.plus(Rotation2d.fromDegrees(AllianceFlipUtil.shouldFlip() ? 0 : 180));
+    }
+
+    public Rotation2d getShuttleDrivetrainAngle() {
+        return shuttleDrivetrainAngle.plus(Rotation2d.fromDegrees(AllianceFlipUtil.shouldFlip() ? 0 : 180));
     }
 
     public Rotation2d getLimelightTXOffset() {
