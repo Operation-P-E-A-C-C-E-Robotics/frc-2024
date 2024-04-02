@@ -89,7 +89,7 @@ public class RobotStatemachine extends StateMachine<RobotStatemachine.Superstruc
         triggerIntakeStatemachine.requestState(state.getTriggerIntakeState());
         MultiTracers.trace("TeleopStatemachine", "triggerIntakeStatemachine.requestState");
 
-        if(timeSinceIntake.get() < 1 && !DriverStation.isAutonomous()) shooterStatemachine.requestState(ShooterState.INDEX);
+        if(timeSinceIntake.get() < 1 && !DriverStation.isAutonomous() && state != SuperstructureState.INTAKE_BACK) shooterStatemachine.requestState(ShooterState.INDEX);
         else shooterStatemachine.requestState(state.getShooterState());
 
         MultiTracers.trace("TeleopStatemachine", "shooterStatemachine.requestState");

@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.util.Util;
 import frc.lib.vision.ApriltagCamera.*;
 import frc.robot.OI;
+import frc.robot.RobotContainer;
+import frc.robot.RobotStatemachine.SuperstructureState;
 
 /**
  * PeaccyVision is a class that manages multiple ApriltagCameras and their results.
@@ -97,7 +99,10 @@ public class PeaccyVision {
     }
 
     public Matrix<N3, N1> getStDev(){
-        if(DriverStation.isAutonomousEnabled()) return VecBuilder.fill(10,10,20);
+        if(DriverStation.isAutonomousEnabled()) {
+            if(RobotContainer.getInstance().getTeleopStatemachine().getState() != SuperstructureState.AUTO_AIM) return VecBuilder.fill(2,2,10);
+            return VecBuilder.fill(10,10,20);
+        }
         return VecBuilder.fill(stDev, stDev, stDev * STDEV_YAW_MULTIPLIER);
     }
 

@@ -73,7 +73,7 @@ public class ShooterStatemachine extends StateMachine<ShooterStatemachine.Shoote
         }
         if(state == ShooterState.AUTO_AIM && this.state == ShooterState.SHOOT) return;
         if(state == ShooterState.SHOOT && this.state != ShooterState.SHOOT) printShotData();
-        if(state == ShooterState.INTAKE && this.state == ShooterState.INDEX) return;
+        // if(state == ShooterState.INTAKE && this.state == ShooterState.INDEX) return;
         this.state = state;
     }
 

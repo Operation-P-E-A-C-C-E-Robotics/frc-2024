@@ -1,6 +1,9 @@
 package frc.robot.statemachines;
 
+import java.sql.Driver;
+
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.state.StateMachine;
 import frc.robot.OI;
@@ -44,8 +47,9 @@ public class PivotStatemachine extends StateMachine<PivotStatemachine.PivotState
 
         if(state == PivotState.AUTO_AIM) {
             var angle = aimPlanner.getTargetPivotAngle();
-                pivot.setPivotPosition(angle);
-                return;
+            if(DriverStation.isAutonomousEnabled()) angle = angle.plus(Rotation2d.fromDegrees(2));
+            pivot.setPivotPosition(angle);
+            return;
         }
 
         if(state == PivotState.AMP && OI.Inputs.wantsPlace.getAsBoolean()) state = PivotState.AMP_PUSH;

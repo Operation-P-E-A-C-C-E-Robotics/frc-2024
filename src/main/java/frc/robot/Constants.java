@@ -293,7 +293,7 @@ public final class Constants {
     public static final Physics physics = new Physics(0.05,0.01, Robot.isReal() ? 80 : 800, 7);
     public static final double steerMotorCurrentLimit = Robot.isReal() ? 40 : 120; //amps
     
-    public static final PidGains driveGains = new PidGains(2, 0, 0, 0.2, 0.6); 
+    public static final PidGains driveGains = new PidGains(2, 0, 0, 0.2, 0.4); 
     public static final PidGains angleGains = new PidGains(90, 0, 0.001, 0, 0);
 
     public static final int pigeonCANId = 3;

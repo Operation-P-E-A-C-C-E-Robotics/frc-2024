@@ -83,7 +83,7 @@ public class OI {
         public static final BooleanSupplier forceAmp = () -> false; //force the robot to go into the place amp state
         
         /* DIRECT OVERRIDES */ //directly sets the state of the subsystem
-        public static final BooleanSupplier disableAutoHeading = () -> driverJoystick.getRawButton(5) || RobotContainer.getInstance().wantsDisableAutoHeading();//disables the auto heading of the swerve
+        public static final BooleanSupplier disableAutoHeading = () -> !driverJoystick.getRawButton(5) || RobotContainer.getInstance().wantsDisableAutoHeading();//disables the auto heading of the swerve
         public static final BooleanSupplier forceTrigger = () -> false; //force the trigger to run
         public static final BooleanSupplier eject = () -> operatorJoystick.getRawButton(6); //oopsie (very overridy) spins everything backwards
     }

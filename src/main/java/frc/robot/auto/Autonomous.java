@@ -232,7 +232,7 @@ public class Autonomous {
     private static Action[] shoot() {
         return new Action[]{
             // new Action(SuperstructureState.REST, 0.5), //allow the shooter to index
-            new Action(SuperstructureState.AUTO_AIM, 1.75),
+            new Action(SuperstructureState.AUTO_AIM, 1.25),
             new Action(SuperstructureState.SHOOT, 0.15)
         };
     }
@@ -399,32 +399,32 @@ public class Autonomous {
 
     public static enum Path {
         TEST_PATH("test path", 3),
-        START2_WING2("start 2 wing 2", 1.9),
-        START3_WING3("start 3 wing 3", 2.2),
-        START1_WING1("start 1 wing 1", 1.7),
-        WING3_WING2("wing 3 wing 2", 2.4),
-        WING2_WING1("wing 2 wing 1", 2.1),
-        WING3_CENTER5("wing 3 center 5", 3.5),
-        CENTER5_SHOOT("center 5 shoot", 3.3),
-        WING3_CENTER4("wing 3 center 4", 3.5),
-        CENTER4_SHOOT_FROM_WING3("center 4 shoot from wing 3", 3.1),
-        WING1_CENTER2("wing 1 center 2", 4.5),
-        CENTER2_SHOOT("center 2 shoot", 3.7),
-        WING1_CENTER3("wing 1 center 3", 5.1),
-        CENTER3_SHOOT("center 3 shoot", 3.3),
-        WING2_CENTER4("wing 2 center 4", 4.2),
-        CENTER4_SHOOT_FROM_WING2("center 4 shoot from wing 2", 3.4),
-        CENTER4_SHOOT_CENTER3("center 4 shoot center 3", 3.3),
+        START2_WING2("start 2 wing 2", 1.5),
+        START3_WING3("start 3 wing 3", 1.7),
+        START1_WING1("start 1 wing 1", 1.4),
+        WING3_WING2("wing 3 wing 2", 1.9),
+        WING2_WING1("wing 2 wing 1", 1.6),
+        WING3_CENTER5("wing 3 center 5", 2.6),
+        CENTER5_SHOOT("center 5 shoot", 2.6),
+        WING3_CENTER4("wing 3 center 4", 2.7),
+        CENTER4_SHOOT_FROM_WING3("center 4 shoot from wing 3", 2.7),
+        WING1_CENTER2("wing 1 center 2", 3.5),
+        CENTER2_SHOOT("center 2 shoot", 2.9),
+        WING1_CENTER3("wing 1 center 3", 3.8),
+        CENTER3_SHOOT("center 3 shoot", 2.4),
+        WING2_CENTER4("wing 2 center 4", 3.6),
+        CENTER4_SHOOT_FROM_WING2("center 4 shoot from wing 2", 3.0),
+        CENTER4_SHOOT_CENTER3("center 4 shoot center 3", 2.6),
         DEFENCE_1("defence 1", 4.1),
         DEFENCE_2("defence 2", 4.3),
         DEFENCE_3("defence 3", 4.4),
         DEFENCE_4_R("defence 4 R", 4.4),
         DEFENCE_4_L("defence 4 L", 4.5),
         DEFENCE_5_R("defence 5 R", 4.2),
-        NEW_INTAKE_1("sketch new auto pt1", 4.7),
-        NEW_SHOOT_1("sketch new auto pt2", 3.2),
-        NEW_INTAKE_2("sketch new auto pt3", 3.4),
-        NEW_SHOOT_2("sketch new auto pt4", 3.4);
+        NEW_INTAKE_1("sketch new auto pt1", 3.8),
+        NEW_SHOOT_1("sketch new auto pt2", 2.4),
+        NEW_INTAKE_2("sketch new auto pt3", 2.5),
+        NEW_SHOOT_2("sketch new auto pt4", 2.5);
     
         public final String pathName;
         public final PathPlannerPath path;

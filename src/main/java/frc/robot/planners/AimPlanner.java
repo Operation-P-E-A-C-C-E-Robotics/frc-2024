@@ -65,7 +65,7 @@ public class AimPlanner {
     private final double SIMPLE_LOCALIZER_DISTANCE_FUDGE = -0.3;
 
     private final double[][] distanceCalibrationData = {
-        {54, 41, 31, 27, 24}, // pivot angles (deg)
+        {55, 41, 31, 27, 24}, // pivot angles (deg)
         {40, 43, 47, 50, 53}, // flywheel speed rps
         {1, 2, 3, 4, 5}  //distances (m)
     };
