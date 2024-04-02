@@ -232,7 +232,7 @@ public class Autonomous {
     private static Action[] shoot() {
         return new Action[]{
             // new Action(SuperstructureState.REST, 0.5), //allow the shooter to index
-            new Action(SuperstructureState.AUTO_AIM, 1),
+            new Action(SuperstructureState.AUTO_AIM, 1.75),
             new Action(SuperstructureState.SHOOT, 0.15)
         };
     }

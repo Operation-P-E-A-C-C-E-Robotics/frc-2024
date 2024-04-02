@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -81,14 +82,14 @@ public class RobotStatemachine extends StateMachine<RobotStatemachine.Superstruc
      */
     @Override
     public void update(){
-        if (state != SuperstructureState.INTAKE_BACK) timeSinceIntake.restart();
+        if (state == SuperstructureState.INTAKE_BACK) timeSinceIntake.restart();
 
         SmartDashboard.putString("Robot State", state.name());
         MultiTracers.trace("TeleopStatemachine", "start update");
         triggerIntakeStatemachine.requestState(state.getTriggerIntakeState());
         MultiTracers.trace("TeleopStatemachine", "triggerIntakeStatemachine.requestState");
 
-        if(timeSinceIntake.get() < 1) shooterStatemachine.requestState(ShooterState.INDEX);
+        if(timeSinceIntake.get() < 1 && !DriverStation.isAutonomous()) shooterStatemachine.requestState(ShooterState.INDEX);
         else shooterStatemachine.requestState(state.getShooterState());
 
         MultiTracers.trace("TeleopStatemachine", "shooterStatemachine.requestState");

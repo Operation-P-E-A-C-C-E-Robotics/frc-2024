@@ -8,6 +8,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.util.Util;
@@ -95,6 +97,7 @@ public class PeaccyVision {
     }
 
     public Matrix<N3, N1> getStDev(){
+        if(DriverStation.isAutonomousEnabled()) return VecBuilder.fill(10,10,20);
         return VecBuilder.fill(stDev, stDev, stDev * STDEV_YAW_MULTIPLIER);
     }
 
@@ -105,6 +108,7 @@ public class PeaccyVision {
     public boolean hasUpdated(){
         return hasUpdated;
     }
+    
 
     public double getOdometryError() {
         return odometryError;
