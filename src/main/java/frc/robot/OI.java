@@ -68,7 +68,7 @@ public class OI {
         public static final BooleanSupplier wantsAimCenterline = () -> operatorJoystick.getRawButton(14);
         public static final BooleanSupplier wantsAutoAim = () -> driverJoystick.getRawButton(6);
 
-        public static final BooleanSupplier wantsAimShuttle = () -> false;
+        public static final BooleanSupplier wantsAimShuttle = () -> operatorJoystick.getRawButton(10);
 
         public static final BooleanSupplier wantsIntakeSource = () -> operatorJoystick.getRawButton(5);
 

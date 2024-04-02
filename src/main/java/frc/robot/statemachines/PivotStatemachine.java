@@ -78,13 +78,13 @@ public class PivotStatemachine extends StateMachine<PivotStatemachine.PivotState
         AMP(Rotation2d.fromDegrees(82)),
         AMP_PUSH(Rotation2d.fromDegrees(50)),
         INTAKE_SOURCE(Rotation2d.fromDegrees(56)),
-        PRE_CLIMB(Rotation2d.fromDegrees(110)),
-        CLIMB(Rotation2d.fromDegrees(30)),
+        PRE_CLIMB(Rotation2d.fromDegrees(70)),
+        CLIMB(Rotation2d.fromDegrees(70)),
         AIM_LAYUP(Rotation2d.fromDegrees(53)),
         AIM_PROTECTED(Rotation2d.fromDegrees(37)),
         AIM_UNDER_STAGE(Rotation2d.fromDegrees(30)),
-        AIM_WINGLINE(Rotation2d.fromDegrees(22)),
-        AIM_CENTERLINE(Rotation2d.fromDegrees(18)),
+        AIM_WINGLINE(Rotation2d.fromDegrees(27)),
+        AIM_CENTERLINE(Rotation2d.fromDegrees(25)),
         AIM_SHUTTLE(Rotation2d.fromDegrees(45)),
         AUTO_AIM(Rotation2d.fromDegrees(30));
 

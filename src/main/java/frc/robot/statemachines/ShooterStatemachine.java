@@ -176,8 +176,8 @@ public class ShooterStatemachine extends StateMachine<ShooterStatemachine.Shoote
         AIM_PROTECTED(45.0,0.0),
         AIM_UNDER_STAGE(50.0,0.0),
         AIM_WINGLINE(60.0,0.0),
-        AIM_CENTERLINE(60.0,0.0),
-        AIM_SHUTTLE(50.0, 0.0),
+        AIM_CENTERLINE(65.0,0.0),
+        AIM_SHUTTLE(40.0, 0.0),
         AUTO_AIM(0.0,0.0),
         SHOOT(0.0,1.0),
         INTAKE_N_AIM(0.0,0.0);

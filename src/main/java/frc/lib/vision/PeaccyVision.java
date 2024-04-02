@@ -22,17 +22,17 @@ import frc.robot.OI;
  * feeding the results to a pose estimator.
  */
 public class PeaccyVision {
-    private static final double INITIALIZE_ERROR = 20;
+    private static final double INITIALIZE_ERROR = 100;
     private static final double TAG_ERROR_REDUCTION = 0.87;
     private static final double ACCELERATION_PENALTY = 5;
     private static final double ACCELERATION_PENALTY_THRESHOLD = 3;
     private static final double VISION_DISTANCE_FROM_CURRENT_ERROR_WEIGHT = 0.01;
 
     private static final double MIN_STDEV = 0.02;
-    private static final double MAX_STDEV = 5.5;
+    private static final double MAX_STDEV = 7.5;
     private static final double STDEV_ERROR_WEIGHT = 4;
     
-    private static final double STDEV_YAW_MULTIPLIER = 30;
+    private static final double STDEV_YAW_MULTIPLIER = 10;
 
 
     private ApriltagCamera[] cameras;
@@ -95,7 +95,7 @@ public class PeaccyVision {
     }
 
     public Matrix<N3, N1> getStDev(){
-        return VecBuilder.fill(stDev, stDev, OI.Swerve.isFastVisionReset.getAsBoolean() ? 0.1 : Util.limit(stDev * STDEV_YAW_MULTIPLIER, 1, 10));
+        return VecBuilder.fill(stDev, stDev, stDev * STDEV_YAW_MULTIPLIER);
     }
 
     public double getTimestamp(){

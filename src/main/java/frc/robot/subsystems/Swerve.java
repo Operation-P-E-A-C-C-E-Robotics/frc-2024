@@ -190,7 +190,11 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic() {
         if(SmartDashboard.getBoolean("seed pose", false)) {
-            resetOdometry(poseSeedChooser.getSelected());
+            var startPose = poseSeedChooser.getSelected();
+            resetOdometry(new Pose2d(
+                AllianceFlipUtil.apply(startPose.getTranslation()),
+                startPose.getRotation()
+            ));;
             SmartDashboard.putBoolean("seed pose", false);
         }
 

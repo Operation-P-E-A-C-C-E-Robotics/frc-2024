@@ -32,8 +32,8 @@ public class TeleopInputs {
     private final double LAYUP_X = 2; // distance from left wall to start aiming.
     private final double PROTECTED_X = 3.5;
     private final double UNDER_STAGE_X = 7;
-    private final double WINGLINE_X = FieldConstants.wingX + 1.5;
-    private final double CENTERLINE_X = 15;
+    private final double WINGLINE_X = FieldConstants.wingX + 3;
+    private final double CENTERLINE_X = WINGLINE_X + 10;
 
     //whether the joystick is overriding the pivot
     private boolean jogPivotMode = false;
@@ -229,7 +229,7 @@ public class TeleopInputs {
                 if (x > WINGLINE_X) return false;
                 break;
             case SHUTTLE:
-                return x > FieldConstants.fieldLength - WINGLINE_X;
+                return true;
             default:
                 return false;
             
@@ -249,6 +249,8 @@ public class TeleopInputs {
                 return SuperstructureState.AIM_WINGLINE;
             case CENTERLINE:
                 return SuperstructureState.AIM_CENTERLINE;
+            case SHUTTLE:
+                return SuperstructureState.AIM_SHUTTLE;
             case AUTO:
                 return SuperstructureState.AUTO_AIM;
             default:
