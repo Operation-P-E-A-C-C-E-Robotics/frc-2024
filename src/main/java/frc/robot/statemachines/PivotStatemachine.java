@@ -46,6 +46,7 @@ public class PivotStatemachine extends StateMachine<PivotStatemachine.PivotState
                 pivot.setPivotPosition(angle);
                 return;
         }
+
         var angle = state.getAngle();
         if(angle.getDegrees() > 80 && !motionPlanner.canFlipPivot()) angle = Rotation2d.fromDegrees(80);
 
@@ -72,6 +73,7 @@ public class PivotStatemachine extends StateMachine<PivotStatemachine.PivotState
         INTAKE(Rotation2d.fromDegrees(17)),
         STOW(Rotation2d.fromDegrees(20)),
         AMP(Rotation2d.fromDegrees(78)),
+        AMP_PUSH(Rotation2d.fromDegrees(85)),
         INTAKE_SOURCE(Rotation2d.fromDegrees(56)),
         PRE_CLIMB(Rotation2d.fromDegrees(110)),
         CLIMB(Rotation2d.fromDegrees(30)),

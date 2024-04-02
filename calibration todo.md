@@ -4,17 +4,17 @@
  - [todo] tune vision stdevs when shooting (especially heading)
  - [todo] tune setpoints really really well (use slow-motion footage)
  - [todo] tune shuttling setpoint
- - [todo]
- - [todo]
- - [todo]
- - [todo]
- - [todo]
- - [todo]
- - [todo]
- - [todo]
- - [todo]
- - [todo]
- - [todo]
- - [todo]
- - [todo]
- - [todo]
+ - [todo] tune pivot second tuning
+ - [todo] tune amp shot (maybe try push in like orbit)
+ - [todo] 
+ - [todo] 
+ - [todo] 
+ - [todo] 
+ - [todo] 
+ - [todo] 
+ - [todo] 
+ - [todo] 
+ - [todo] 
+ - [todo] 
+ - [todo] 
+ - [todo] 
