@@ -422,9 +422,9 @@ public class Autonomous {
         DEFENCE_4_L("defence 4 L", 4.5),
         DEFENCE_5_R("defence 5 R", 4.2),
         NEW_INTAKE_1("sketch new auto pt1", 3.8),
-        NEW_SHOOT_1("sketch new auto pt2", 2.4),
-        NEW_INTAKE_2("sketch new auto pt3", 2.5),
-        NEW_SHOOT_2("sketch new auto pt4", 2.5);
+        NEW_SHOOT_1("sketch new auto pt2", 2.5),
+        NEW_INTAKE_2("sketch new auto pt3", 2.8),
+        NEW_SHOOT_2("sketch new auto pt4", 2.7);
     
         public final String pathName;
         public final PathPlannerPath path;

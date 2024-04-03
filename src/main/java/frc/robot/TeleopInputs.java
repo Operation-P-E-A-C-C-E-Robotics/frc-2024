@@ -40,6 +40,8 @@ public class TeleopInputs {
     private boolean jogClimberMode = false;
     private boolean jogTriggerMode = false;
 
+    private boolean doTheAmpAlign = false;
+
     private Timer ampResetTimer = new Timer();
 
     private TeleopInputs() {
@@ -80,12 +82,11 @@ public class TeleopInputs {
         var blueAlliancePose = AllianceFlipUtil.apply(Swerve.getInstance().getPose()); //robot pose for automation
 
         if(mode == TeleopMode.AMP) {
-            if(ampResetTimer.get() > 0.5) {
+            if(ampResetTimer.get() > 0.7) {
                 mode = TeleopMode.PANIC;
             }
-            if(Shooter.getInstance().flywheelSwitchTripped()) {
-                ampResetTimer.start();
-            }
+            // if(intakingMode != intakingMode.NONE
+            if(OI.Inputs.wantsPlace.getAsBoolean()) ampResetTimer.start();
         } else {
             ampResetTimer.stop();
             ampResetTimer.reset();
@@ -204,6 +205,11 @@ public class TeleopInputs {
     
     public TeleopMode getMode() {
         return mode;
+    }
+
+    private boolean wantsAmp(Pose2d blueAlliancePose){
+        if(AllianceFlipUtil.apply(Swerve.getInstance().getPose()).getX() < WINGLINE_X && ampResetTimer.get() < 0.7) return true;
+        return false;
     }
 
     private boolean wantsAim(Pose2d blueAlliancePose) {
