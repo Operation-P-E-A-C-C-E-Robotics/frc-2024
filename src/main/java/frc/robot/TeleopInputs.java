@@ -35,6 +35,9 @@ public class TeleopInputs {
     private final double WINGLINE_X = FieldConstants.wingX + 3;
     private final double CENTERLINE_X = WINGLINE_X + 10;
 
+    private final double AMP_ALIGN_X = 4.5;
+    private final double AMP_ALIGN_Y = 6.5;
+
     //whether the joystick is overriding the pivot
     private boolean jogPivotMode = false;
     private boolean jogClimberMode = false;
@@ -82,10 +85,13 @@ public class TeleopInputs {
         var blueAlliancePose = AllianceFlipUtil.apply(Swerve.getInstance().getPose()); //robot pose for automation
 
         if(mode == TeleopMode.AMP) {
-            if(ampResetTimer.get() > 0.7) {
-                mode = TeleopMode.PANIC;
+            // if(ampResetTimer.get() > 0.7) {
+            //     mode = TeleopMode.PANIC;
+            // }
+            if(intakingMode != IntakingMode.NONE) {
+                ampResetTimer.stop();
+                ampResetTimer.reset();
             }
-            // if(intakingMode != intakingMode.NONE
             if(OI.Inputs.wantsPlace.getAsBoolean()) ampResetTimer.start();
         } else {
             ampResetTimer.stop();
@@ -130,7 +136,7 @@ public class TeleopInputs {
         switch (mode) {
             case AMP:
                 aiming = false;
-                return SuperstructureState.ALIGN_AMP;
+                return wantsAmp(new Pose2d()) ? SuperstructureState.ALIGN_AMP : SuperstructureState.REST;
             case CLIMB:
                 aiming = false;
                 climbMode = wantedClimbMode();
@@ -208,7 +214,9 @@ public class TeleopInputs {
     }
 
     private boolean wantsAmp(Pose2d blueAlliancePose){
-        if(AllianceFlipUtil.apply(Swerve.getInstance().getPose()).getX() < WINGLINE_X && ampResetTimer.get() < 0.7) return true;
+        var pose = AllianceFlipUtil.apply(Swerve.getInstance().getPose());
+        if(!OI.ManualInputs.resetManualInputs.getAsBoolean()) return true;
+        if(pose.getX() < AMP_ALIGN_X && pose.getY() > AMP_ALIGN_Y && ampResetTimer.get() < 0.7) return true;
         return false;
     }
 
