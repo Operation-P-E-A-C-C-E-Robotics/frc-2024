@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.telemetry.MultiTracers;
 import frc.lib.telemetry.StrategyTelemetry;
+import frc.robot.RobotStatemachine.SuperstructureState;
 import frc.robot.auto.Autonomous;
 import frc.robot.auto.Autonomous.TimedAuto;
 import frc.robot.planners.AimPlanner;
@@ -120,6 +121,12 @@ public class RobotContainer {
             return true;
         }
         return false;
+    }
+
+    public boolean wantsDisableAutoHeading() {
+        return teleopStatemachine.getState() == SuperstructureState.INTAKE_BACK
+            || teleopStatemachine.getState() == SuperstructureState.ALIGN_AMP
+            || teleopStatemachine.getState() == SuperstructureState.INTAKE_SOURCE;
     }
 
     public boolean readyToShoot(){

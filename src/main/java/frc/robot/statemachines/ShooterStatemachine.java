@@ -73,7 +73,7 @@ public class ShooterStatemachine extends StateMachine<ShooterStatemachine.Shoote
         }
         if(state == ShooterState.AUTO_AIM && this.state == ShooterState.SHOOT) return;
         if(state == ShooterState.SHOOT && this.state != ShooterState.SHOOT) printShotData();
-        if(state == ShooterState.INTAKE && this.state == ShooterState.INDEX) return;
+        // if(state == ShooterState.INTAKE && this.state == ShooterState.INDEX) return;
         this.state = state;
     }
 
@@ -130,7 +130,7 @@ public class ShooterStatemachine extends StateMachine<ShooterStatemachine.Shoote
         }
 
         if(state == ShooterState.AMP) {
-            shooter.setFlywheelVelocity(18.5, 5.3);
+            shooter.setFlywheelVelocity(24, 0);
             if(OI.Inputs.wantsPlace.getAsBoolean()) shooter.setTriggerPercent(0.4);
             else shooter.setTriggerPercent(0);
             return;
@@ -176,7 +176,8 @@ public class ShooterStatemachine extends StateMachine<ShooterStatemachine.Shoote
         AIM_PROTECTED(45.0,0.0),
         AIM_UNDER_STAGE(50.0,0.0),
         AIM_WINGLINE(60.0,0.0),
-        AIM_CENTERLINE(60.0,0.0),
+        AIM_CENTERLINE(65.0,0.0),
+        AIM_SHUTTLE(40.0, 0.0),
         AUTO_AIM(0.0,0.0),
         SHOOT(0.0,1.0),
         INTAKE_N_AIM(0.0,0.0);

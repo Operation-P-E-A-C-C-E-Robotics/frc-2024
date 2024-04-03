@@ -30,15 +30,20 @@ public class TeleopInputs {
 
     private final double AUTO_AIM_X = 7; // distance from left wall to start aiming.
     private final double LAYUP_X = 2; // distance from left wall to start aiming.
-    private final double PROTECTED_X = 4;
+    private final double PROTECTED_X = 3.5;
     private final double UNDER_STAGE_X = 7;
-    private final double WINGLINE_X = 10;
-    private final double CENTERLINE_X = 15;
+    private final double WINGLINE_X = FieldConstants.wingX + 3;
+    private final double CENTERLINE_X = WINGLINE_X + 10;
+
+    private final double AMP_ALIGN_X = 4.5;
+    private final double AMP_ALIGN_Y = 6.5;
 
     //whether the joystick is overriding the pivot
     private boolean jogPivotMode = false;
     private boolean jogClimberMode = false;
     private boolean jogTriggerMode = false;
+
+    private boolean doTheAmpAlign = false;
 
     private Timer ampResetTimer = new Timer();
 
@@ -53,7 +58,7 @@ public class TeleopInputs {
      */
     public SwerveState getWantedSwerveState() {
         if(OI.Overrides.forceAim.getAsBoolean() || (aiming && mode == TeleopMode.SPEAKER && intakingMode == IntakingMode.NONE)) {
-            return SwerveState.AIM;
+            return aimMode == AimMode.SHUTTLE ? SwerveState.AIM_SHUTTLE : SwerveState.AIM;
         }
 
         if(OI.Swerve.isLockIn.getAsBoolean()) {
@@ -62,6 +67,10 @@ public class TeleopInputs {
 
         if(OI.Swerve.isRobotCentric.getAsBoolean()) {
             return SwerveState.ROBOT_CENTRIC;
+        }
+
+        if(OI.Swerve.wantsDriveToNote.getAsBoolean()){
+            return SwerveState.DRIVE_TO_NOTE;
         }
 
         return OI.Swerve.isOpenLoop.getAsBoolean() ? SwerveState.OPEN_LOOP_TELEOP : SwerveState.CLOSED_LOOP_TELEOP;
@@ -76,12 +85,14 @@ public class TeleopInputs {
         var blueAlliancePose = AllianceFlipUtil.apply(Swerve.getInstance().getPose()); //robot pose for automation
 
         if(mode == TeleopMode.AMP) {
-            if(ampResetTimer.get() > 0.5) {
-                mode = TeleopMode.PANIC;
+            // if(ampResetTimer.get() > 0.7) {
+            //     mode = TeleopMode.PANIC;
+            // }
+            if(intakingMode != IntakingMode.NONE) {
+                ampResetTimer.stop();
+                ampResetTimer.reset();
             }
-            if(Shooter.getInstance().flywheelSwitchTripped()) {
-                ampResetTimer.start();
-            }
+            if(OI.Inputs.wantsPlace.getAsBoolean()) ampResetTimer.start();
         } else {
             ampResetTimer.stop();
             ampResetTimer.reset();
@@ -116,6 +127,7 @@ public class TeleopInputs {
         if(OI.Inputs.wantsAimWingline.getAsBoolean()) aimMode = AimMode.WINGLINE;
         if(OI.Inputs.wantsAimCenterline.getAsBoolean()) aimMode = AimMode.CENTERLINE;
         if(OI.Inputs.wantsAutoAim.getAsBoolean()) aimMode = AimMode.AUTO;
+        if(OI.Inputs.wantsAimShuttle.getAsBoolean()) aimMode = AimMode.SHUTTLE;
 
         if(mode == TeleopMode.PANIC) return SuperstructureState.REST;
 
@@ -124,7 +136,7 @@ public class TeleopInputs {
         switch (mode) {
             case AMP:
                 aiming = false;
-                return SuperstructureState.ALIGN_AMP;
+                return wantsAmp(new Pose2d()) ? SuperstructureState.ALIGN_AMP : SuperstructureState.REST;
             case CLIMB:
                 aiming = false;
                 climbMode = wantedClimbMode();
@@ -201,6 +213,13 @@ public class TeleopInputs {
         return mode;
     }
 
+    private boolean wantsAmp(Pose2d blueAlliancePose){
+        var pose = AllianceFlipUtil.apply(Swerve.getInstance().getPose());
+        if(!OI.ManualInputs.resetManualInputs.getAsBoolean()) return true;
+        if(pose.getX() < AMP_ALIGN_X && pose.getY() > AMP_ALIGN_Y && ampResetTimer.get() < 0.7) return true;
+        return false;
+    }
+
     private boolean wantsAim(Pose2d blueAlliancePose) {
         if(NoteTracker.getLocation() != NoteLocation.SHOOTER) return false;
         var x = AllianceFlipUtil.apply(Swerve.getInstance().getPose()).getX();
@@ -223,6 +242,8 @@ public class TeleopInputs {
             case WINGLINE:
                 if (x > WINGLINE_X) return false;
                 break;
+            case SHUTTLE:
+                return true;
             default:
                 return false;
             
@@ -242,6 +263,8 @@ public class TeleopInputs {
                 return SuperstructureState.AIM_WINGLINE;
             case CENTERLINE:
                 return SuperstructureState.AIM_CENTERLINE;
+            case SHUTTLE:
+                return SuperstructureState.AIM_SHUTTLE;
             case AUTO:
                 return SuperstructureState.AUTO_AIM;
             default:
@@ -276,7 +299,7 @@ public class TeleopInputs {
     }
 
     public enum AimMode {
-        LAYUP, PROTECTED, UNDER_STAGE, WINGLINE, CENTERLINE, AUTO
+        LAYUP, PROTECTED, UNDER_STAGE, WINGLINE, CENTERLINE, AUTO, SHUTTLE
     }
 
     private static TeleopInputs instance = new TeleopInputs();

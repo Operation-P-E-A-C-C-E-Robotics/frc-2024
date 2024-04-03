@@ -28,6 +28,8 @@ import frc.lib.vision.ApriltagCamera;
 import frc.lib.vision.LimelightHelpers;
 import frc.lib.vision.PeaccyVision;
 import frc.robot.Constants;
+import frc.robot.auto.Autonomous;
+
 import static frc.robot.Constants.Swerve.*;
 
 import java.util.Optional;
@@ -84,6 +86,12 @@ public class Swerve extends SubsystemBase {
 
         poseSeedChooser.setDefaultOption("zero", new Pose2d());
         poseSeedChooser.addOption("test", new Pose2d(1, 1, new Rotation2d()));
+        poseSeedChooser.addOption("START 1", Autonomous.twoNoteStageSide.getStartPose());
+        poseSeedChooser.addOption("START 2", Autonomous.twoNoteCenter.getStartPose());
+        poseSeedChooser.addOption("START 3", Autonomous.twoNoteAmpSide.getStartPose());
+        poseSeedChooser.addOption("START NEW AUTO", Autonomous.newAutoThing.getStartPose());
+        poseSeedChooser.addOption("START DEFENCE", Autonomous.defence1.getStartPose());
+
         SmartDashboard.putData("POSE SEED", poseSeedChooser);
         SmartDashboard.putBoolean("seed pose", false);
 
@@ -182,7 +190,11 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic() {
         if(SmartDashboard.getBoolean("seed pose", false)) {
-            resetOdometry(poseSeedChooser.getSelected());
+            var startPose = poseSeedChooser.getSelected();
+            resetOdometry(new Pose2d(
+                AllianceFlipUtil.apply(startPose.getTranslation()),
+                startPose.getRotation()
+            ));;
             SmartDashboard.putBoolean("seed pose", false);
         }
 
@@ -207,11 +219,15 @@ public class Swerve extends SubsystemBase {
             noteFromRobot = Optional.of(new Translation2d(distance, Rotation2d.fromDegrees(angle)));
             noteFromField = Optional.of(getPose().getTranslation().plus(noteFromRobot.get()));
             timeSinceFloorNoteUpdate.restart();
+            SmartDashboard.putNumber("distance to note", distance);
+            SmartDashboard.putNumber("angle to note", angle);
         }
         if(timeSinceFloorNoteUpdate.get() > 0.2) {
             noteFromRobot = Optional.empty();
             noteFromField = Optional.empty();
         }
+
+        SmartDashboard.putString("note translation", noteFromField.toString());
 
         //TODO: update limelight telemetry
         // LimelightTelemetry.update(Constants.Cameras.frontLimelight, swerve.getPose3d());

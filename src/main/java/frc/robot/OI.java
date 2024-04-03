@@ -68,6 +68,8 @@ public class OI {
         public static final BooleanSupplier wantsAimCenterline = () -> operatorJoystick.getRawButton(14);
         public static final BooleanSupplier wantsAutoAim = () -> driverJoystick.getRawButton(6);
 
+        public static final BooleanSupplier wantsAimShuttle = () -> operatorJoystick.getRawButton(10);
+
         public static final BooleanSupplier wantsIntakeSource = () -> operatorJoystick.getRawButton(5);
 
         //let the shooter get steezy.
@@ -81,7 +83,7 @@ public class OI {
         public static final BooleanSupplier forceAmp = () -> false; //force the robot to go into the place amp state
         
         /* DIRECT OVERRIDES */ //directly sets the state of the subsystem
-        public static final BooleanSupplier disableAutoHeading = () -> driverJoystick.getRawButton(5); //disables the auto heading of the swerve
+        public static final BooleanSupplier disableAutoHeading = () -> !driverJoystick.getRawButton(5) || RobotContainer.getInstance().wantsDisableAutoHeading();//disables the auto heading of the swerve
         public static final BooleanSupplier forceTrigger = () -> false; //force the trigger to run
         public static final BooleanSupplier eject = () -> operatorJoystick.getRawButton(6); //oopsie (very overridy) spins everything backwards
     }

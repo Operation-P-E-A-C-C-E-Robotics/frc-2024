@@ -1,8 +1,12 @@
 package frc.robot.statemachines;
 
+import java.sql.Driver;
+
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.state.StateMachine;
+import frc.robot.OI;
 import frc.robot.planners.AimPlanner;
 import frc.robot.planners.MotionPlanner;
 import frc.robot.subsystems.Pivot;
@@ -43,9 +47,13 @@ public class PivotStatemachine extends StateMachine<PivotStatemachine.PivotState
 
         if(state == PivotState.AUTO_AIM) {
             var angle = aimPlanner.getTargetPivotAngle();
-                pivot.setPivotPosition(angle);
-                return;
+            if(DriverStation.isAutonomousEnabled()) angle = angle.plus(Rotation2d.fromDegrees(2));
+            pivot.setPivotPosition(angle);
+            return;
         }
+
+        if(state == PivotState.AMP && OI.Inputs.wantsPlace.getAsBoolean()) state = PivotState.AMP_PUSH;
+
         var angle = state.getAngle();
         if(angle.getDegrees() > 80 && !motionPlanner.canFlipPivot()) angle = Rotation2d.fromDegrees(80);
 
@@ -71,15 +79,17 @@ public class PivotStatemachine extends StateMachine<PivotStatemachine.PivotState
         REST(Rotation2d.fromDegrees(33)),
         INTAKE(Rotation2d.fromDegrees(17)),
         STOW(Rotation2d.fromDegrees(20)),
-        AMP(Rotation2d.fromDegrees(78)),
+        AMP(Rotation2d.fromDegrees(82)),
+        AMP_PUSH(Rotation2d.fromDegrees(50)),
         INTAKE_SOURCE(Rotation2d.fromDegrees(56)),
-        PRE_CLIMB(Rotation2d.fromDegrees(110)),
-        CLIMB(Rotation2d.fromDegrees(30)),
+        PRE_CLIMB(Rotation2d.fromDegrees(70)),
+        CLIMB(Rotation2d.fromDegrees(70)),
         AIM_LAYUP(Rotation2d.fromDegrees(53)),
         AIM_PROTECTED(Rotation2d.fromDegrees(37)),
         AIM_UNDER_STAGE(Rotation2d.fromDegrees(30)),
-        AIM_WINGLINE(Rotation2d.fromDegrees(22)),
-        AIM_CENTERLINE(Rotation2d.fromDegrees(18)),
+        AIM_WINGLINE(Rotation2d.fromDegrees(27)),
+        AIM_CENTERLINE(Rotation2d.fromDegrees(25)),
+        AIM_SHUTTLE(Rotation2d.fromDegrees(45)),
         AUTO_AIM(Rotation2d.fromDegrees(30));
 
         private Rotation2d angle;

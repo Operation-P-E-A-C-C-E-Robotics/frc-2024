@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.state.StateMachine;
@@ -30,6 +32,8 @@ public class RobotStatemachine extends StateMachine<RobotStatemachine.Superstruc
     private final ShooterStatemachine shooterStatemachine;
     private final PivotStatemachine pivotStatemachine;
     private final ClimberStatemachine climberStatemachine;
+
+    private final Timer timeSinceIntake = new Timer();
 
     public RobotStatemachine (SwerveStatemachine swerveStatemachine, 
                             TriggerIntakeStatemachine triggerIntakeStatemachine, 
@@ -78,11 +82,16 @@ public class RobotStatemachine extends StateMachine<RobotStatemachine.Superstruc
      */
     @Override
     public void update(){
+        if (state == SuperstructureState.INTAKE_BACK) timeSinceIntake.restart();
+
         SmartDashboard.putString("Robot State", state.name());
         MultiTracers.trace("TeleopStatemachine", "start update");
         triggerIntakeStatemachine.requestState(state.getTriggerIntakeState());
         MultiTracers.trace("TeleopStatemachine", "triggerIntakeStatemachine.requestState");
-        shooterStatemachine.requestState(state.getShooterState());
+
+        if(timeSinceIntake.get() < 1 && !DriverStation.isAutonomous() && state != SuperstructureState.INTAKE_BACK) shooterStatemachine.requestState(ShooterState.INDEX);
+        else shooterStatemachine.requestState(state.getShooterState());
+
         MultiTracers.trace("TeleopStatemachine", "shooterStatemachine.requestState");
         pivotStatemachine.requestState(state.getPivotState());
         MultiTracers.trace("TeleopStatemachine", "pivotStatemachine.requestState");
@@ -156,6 +165,10 @@ public class RobotStatemachine extends StateMachine<RobotStatemachine.Superstruc
         AUTO_AIM(
             ShooterState.AUTO_AIM,
             PivotState.AUTO_AIM
+        ),
+        AIM_SHUTTLE (
+            ShooterState.AIM_SHUTTLE,
+            PivotState.AIM_SHUTTLE
         ),
         SHOOT(
             ShooterState.SHOOT,

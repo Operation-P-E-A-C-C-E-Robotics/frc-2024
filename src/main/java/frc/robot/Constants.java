@@ -158,22 +158,22 @@ public final class Constants {
       pivotConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
       pivotConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
-      pivotConfigs.Slot0.kP = 24;//6;//8;//6;
-      pivotConfigs.Slot0.kI = 6;//0;
-      pivotConfigs.Slot0.kD = 5;//0.0;//0;
-      pivotConfigs.Slot0.kS = 0.3;//0;
-      pivotConfigs.Slot0.kV = 16.5;//14.5;//20;//14.5;
-      pivotConfigs.Slot0.kA = 1.25;//0;//0.01;//0;
-      pivotConfigs.Slot0.kG = 0.17;//0.23;//0.25;//0.23;
+      pivotConfigs.Slot0.kP = 10;//24;//6;//8;//6;
+      pivotConfigs.Slot0.kI = 0;//6;//0;
+      pivotConfigs.Slot0.kD = 6;//5;//0.0;//0;
+      pivotConfigs.Slot0.kS = 0.7;//0.3;//0;
+      pivotConfigs.Slot0.kV = 15;//16.5;//14.5;//20;//14.5;
+      pivotConfigs.Slot0.kA = 0;//1.25;//0;//0.01;//0;
+      pivotConfigs.Slot0.kG = 0.14;//0.17;//0.23;//0.25;//0.23;
       pivotConfigs.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
 
-      pivotConfigs.Slot1.kP = 24;//6;//8;//6;
+      pivotConfigs.Slot1.kP = 25;//6;//8;//6;
       pivotConfigs.Slot1.kI = 6;//0;
       pivotConfigs.Slot1.kD = 5;//0.0;//0;
-      pivotConfigs.Slot1.kS = 0.3;//0;
-      pivotConfigs.Slot1.kV = 16.5;//14.5;//20;//14.5;
+      pivotConfigs.Slot1.kS = 1;//0;
+      pivotConfigs.Slot1.kV = 18;//14.5;//20;//14.5;
       pivotConfigs.Slot1.kA = 1.25;//0;//0.01;//0;
-      pivotConfigs.Slot1.kG = 0.17;//0.23;//0.25;//0.23;
+      pivotConfigs.Slot1.kG = 0.4;//0.23;//0.25;//0.23;
       pivotConfigs.Slot1.GravityType = GravityTypeValue.Arm_Cosine;
 
 
@@ -293,7 +293,7 @@ public final class Constants {
     public static final Physics physics = new Physics(0.05,0.01, Robot.isReal() ? 80 : 800, 7);
     public static final double steerMotorCurrentLimit = Robot.isReal() ? 40 : 120; //amps
     
-    public static final PidGains driveGains = new PidGains(2, 0, 0, 0.2, 0.6); 
+    public static final PidGains driveGains = new PidGains(2, 0, 0, 0.2, 0.4); 
     public static final PidGains angleGains = new PidGains(90, 0, 0.001, 0, 0);
 
     public static final int pigeonCANId = 3;

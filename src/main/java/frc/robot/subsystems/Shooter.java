@@ -136,6 +136,8 @@ public class Shooter {
 
         topControl.withUpdateFreqHz(100);
         bottomControl.withUpdateFreqHz(100);
+
+        triggerMotor.burnFlash();
     }
 
     /**
@@ -143,7 +145,7 @@ public class Shooter {
      * @param velocity the velocity to set the flywheels to in RPS
      */
     public void setFlywheelVelocity (double velocity) {
-        setFlywheelVelocity(velocity, velocity);
+        setFlywheelVelocity(velocity+5, velocity);
     }
 
     /**
